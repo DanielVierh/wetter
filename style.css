@@ -1,0 +1,90 @@
+body{
+    background-color: rgba(3, 24, 39, 0.9);
+    color: white;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+.container{
+    margin: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    flex-direction: column;
+    display: grid;
+    place-items: center;
+    background-color: rgb(64, 165, 224);
+    border-radius: 20px;
+    padding: 20px;
+}
+
+#outpTemp{
+    font-size: 4rem;
+    font-weight: bolder;
+    margin: 0;
+}
+
+#outpOrt{
+    font-size: 2rem;
+    margin: 0;
+}
+
+#outpWeather{
+    font-size: 2rem;
+    margin: 0;
+}
+
+input{
+    background-color: turquoise;
+    height: 30px;
+    border-radius: 15px;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+button{
+    width: 100%;
+    height: 30px;
+    border-radius: 10px;
+    background-color: rgb(3, 21, 24);
+    color: white;
+    font-weight: bold;
+    margin: 5px;
+}
+
+#errorLeiste{
+    background: red;
+    color: black;
+    font-weight: bold;
+}
+
+#btnAddCity{
+    justify-self: left;
+    font-size: 1.4rem;
+
+}
+
+ul{
+    max-height: 70%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    overflow-y: auto;
+    border: 1px solid black;
+    padding: 10px;
+    border-radius: 12px;
+}
+
+
+.smallbutton{
+    width: 40px;
+    height: 30px;
+    border-radius: 10px;
+    background-color: yellowgreen;
+    font-weight: bold;
+}

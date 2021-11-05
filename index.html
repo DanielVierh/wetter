@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wetter</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <input type="text" id="inpCityname" placeholder="PLZ oder Stadtname">
+    <button onclick="showWeather()" class="smallbutton">Ok</button>
+    <p id="errorLeiste" hidden>Ort konnte nicht gefunden werden</p>
+    <div class="container">
+        <button hidden id="btnAddCity" onclick="addCity()" class="smallbutton">+</button>
+        <p id="outpOrt">Suche nach einer PLZ oder einen Städtenamen</p>
+        <img src="" alt="" id="weatherimg">
+        <p id="outpTemp"></p>
+        <p id="outpWeather"></p>
+        <p id="outMinMax"></p>
+        <p id="outpLastUpdt"></p>
+    </div>
+
+   <div class="container">
+    <h1 style="margin: 0px;">Meine Orte</h1>
+    <ul id="outCitys"></ul>
+   </div>
+   
+
+    <script src="app.js"></script>
+</body>
+</html>
