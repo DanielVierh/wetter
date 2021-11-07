@@ -5,14 +5,17 @@ let apiLink = '';
 let cityList = [];
 let adress = '';
 
+// Load
 window.onload = loadData();
 
+// Eingegebene Stadt suchen
 function showWeather() {
     adress = document.getElementById("inpCityname").value; 
     weatherRequest();
     document.getElementById("inpCityname").value = "";
 }
 
+// Wetter Request
 function weatherRequest() {
     if(adress != "") {
         if(isNaN(adress)) {
@@ -65,14 +68,33 @@ function weatherRequest() {
 
 // Forecast
 function requestWeatherForecast(lat, lon) {
-    apiLink = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=hourly&appid=253ebb991ba415df809a9978b3885e7e`;
+    apiLink = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=minutely&appid=253ebb991ba415df809a9978b3885e7e&lang=de&units=metric`;
     fetch(apiLink)
         .then(response => response.json())
         .then(data => {
             console.log(data)
+            let tempMin
+            let tempMax
+            let weatherIcon
+            let weekDay
+            let imgSrc
+            let index
+            for(let i = 0; i <= 3; i++) {
+                tempMin = parseInt(data.daily[i].temp.min)
+                tempMax = parseInt(data.daily[i].temp.max)
+                weatherIcon = data.daily[i].weather[0].icon
+                weekDay = getDate(i)
+                index = `outpDay${i}`
+                document.getElementById(index).innerHTML = weekDay
+                index = `outpDayPlus${i}`
+                document.getElementById(index).innerHTML = `${tempMin}°C / ${tempMax}°C`
+                imgSrc = `https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/widgets/${weatherIcon}.png`
+                index = `foreCastImg${i}`
+                document.getElementById(index).src = imgSrc
+            }
         })
     .catch(error => {
-        console.log(`Uff: ${error}`)
+        console.log(`Forecast Err: ${error}`)
     })
 }
 
@@ -103,7 +125,7 @@ function loadData() {
     }
 }
 
-
+// Zeigt abgespeicherte Städte an
 function showSavedCitys() {
     document.getElementById("outCitys").innerHTML = "";
     for(let i = 0; i < cityList.length; i++) {
@@ -116,11 +138,12 @@ function showSavedCitys() {
         }
 }
 
-
+// Speichert eine Stadt in den localStorage
 function saveCity(){
     localStorage.setItem("stored_CityList", JSON.stringify(cityList));
 }
 
+// Fügt die Stadt in die Liste der Städte hinzu, nach Überprüfung, ob diese bereits vorhanden ist
 function addCity() {
     if(cityList.includes(adress)) {
         alert("Den Ort hast du bereits abgespeichert")
@@ -135,8 +158,40 @@ function addCity() {
     // console.log(cityList);
 }
 
-
+// Ausgewählte Stadt anzeigen
 function getCity() {
    adress = this.innerText;
    weatherRequest();
+}
+
+function getDate(addNumb) {
+    let date = new Date();
+    let weekday = date.getDay() + addNumb + 1;
+    let day = '';
+    switch (weekday) {
+        case 0:
+            day = 'So'
+            break;
+        case 1:
+            day = 'Mo'
+            break;
+        case 2:
+            day = 'Di';
+            break;
+        case 3:
+            day = 'Mi';
+            break;
+        case 4:
+            day = 'Do';
+            break;
+        case 5:
+            day = 'Fr';
+            break;
+        case 6:
+            day = 'Sa';
+            break;
+        default:
+            break;
+    }
+    return day;
 }

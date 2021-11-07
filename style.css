@@ -114,3 +114,25 @@ ul{
     border: 1px solid rgba(255, 255, 255, 0.308);
 }
 
+.foreCastCont{
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.forecastImg{
+    height: 30px;
+    width: 30px;
+
+}
+
+.day{
+    margin-right: 20px;
+}
+
+.forecastText{
+    height: 10px;
+    margin: 0;
+    font-size: 0.8rem;
+}
