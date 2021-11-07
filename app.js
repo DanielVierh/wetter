@@ -62,8 +62,12 @@ function weatherRequest() {
                 document.getElementById("outMinMax").innerHTML = ""
                 adress = ""
                 let index
-                for (let i = 0; i <= 4; i++) {
+                for (let i = 0; i <= 5; i++) {
                     index = `forecastBlock${i}`
+                    document.getElementById(index).hidden = true
+                }
+                for (let i = 0; i <= 23; i++) {
+                    index = `hourForecastBlock${i}`
                     document.getElementById(index).hidden = true
                 }
                 console.log(`Error: ${error}`)
@@ -105,12 +109,12 @@ function requestWeatherForecast(lat, lon) {
             }
 
             // Forecast Tage Felder mit Inhalt befüllen
-            for (let i = 0; i <= 3; i++) {
+            for (let i = 0; i <= 4; i++) {
                 index = `forecastBlock${i}`
                 document.getElementById(index).hidden = false
-                tempMin = parseInt(data.daily[i].temp.min)
-                tempMax = parseInt(data.daily[i].temp.max)
-                weatherIcon = data.daily[i].weather[0].icon
+                tempMin = parseInt(data.daily[i + 1].temp.min)
+                tempMax = parseInt(data.daily[i + 1].temp.max)
+                weatherIcon = data.daily[i + 1].weather[0].icon
                 weekDay = getDate(i)
                 index = `outpDay${i}`
                 document.getElementById(index).innerHTML = weekDay
@@ -120,7 +124,7 @@ function requestWeatherForecast(lat, lon) {
                 index = `foreCastImg${i}`
                 document.getElementById(index).src = imgSrc
             }
-            index = `forecastBlock${4}`
+            index = `forecastBlock${5}`
             document.getElementById(index).hidden = false
         })
         .catch(error => {
