@@ -9,16 +9,17 @@
 </head>
 <body>
     <input type="text" id="inpCityname" placeholder="PLZ oder Stadtname">
-    <button onclick="showWeather()" class="smallbutton">Ok</button>
+    <button onclick="showWeather()" class="smallbutton">Suchen</button>
     <p id="errorLeiste" hidden>Ort konnte nicht gefunden werden</p>
     <div class="container">
-        <button hidden id="btnAddCity" onclick="addCity()" class="smallbutton">+</button>
-        <p id="outpOrt">Suche nach einer PLZ oder einen Städtenamen</p>
-        <img src="" alt="" id="weatherimg">
-        <p id="outpTemp"></p>
-        <p id="outpWeather"></p>
-        <p id="outMinMax"></p>
-        <p id="outpLastUpdt"></p>
+        <button hidden id="btnAddCity" onclick="addCity()">+</button>
+        <p id="outpOrt" class="outputLabel" style="font-size: 2rem; margin: 11px;">Suche nach einer PLZ oder einen Städtenamen</p>
+        <img src="" alt="" id="weatherimg" class="imag">
+        <p id="outpTemp" class="outputLabel "></p>
+        <p id="outpWeather" class="outputLabel"></p>
+        <p id="outMinMax" class="outputLabel"></p>
+        <p id="outpWind" class="outputLabel"></p>
+        <p id="outSun" class="sunsetLabel"></p>
     </div>
 
    <div class="container">
