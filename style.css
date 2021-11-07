@@ -136,3 +136,21 @@ ul{
     margin: 0;
     font-size: 0.8rem;
 }
+
+
+.hourForecastContainer{
+    display: flex;
+    overflow-x: auto;
+    max-width: 100%;
+    border: 1px solid black;
+    padding: 15px;
+    border-radius: 15px;
+}
+
+.std{
+    margin-right: 15px;
+}
+
+.forecastTextHour{
+    font-size: 0.6rem;
+}
