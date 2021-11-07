@@ -61,6 +61,11 @@ function weatherRequest() {
             document.getElementById("outpWind").innerHTML = ""
             document.getElementById("outMinMax").innerHTML = ""
             adress = ""
+            let index
+            for(let i = 0; i <= 3;i++) {
+                index =  `forecastBlock${i}`
+                document.getElementById(index).hidden = true
+            }
             console.log(`Error: ${error}`)
         })
     }
@@ -68,6 +73,7 @@ function weatherRequest() {
 
 // Forecast
 function requestWeatherForecast(lat, lon) {
+    console.log(`Adresse: ${adress}`)
     apiLink = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=minutely&appid=253ebb991ba415df809a9978b3885e7e&lang=de&units=metric`;
     fetch(apiLink)
         .then(response => response.json())
@@ -79,6 +85,10 @@ function requestWeatherForecast(lat, lon) {
             let weekDay
             let imgSrc
             let index
+            for(let i = 0; i <= 3;i++) {
+                index =  `forecastBlock${i}`
+                document.getElementById(index).hidden = false
+            }
             for(let i = 0; i <= 3; i++) {
                 tempMin = parseInt(data.daily[i].temp.min)
                 tempMax = parseInt(data.daily[i].temp.max)
@@ -95,6 +105,7 @@ function requestWeatherForecast(lat, lon) {
         })
     .catch(error => {
         console.log(`Forecast Err: ${error}`)
+        
     })
 }
 
