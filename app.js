@@ -63,6 +63,7 @@ function weatherRequest() {
     }
 }
 
+// Forecast
 function requestWeatherForecast(lat, lon) {
     apiLink = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=hourly&appid=253ebb991ba415df809a9978b3885e7e`;
     fetch(apiLink)
@@ -75,12 +76,13 @@ function requestWeatherForecast(lat, lon) {
     })
 }
 
+// Wandelt die Zeit um
 function dezTimeInTime(num) {
   let dte = new Date(num * 1000);
   return dte;
 }
 
-
+// Auswertung z.B farbliche Änderung bei Temperaturen und Tag / Nacht anzeige
 function ausw() {
     if(temp > 30) {
         document.getElementById("outpTemp").style.color = 'orange';
@@ -91,7 +93,7 @@ function ausw() {
     }
 }
 
-
+// Lädt die zuerst abgespeicherte Stadt
 function loadData() {
     if(localStorage.getItem('stored_CityList') != null) {
        cityList = JSON.parse(localStorage.getItem("stored_CityList")); 
