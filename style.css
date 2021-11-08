@@ -1,5 +1,5 @@
 body{
-    background:linear-gradient(to right,#157075,#79b87f);
+    background:linear-gradient(to right,#008bf5,#00ffd5);
     color: white;
     margin: 0;
     padding: 0;
@@ -18,6 +18,7 @@ body{
     border-radius: 20px;
     padding: 20px;
     backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     box-shadow: 3px 3px 15px black;
     border: 1px solid rgba(255, 255, 255, 0.308);
 }
@@ -90,8 +91,8 @@ ul{
     width: 70px;
     height: 35px;
     border-radius: 10px;
-    /* background-color: yellowgreen; */
     font-weight: bold;
+    color: aqua;
 }
 
 .outputLabel{
@@ -110,6 +111,7 @@ ul{
     background: rgba(39, 203, 224, 0.185);
     border-radius: 50%;
     backdrop-filter: blur(30%);
+    -webkit-backdrop-filter:blur(30%);
     box-shadow: 5px 5px 15px black;
     border: 1px solid rgba(255, 255, 255, 0.308);
 }

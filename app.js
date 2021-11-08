@@ -4,6 +4,7 @@ let cityCode = '';
 let apiLink = '';
 let cityList = [];
 let adress = '';
+let timezone;
 
 // Load
 window.onload = loadData();
@@ -48,6 +49,7 @@ function weatherRequest() {
                 const lat = data.coord.lat
                 const lon = data.coord.lon
                 ausw()
+                timezone = data.timezone
                 requestWeatherForecast(lat, lon)
             })
             .catch(error => {
@@ -97,7 +99,7 @@ function requestWeatherForecast(lat, lon) {
                 document.getElementById(index).hidden = false
                 temp = parseInt(data.hourly[i].temp)
                 weatherIcon = data.hourly[i].weather[0].icon
-                hour = splitVal((dezTimeInTime(data.hourly[i].dt) + ''),' ', 4)
+                hour = splitVal((dezTimeInTime(data.hourly[i].dt + timezone) + ''),' ', 4)
                 hour = splitVal(hour, ':', 0)
                 index = `hourOutp${i}`
                 document.getElementById(index).innerHTML = `${hour} Uhr`
