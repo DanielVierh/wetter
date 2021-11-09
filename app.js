@@ -13,9 +13,15 @@ window.onload = loadData();
 // Eingegebene Stadt suchen
 function showWeather() {
     adress = document.getElementById("inpCityname").value;
+    if(adress.slice(-1)=== " ") {
+        adress = adress.trimEnd();
+        console.log(`Hatte Leerzeichen: ${adress}`)
+    }
     weatherRequest();
     document.getElementById("inpCityname").value = "";
 }
+
+
 
 // Wetter Request
 function weatherRequest() {
@@ -25,12 +31,12 @@ function weatherRequest() {
         } else {
             apiLink = `https://api.openweathermap.org/data/2.5/weather?zip=${adress},de&APPID=253ebb991ba415df809a9978b3885e7e&lang=de&units=metric`
         }
-
         fetch(apiLink)
             .then(response => response.json())
             .then(data => {
                 document.getElementById("errorLeiste").hidden = true
                 document.getElementById("btnAddCity").hidden = false
+                document.getElementById("backgrLayer").hidden = false
                 console.log(data)
                 adress = data.name
                 document.getElementById("outpOrt").innerHTML = adress
@@ -59,7 +65,7 @@ function weatherRequest() {
             .catch(error => {
                 document.getElementById("errorLeiste").hidden = false
                 document.getElementById("btnAddCity").hidden = true
-                document.getElementById("outpOrt").innerHTML = "Evt. war am Ende ein Leerzeichen vorhanden?"
+                document.getElementById("outpOrt").innerHTML = ""
                 document.getElementById("weatherimg").src = ""
                 document.getElementById("outpTemp").innerHTML = "Ups :("
                 document.getElementById("outpWeather").innerHTML = ""
@@ -156,7 +162,7 @@ function ausw() {
     }
     // Tag / Nacht
     if(iconVal === 'n') {
-        document.getElementById("weatherCard").style.backgroundColor = 'rgba(0,0,100,0.900';
+        document.getElementById("weatherCard").style.backgroundColor = 'rgba(0,0,100,0.700';
     }else{
         document.getElementById("weatherCard").style.backgroundColor = 'rgba(29, 28, 28, 0.247)';
     }

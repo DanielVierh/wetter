@@ -158,3 +158,15 @@ ul{
 .forecastTextHour{
     font-size: 0.6rem;
 }
+
+.backgroundLayer{
+    min-width: 15rem;
+    min-height: 15rem;
+    border-radius: 50%;
+    background-color: rgba(243, 243, 164, 0.951);
+    position: fixed;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: -5;
+}
