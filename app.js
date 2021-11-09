@@ -55,9 +55,9 @@ function weatherRequest() {
             .catch(error => {
                 document.getElementById("errorLeiste").hidden = false
                 document.getElementById("btnAddCity").hidden = true
-                document.getElementById("outpOrt").innerHTML = ""
+                document.getElementById("outpOrt").innerHTML = "Evt. war am Ende ein Leerzeichen vorhanden?"
                 document.getElementById("weatherimg").src = ""
-                document.getElementById("outpTemp").innerHTML = "Ups"
+                document.getElementById("outpTemp").innerHTML = "Ups :("
                 document.getElementById("outpWeather").innerHTML = ""
                 document.getElementById("outSun").innerHTML = ""
                 document.getElementById("outpWind").innerHTML = ""
