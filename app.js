@@ -5,6 +5,7 @@ let apiLink = '';
 let cityList = [];
 let adress = '';
 let timezone;
+let iconVal 
 
 // Load
 window.onload = loadData();
@@ -35,6 +36,9 @@ function weatherRequest() {
                 document.getElementById("outpOrt").innerHTML = adress
                 temp = parseInt(data.main.temp)
                 document.getElementById("outpTemp").innerHTML = `${temp}°C`
+                iconVal = data.weather[0].icon
+                iconVal = iconVal.slice(-1)
+                console.log(`Icon: ${iconVal}`)
                 const imgSrc = `https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/widgets/${data.weather[0].icon}.png`
                 document.getElementById("weatherimg").src = imgSrc
                 document.getElementById("outpWeather").innerHTML = data.weather[0].description
@@ -142,12 +146,19 @@ function dezTimeInTime(num) {
 
 // Auswertung z.B farbliche Änderung bei Temperaturen und Tag / Nacht anzeige
 function ausw() {
+    // Temperatur
     if (temp > 30) {
         document.getElementById("outpTemp").style.color = 'orange';
     } else if (temp > 10) {
         document.getElementById("outpTemp").style.color = 'white';
     } else {
         document.getElementById("outpTemp").style.color = 'lightblue';
+    }
+    // Tag / Nacht
+    if(iconVal === 'n') {
+        document.getElementById("weatherCard").style.backgroundColor = 'rgba(0,0,100,0.900';
+    }else{
+        document.getElementById("weatherCard").style.backgroundColor = 'rgba(29, 28, 28, 0.247)';
     }
 }
 

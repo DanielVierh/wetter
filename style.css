@@ -21,6 +21,7 @@ body{
     -webkit-backdrop-filter: blur(20px);
     box-shadow: 3px 3px 15px black;
     border: 1px solid rgba(255, 255, 255, 0.308);
+    transition: 1.5s all;
 }
 
 #outpTemp{
@@ -147,6 +148,7 @@ ul{
     border: 1px solid black;
     padding: 15px;
     border-radius: 15px;
+    background-color: rgba(158, 156, 156, 0.308);
 }
 
 .std{
