@@ -227,6 +227,7 @@ function getDate(addNumb) {
             day = 'Sa';
             break;
         default:
+            day = 'So';
             break;
     }
     return day;
