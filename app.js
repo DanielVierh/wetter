@@ -5,7 +5,8 @@ let apiLink = '';
 let cityList = [];
 let adress = '';
 let timezone;
-let iconVal 
+let iconVal;
+
 
 // Load
 window.onload = loadData();
@@ -98,10 +99,10 @@ function requestWeatherForecast(lat, lon) {
             let tempMax
             let temp
             let weatherIcon
-            let weekDay
             let imgSrc
             let index
             let hour
+            let weekDay;
 
             // Forecast Stunden Felder einblenden
             for (let i = 0; i <= 23; i++) {
@@ -127,7 +128,8 @@ function requestWeatherForecast(lat, lon) {
                 tempMin = parseInt(data.daily[i + 1].temp.min)
                 tempMax = parseInt(data.daily[i + 1].temp.max)
                 weatherIcon = data.daily[i + 1].weather[0].icon
-                weekDay = getDate(i)
+                weekDay = splitVal((dezTimeInTime(data.daily[i + 1].dt) + ''),' ', 0)
+                weekDay = getDate(weekDay)
                 index = `outpDay${i}`
                 document.getElementById(index).innerHTML = weekDay
                 index = `outpDayPlus${i}`
@@ -166,6 +168,17 @@ function ausw() {
     }else{
         document.getElementById("weatherCard").style.backgroundColor = 'rgba(29, 28, 28, 0.247)';
     }
+
+    // Höhe anpassen
+    /*
+        var left = document.getElementById("left");
+        var right = document.getElementById("right");
+
+        if(left.offsetHeight > right.offsetHeight)
+        {
+            right.style.height = left.offsetHeight+"px";
+        }
+    */
 }
 
 // Lädt die zuerst abgespeicherte Stadt
@@ -217,34 +230,32 @@ function getCity() {
     weatherRequest();
 }
 
-function getDate(addNumb) {
-    let date = new Date();
-    let weekday = date.getDay() + addNumb + 1;
+function getDate(weekDay) {
     let day = '';
-    switch (weekday) {
-        case 0:
+    switch (weekDay) {
+        case 'Sun':
             day = 'So'
             break;
-        case 1:
+        case 'Mon':
             day = 'Mo'
             break;
-        case 2:
+        case 'Tue':
             day = 'Di';
             break;
-        case 3:
+        case 'Wed':
             day = 'Mi';
             break;
-        case 4:
+        case 'Thu':
             day = 'Do';
             break;
-        case 5:
+        case 'Fri':
             day = 'Fr';
             break;
-        case 6:
+        case 'Sat':
             day = 'Sa';
             break;
         default:
-            day = 'So';
+            day = '-';
             break;
     }
     return day;
