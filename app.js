@@ -56,7 +56,7 @@ function weatherRequest() {
                 const windgesch = data.wind.speed * 3.6
                 document.getElementById("outpWind").innerHTML = `Wind: ${windgesch.toFixed(0)} Km/h | Luftdruck: ${pressure} hPa`
                 // Schauen, wie man die Standort spezifische Zeit anzeigen kann. Solange ausgeblendet
-                // document.getElementById("outSun").innerHTML = `Sonnenaufgang: ${dezTimeInTime(data.sys.sunrise)} | Sonnenuntergang: ${dezTimeInTime(data.sys.sunset)}`
+                // document.getElementById("outSun").innerHTML = `Sonnenaufgang: ${intTimeConvert(data.sys.sunrise)} | Sonnenuntergang: ${intTimeConvert(data.sys.sunset)}`
                 const lat = data.coord.lat
                 const lon = data.coord.lon
                 ausw()
@@ -110,7 +110,7 @@ function requestWeatherForecast(lat, lon) {
                 document.getElementById(index).hidden = false
                 temp = parseInt(data.hourly[i].temp)
                 weatherIcon = data.hourly[i].weather[0].icon
-                hour = splitVal((dezTimeInTime(data.hourly[i].dt + timezone) + ''),' ', 4)
+                hour = splitVal((intTimeConvert(data.hourly[i].dt + timezone) + ''),' ', 4)
                 hour = splitVal(hour, ':', 0)
                 index = `hourOutp${i}`
                 document.getElementById(index).innerHTML = `${hour} Uhr`
@@ -128,7 +128,7 @@ function requestWeatherForecast(lat, lon) {
                 tempMin = parseInt(data.daily[i + 1].temp.min)
                 tempMax = parseInt(data.daily[i + 1].temp.max)
                 weatherIcon = data.daily[i + 1].weather[0].icon
-                weekDay = splitVal((dezTimeInTime(data.daily[i + 1].dt) + ''),' ', 0)
+                weekDay = splitVal((intTimeConvert(data.daily[i + 1].dt) + ''),' ', 0)
                 weekDay = getDate(weekDay)
                 index = `outpDay${i}`
                 document.getElementById(index).innerHTML = weekDay
@@ -147,7 +147,7 @@ function requestWeatherForecast(lat, lon) {
 }
 
 // Wandelt die Zeit um
-function dezTimeInTime(num) {
+function intTimeConvert(num) {
     let dte = new Date(num * 1000);
     return dte;
 }
