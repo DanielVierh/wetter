@@ -6,6 +6,7 @@ let cityList = [];
 let adress = '';
 let timezone;
 let iconVal;
+let isCurrentLocation = false;
 
 
 // Load
@@ -35,23 +36,20 @@ function weatherRequest() {
         fetch(apiLink)
             .then(response => response.json())
             .then(data => {
+                isCurrentLocation = false;
                 document.getElementById("errorLeiste").hidden = true
                 document.getElementById("btnAddCity").hidden = false
                 document.getElementById("backgrLayer").hidden = false
-                console.log(data)
                 adress = data.name
                 document.getElementById("outpOrt").innerHTML = adress
                 temp = parseInt(data.main.temp)
                 document.getElementById("outpTemp").innerHTML = `${temp}°C`
                 iconVal = data.weather[0].icon
                 iconVal = iconVal.slice(-1)
-                console.log(`Icon: ${iconVal}`)
                 const imgSrc = `https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/widgets/${data.weather[0].icon}.png`
                 document.getElementById("weatherimg").src = imgSrc
                 document.getElementById("outpWeather").innerHTML = data.weather[0].description
                 document.getElementById("outMinMax").innerHTML = `Min: ${parseInt(data.main.temp_min)}°C | Max: ${parseInt(data.main.temp_max)}°C | Gefühlt: ${parseInt(data.main.feels_like)}°C`
-                // Gibt irgendwie immer die gleichen Werte aus.
-                // const visibilityInKm = parseInt(data.visibility / 1000)
                 const pressure = data.main.pressure
                 const windgesch = data.wind.speed * 3.6
                 document.getElementById("outpWind").innerHTML = `Wind: ${windgesch.toFixed(0)} Km/h | Luftdruck: ${pressure} hPa`
@@ -59,7 +57,6 @@ function weatherRequest() {
                 // document.getElementById("outSun").innerHTML = `Sonnenaufgang: ${intTimeConvert(data.sys.sunrise)} | Sonnenuntergang: ${intTimeConvert(data.sys.sunset)}`
                 const lat = data.coord.lat
                 const lon = data.coord.lon
-                ausw()
                 timezone = data.timezone
                 requestWeatherForecast(lat, lon)
             })
@@ -140,6 +137,24 @@ function requestWeatherForecast(lat, lon) {
             }
             index = `forecastBlock${5}`
             document.getElementById(index).hidden = false
+
+            // Bei Geolocation
+            if(isCurrentLocation === true) {
+                temp = parseInt(data.current.temp)
+                document.getElementById("outpTemp").innerHTML = `${temp}°C`
+                iconVal = data.current.weather[0].icon
+                iconVal = iconVal.slice(-1)
+                console.log(`Datum:${intTimeConvert(data.daily[0].dt)}`)
+                const imgSrc = `https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/widgets/${data.current.weather[0].icon}.png`
+                document.getElementById("weatherimg").src = imgSrc
+                document.getElementById("outpWeather").innerHTML = data.current.weather[0].description
+                document.getElementById("outMinMax").innerHTML = `Min: ${parseInt(data.daily[0].temp.min)}°C | Max: ${parseInt(data.daily[0].temp.max)}°C | Gefühlt: ${parseInt(data.current.feels_like)}°C`
+                const pressure = data.current.pressure
+                const windgesch = data.current.wind_speed * 3.6
+                document.getElementById("outpWind").innerHTML = `Wind: ${windgesch.toFixed(0)} Km/h | Luftdruck: ${pressure} hPa`
+            }
+
+            ausw()
         })
         .catch(error => {
             console.log(`Forecast Err: ${error}`)
@@ -266,4 +281,24 @@ function splitVal(val, marker, pos) {
     const elem = val.split(marker);
     const retVal = elem[pos];
     return retVal;
+}
+
+
+// Geolocation
+function getCurrentLocation() {
+    if(navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition)
+    }else{
+        alert("Geolocation ist nicht verfügbar");
+        isCurrentLocation = false;
+    }
+}
+
+function showPosition(position) {
+    const lat = position.coords.latitude.toFixed(1);
+    const lon = position.coords.longitude.toFixed(1);
+    isCurrentLocation = true;
+    //console.log(`Lat: ${lat} / Lon: ${lon}`)
+    document.getElementById("outpOrt").innerHTML = "Mein Standort";
+    requestWeatherForecast(lat, lon);
 }
