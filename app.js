@@ -9,6 +9,8 @@ let iconVal;
 let isCurrentLocation = false;
 
 
+const currentLocationButton = document.getElementById("btnCurrLoc");
+
 // Load
 window.onload = loadData();
 
@@ -203,6 +205,7 @@ function loadData() {
         adress = cityList[0];
         weatherRequest();
         showSavedCitys();
+        currentLocationButton.hidden = false;
     }
 }
 
