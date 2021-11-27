@@ -24,6 +24,20 @@ body{
     transition: 1.5s all;
 }
 
+.container2{
+    margin: 10px;
+    display: flex;
+    flex-direction: row;
+    background-color: rgba(29, 28, 28, 0.247);
+    border-radius: 20px;
+    padding: 20px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 3px 3px 15px black;
+    border: 1px solid rgba(255, 255, 255, 0.308);
+    transition: 1.5s all;
+}
+
 #outpTemp{
     font-size: 4rem;
     font-weight: bolder;
@@ -170,3 +184,4 @@ ul{
     transform: translate(-50%, -50%);
     z-index: -5;
 }
+

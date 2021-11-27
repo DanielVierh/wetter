@@ -244,6 +244,7 @@ function addCity() {
 
 // Ausgewählte Stadt anzeigen
 function getCity() {
+    window.scrollTo(0, 0);
     adress = this.innerText;
     weatherRequest();
 }
