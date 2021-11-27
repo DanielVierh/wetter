@@ -8,13 +8,17 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div id="coverLayer"></div>
     <div class="backgroundLayer" id="backgrLayer" hidden></div>
     <button class="smallbutton" onclick="getCurrentLocation()" style="font-size: 1.3rem;" id="btnCurrLoc" hidden>🧭</button>
     <input type="text" id="inpCityname" placeholder="PLZ oder Stadtname">
     <button onclick="showWeather()" class="smallbutton">Suchen</button>
     <p id="errorLeiste" hidden>Ort konnte nicht gefunden werden</p>
     <div class="container" id="weatherCard">
-        <button hidden id="btnAddCity" onclick="addCity()">+</button>
+        <div class="cont">
+            <button class="addDelButton" id="btnAddCity" onclick="addCity()">Hinzufügen</button>
+            <button class="addDelButton" id="btndelCity" onclick="delCity()">Löschen</button>
+        </div>
         <p id="outpOrt" class="outputLabel" style="font-size: 2rem; margin: 11px;">Suche nach einer Stadt oder PLZ</p>
         <img src="" alt="" id="weatherimg" class="imag">
         <p id="outpTemp" class="outputLabel "></p>

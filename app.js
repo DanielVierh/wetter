@@ -10,6 +10,8 @@ let isCurrentLocation = false;
 
 
 const currentLocationButton = document.getElementById("btnCurrLoc");
+const coverLayer = document.getElementById("coverLayer");
+
 
 // Load
 window.onload = loadData();
@@ -30,6 +32,7 @@ function showWeather() {
 // Wetter Request
 function weatherRequest() {
     if (adress != "") {
+        coverLayer.hidden = true;
         if (isNaN(adress)) {
             apiLink = `https://api.openweathermap.org/data/2.5/weather?q=${adress}&appid=253ebb991ba415df809a9978b3885e7e&lang=de&units=metric`
         } else {
@@ -186,16 +189,6 @@ function ausw() {
         document.getElementById("weatherCard").style.backgroundColor = 'rgba(29, 28, 28, 0.247)';
     }
 
-    // Höhe anpassen
-    /*
-        var left = document.getElementById("left");
-        var right = document.getElementById("right");
-
-        if(left.offsetHeight > right.offsetHeight)
-        {
-            right.style.height = left.offsetHeight+"px";
-        }
-    */
 }
 
 // Lädt die zuerst abgespeicherte Stadt
@@ -229,17 +222,18 @@ function saveCity() {
 
 // Fügt die Stadt in die Liste der Städte hinzu, nach Überprüfung, ob diese bereits vorhanden ist
 function addCity() {
-    if (cityList.includes(adress)) {
-        alert("Den Ort hast du bereits abgespeichert")
-    } else {
-        if (adress != "") {
-            cityList.push(adress);
-            saveCity();
-            alert(`${adress} wurde gespeichert`);
-            showSavedCitys();
+    if(adress != "") {
+        if (cityList.includes(adress)) {
+            alert("Den Ort hast du bereits abgespeichert")
+        } else {
+            if (adress != "") {
+                cityList.push(adress);
+                saveCity();
+                alert(`${adress} wurde gespeichert`);
+                showSavedCitys();
+            }
         }
     }
-    // console.log(cityList);
 }
 
 // Ausgewählte Stadt anzeigen
@@ -248,6 +242,26 @@ function getCity() {
     adress = this.innerText;
     weatherRequest();
 }
+
+
+// Lösche die Stadt, falls in der Liste vorhanden
+function delCity() {
+    if(adress != "") {
+        if (cityList.includes(adress)) {
+            const confirm = window.confirm(`Möchtest du die Stadt "${adress}" wirklich aus Deiner Liste entfernen?`);
+            if(confirm) {
+                for(let i = 0; i < cityList.length; i++) {
+                    if(adress === cityList[i]) {
+                        cityList.splice(i, 1);
+                        saveCity();
+                        location.reload();
+                    }
+                }
+            }
+        }
+    }
+}
+
 
 function getDate(weekDay) {
     let day = '';

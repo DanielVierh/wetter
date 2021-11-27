@@ -81,11 +81,6 @@ button{
     font-weight: bold;
 }
 
-#btnAddCity{
-    justify-self: left;
-    font-size: 1.4rem;
-
-}
 
 ul{
     max-height: 70%;
@@ -185,3 +180,27 @@ ul{
     z-index: -5;
 }
 
+.cont{
+    display: flex;
+    justify-content: center;
+}
+
+.addDelButton{
+    font-size: 90%;
+    padding: 10%;
+    display: grid;
+    place-content: center;
+    min-width: 80%;
+}
+
+#coverLayer{
+    position: absolute;
+    height: 900px;
+    width: 900px;
+    margin-top: 17%;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    -moz-backdrop-filter: blur(15px);
+    z-index: 50;
+    background: rgba(255, 255, 255, 0.308);
+}
