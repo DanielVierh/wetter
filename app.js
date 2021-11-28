@@ -8,7 +8,7 @@ let timezone;
 let iconVal;
 let isCurrentLocation = false;
 
-
+// Button etc.
 const currentLocationButton = document.getElementById("btnCurrLoc");
 const coverLayer = document.getElementById("coverLayer");
 
