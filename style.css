@@ -33,6 +33,7 @@ body{
     padding: 20px;
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
+    -moz-backdrop-filter: blur(20px);
     box-shadow: 3px 3px 15px black;
     border: 1px solid rgba(255, 255, 255, 0.308);
     transition: 1.5s all;
@@ -122,6 +123,7 @@ ul{
     border-radius: 50%;
     backdrop-filter: blur(30%);
     -webkit-backdrop-filter:blur(30%);
+    -moz-backdrop-filter: blur(30px);
     box-shadow: 5px 5px 15px black;
     border: 1px solid rgba(255, 255, 255, 0.308);
 }
