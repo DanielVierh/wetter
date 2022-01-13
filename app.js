@@ -14,6 +14,7 @@ const weatherContainer = document.getElementById("weatherCard");
 const cityContainer = document.getElementById("cityContainer");
 const searchButton = document.getElementById("searchButton");
 const searchField = document.getElementById("inpCityname");
+const toasts = document.getElementById('toasts');
 
 // Load
 window.onload = loadData();
@@ -55,7 +56,6 @@ function weatherRequest() {
                 isCurrentLocation = false;
                 document.getElementById("errorLeiste").hidden = true
                 document.getElementById("btnAddCity").hidden = false
-                // document.getElementById("backgrLayer").hidden = false
                 adress = data.name
                 document.getElementById("outpOrt").innerHTML = adress
                 temp = parseInt(data.main.temp)
@@ -77,15 +77,18 @@ function weatherRequest() {
                 requestWeatherForecast(lat, lon)
             })
             .catch(error => {
-                document.getElementById("errorLeiste").hidden = false
-                document.getElementById("btnAddCity").hidden = true
-                document.getElementById("outpOrt").innerHTML = ""
-                document.getElementById("weatherimg").src = ""
-                document.getElementById("outpTemp").innerHTML = "Ups :("
-                document.getElementById("outpWeather").innerHTML = ""
-                document.getElementById("outSun").innerHTML = ""
-                document.getElementById("outpWind").innerHTML = ""
-                document.getElementById("outMinMax").innerHTML = ""
+                // document.getElementById("errorLeiste").hidden = false
+                // document.getElementById("btnAddCity").hidden = true
+                // document.getElementById("outpOrt").innerHTML = ""
+                // document.getElementById("weatherimg").src = ""
+                // document.getElementById("outpTemp").innerHTML = "Ups :("
+                // document.getElementById("outpWeather").innerHTML = ""
+                // document.getElementById("outSun").innerHTML = ""
+                // document.getElementById("outpWind").innerHTML = ""
+                // document.getElementById("outMinMax").innerHTML = ""
+                weatherContainer.style.display = "none";
+                // cityContainer.style.display = "none";
+                createNotification('Der Ort konnte nicht gefunden werden :(','alert');
                 adress = ""
                 let index
                 for (let i = 0; i <= 5; i++) {
@@ -239,12 +242,12 @@ function saveCity() {
 function addCity() {
     if(adress != "") {
         if (cityList.includes(adress)) {
-            alert("Den Ort hast du bereits abgespeichert")
+            createNotification('Den Ort hast du bereits abgespeichert','warning');
         } else {
             if (adress != "") {
                 cityList.push(adress);
                 saveCity();
-                alert(`${adress} wurde gespeichert`);
+                createNotification(`${adress} wurde gespeichert`,'success')
                 showSavedCitys();
             }
         }
@@ -253,6 +256,7 @@ function addCity() {
 
 // Ausgewählte Stadt anzeigen
 function getCity() {
+    weatherContainer.style.display = "flex";
     window.scrollTo(0, 0);
     adress = this.innerText;
     weatherRequest();
@@ -322,7 +326,7 @@ function getCurrentLocation() {
     if(navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(showPosition)
     }else{
-        alert("Geolocation ist nicht verfügbar");
+        createNotification('Geolocation ist nicht verfügbar','alert');
         isCurrentLocation = false;
     }
 }
@@ -334,4 +338,23 @@ function showPosition(position) {
     //console.log(`Lat: ${lat} / Lon: ${lon}`)
     document.getElementById("outpOrt").innerHTML = "Mein Standort";
     requestWeatherForecast(lat, lon);
+}
+
+
+// Toast Notification
+function createNotification(message, messageType) {
+    // Erstelle Div
+    const notifi = document.createElement('div');
+    // Füge Klasse hinzu
+    notifi.classList.add('toast'); // Messagebox
+    notifi.classList.add(messageType); // Messagetypes: alert, info, modal, warning, success
+    // Textmessage hinzufügen
+    notifi.innerText = message;
+    // Dem Toastcontainer das erstelle Toast hinzufügen
+    toasts.appendChild(notifi);
+
+    // Nachricht nach festgelegter Zeit wieder entfernen
+    setTimeout(() => {
+        notifi.remove();
+    }, 5000);
 }
