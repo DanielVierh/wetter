@@ -195,7 +195,7 @@ function ausw() {
     }
     // Tag / Nacht
     if(iconVal === 'n') {
-        document.getElementById("weatherCard").style.backgroundColor = 'rgba(0,0,100,0.900';
+        document.getElementById("weatherCard").style.backgroundColor = 'rgba(0,0,100,0.600';
     }else{
         document.getElementById("weatherCard").style.backgroundColor = 'rgba(29, 28, 28, 0.247)';
     }
