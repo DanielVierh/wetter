@@ -10,29 +10,40 @@ let isCurrentLocation = false;
 
 // Button etc.
 const currentLocationButton = document.getElementById("btnCurrLoc");
-const coverLayer = document.getElementById("coverLayer");
-
+const weatherContainer = document.getElementById("weatherCard");
+const cityContainer = document.getElementById("cityContainer");
+const searchButton = document.getElementById("searchButton");
+const searchField = document.getElementById("inpCityname");
 
 // Load
 window.onload = loadData();
 
 // Eingegebene Stadt suchen
 function showWeather() {
-    adress = document.getElementById("inpCityname").value;
+    adress = searchField.value;
     if(adress.slice(-1)=== " ") {
         adress = adress.trimEnd();
-        console.log(`Hatte Leerzeichen: ${adress}`)
     }
     weatherRequest();
-    document.getElementById("inpCityname").value = "";
+    searchField.value = "";
+    weatherContainer.style.display = "flex";
+    cityContainer.style.display = "flex";
 }
+
+
+// Wenn mit Enter gesucht wird
+window.addEventListener("keydown", (e) => {
+    if(e.key === 'Enter') {
+        showWeather();
+    }
+})
 
 
 
 // Wetter Request
 function weatherRequest() {
     if (adress != "") {
-        coverLayer.hidden = true;
+        // coverLayer.hidden = true;
         if (isNaN(adress)) {
             apiLink = `https://api.openweathermap.org/data/2.5/weather?q=${adress}&appid=253ebb991ba415df809a9978b3885e7e&lang=de&units=metric`
         } else {
@@ -44,7 +55,7 @@ function weatherRequest() {
                 isCurrentLocation = false;
                 document.getElementById("errorLeiste").hidden = true
                 document.getElementById("btnAddCity").hidden = false
-                document.getElementById("backgrLayer").hidden = false
+                // document.getElementById("backgrLayer").hidden = false
                 adress = data.name
                 document.getElementById("outpOrt").innerHTML = adress
                 temp = parseInt(data.main.temp)
@@ -85,7 +96,7 @@ function weatherRequest() {
                     index = `hourForecastBlock${i}`
                     document.getElementById(index).hidden = true
                 }
-                console.log(`Error: ${error}`)
+                // console.log(`Error: ${error}`)
             })
     }
 }
@@ -184,7 +195,7 @@ function ausw() {
     }
     // Tag / Nacht
     if(iconVal === 'n') {
-        document.getElementById("weatherCard").style.backgroundColor = 'rgba(0,0,100,0.700';
+        document.getElementById("weatherCard").style.backgroundColor = 'rgba(0,0,100,0.900';
     }else{
         document.getElementById("weatherCard").style.backgroundColor = 'rgba(29, 28, 28, 0.247)';
     }
@@ -199,6 +210,10 @@ function loadData() {
         weatherRequest();
         showSavedCitys();
         currentLocationButton.hidden = false;
+    }else{
+        // Keine Einträge vorhanden
+        weatherContainer.style.display = "none";
+        cityContainer.style.display = "none";
     }
 }
 

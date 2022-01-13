@@ -8,11 +8,11 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="coverLayer"></div>
-    <div class="backgroundLayer" id="backgrLayer" hidden></div>
+    <!-- <div id="coverLayer"></div> -->
+    <!-- <div class="backgroundLayer" id="backgrLayer" hidden></div> -->
     <button class="smallbutton" onclick="getCurrentLocation()" style="font-size: 1.3rem;" id="btnCurrLoc" hidden>🧭</button>
     <input type="text" id="inpCityname" placeholder="PLZ oder Stadtname">
-    <button onclick="showWeather()" class="smallbutton">Suchen</button>
+    <button onclick="showWeather()" class="smallbutton" id="searchButton">Suchen</button>
     <p id="errorLeiste" hidden>Ort konnte nicht gefunden werden</p>
     <div class="container" id="weatherCard">
         <!-- Button für das Hinzufügen und entfernen von Städten -->
@@ -167,12 +167,12 @@
                 <img src="" alt="img" class="forecastImg"  id="foreCastImg2">
                 <p id="outpDayPlus2" class="forecastText">-</p>
             </div>
-            <div class="day" id="forecastBlock3" hidden> 
+            <div class="day" id="forecastBlock3" hidden>
                 <p class="forecastText" id="outpDay3">-</p>
                 <img src="" alt="img" class="forecastImg"  id="foreCastImg3">
                 <p id="outpDayPlus3" class="forecastText">-</p>
             </div>
-            <div class="day" id="forecastBlock4" hidden> 
+            <div class="day" id="forecastBlock4" hidden>
                 <p class="forecastText" id="outpDay4">-</p>
                 <img src="" alt="img" class="forecastImg"  id="foreCastImg4">
                 <p id="outpDayPlus4" class="forecastText">-</p>
@@ -183,11 +183,11 @@
 
 
 
-   <div class="container">
-    <h1 style="margin: 0px;">Meine Orte</h1>
+   <div class="container" id="cityContainer">
+    <h1 style="margin: 0px;">Meine gespeicherten Orte</h1>
     <ul id="outCitys"></ul>
    </div>
-  
+
 
     <script src="app.js"></script>
 </body>
