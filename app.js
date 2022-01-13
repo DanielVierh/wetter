@@ -27,8 +27,8 @@ function showWeather() {
     }
     weatherRequest();
     searchField.value = "";
-    weatherContainer.style.display = "flex";
-    cityContainer.style.display = "flex";
+    // weatherContainer.style.display = "flex";
+    // cityContainer.style.display = "flex";
 }
 
 
@@ -44,7 +44,6 @@ window.addEventListener("keydown", (e) => {
 // Wetter Request
 function weatherRequest() {
     if (adress != "") {
-        // coverLayer.hidden = true;
         if (isNaN(adress)) {
             apiLink = `https://api.openweathermap.org/data/2.5/weather?q=${adress}&appid=253ebb991ba415df809a9978b3885e7e&lang=de&units=metric`
         } else {
@@ -53,6 +52,8 @@ function weatherRequest() {
         fetch(apiLink)
             .then(response => response.json())
             .then(data => {
+                weatherContainer.style.display = "flex"
+                cityContainer.style.display = "flex"
                 isCurrentLocation = false;
                 document.getElementById("errorLeiste").hidden = true
                 document.getElementById("btnAddCity").hidden = false
@@ -87,7 +88,9 @@ function weatherRequest() {
                 // document.getElementById("outpWind").innerHTML = ""
                 // document.getElementById("outMinMax").innerHTML = ""
                 weatherContainer.style.display = "none";
-                // cityContainer.style.display = "none";
+                if(localStorage.getItem('stored_CityList') === null ) {
+                    cityContainer.style.display = "none";
+                }
                 createNotification('Der Ort konnte nicht gefunden werden :(','alert');
                 adress = ""
                 let index
