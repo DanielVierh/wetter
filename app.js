@@ -1,4 +1,5 @@
-const testLink = 'https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&exclude=hourly,daily&appid=253ebb991ba415df809a9978b3885e7e&lang=de&units=metric'
+const testLink =
+    'https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&exclude=hourly,daily&appid=253ebb991ba415df809a9978b3885e7e&lang=de&units=metric';
 let temp = 0;
 let cityCode = '';
 let apiLink = '';
@@ -9,11 +10,11 @@ let iconVal;
 let isCurrentLocation = false;
 
 // Button etc.
-const currentLocationButton = document.getElementById("btnCurrLoc");
-const weatherContainer = document.getElementById("weatherCard");
-const cityContainer = document.getElementById("cityContainer");
-const searchButton = document.getElementById("searchButton");
-const searchField = document.getElementById("inpCityname");
+const currentLocationButton = document.getElementById('btnCurrLoc');
+const weatherContainer = document.getElementById('weatherCard');
+const cityContainer = document.getElementById('cityContainer');
+const searchButton = document.getElementById('searchButton');
+const searchField = document.getElementById('inpCityname');
 const toasts = document.getElementById('toasts');
 
 // Load
@@ -22,88 +23,87 @@ window.onload = loadData();
 // Eingegebene Stadt suchen
 function showWeather() {
     adress = searchField.value;
-    if(adress.slice(-1)=== " ") {
+    if (adress.slice(-1) === ' ') {
         adress = adress.trimEnd();
     }
     weatherRequest();
-    searchField.value = "";
+    searchField.value = '';
     // weatherContainer.style.display = "flex";
     // cityContainer.style.display = "flex";
 }
 
-
 // Wenn mit Enter gesucht wird
-window.addEventListener("keydown", (e) => {
-    if(e.key === 'Enter') {
+window.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
         showWeather();
     }
-})
-
-
+});
 
 // Wetter Request
 function weatherRequest() {
-    if (adress != "") {
+    if (adress != '') {
         if (isNaN(adress)) {
-            apiLink = `https://api.openweathermap.org/data/2.5/weather?q=${adress}&appid=253ebb991ba415df809a9978b3885e7e&lang=de&units=metric`
+            apiLink = `https://api.openweathermap.org/data/2.5/weather?q=${adress}&appid=253ebb991ba415df809a9978b3885e7e&lang=de&units=metric`;
         } else {
-            apiLink = `https://api.openweathermap.org/data/2.5/weather?zip=${adress},de&APPID=253ebb991ba415df809a9978b3885e7e&lang=de&units=metric`
+            apiLink = `https://api.openweathermap.org/data/2.5/weather?zip=${adress},de&APPID=253ebb991ba415df809a9978b3885e7e&lang=de&units=metric`;
         }
         fetch(apiLink)
-            .then(response => response.json())
-            .then(data => {
-                weatherContainer.style.display = "flex"
-                cityContainer.style.display = "flex"
+            .then((response) => response.json())
+            .then((data) => {
+                weatherContainer.style.display = 'flex';
+                cityContainer.style.display = 'flex';
                 isCurrentLocation = false;
-                document.getElementById("errorLeiste").hidden = true
-                document.getElementById("btnAddCity").hidden = false
-                adress = data.name
-                document.getElementById("outpOrt").innerHTML = adress
-                temp = parseInt(data.main.temp)
-                document.getElementById("outpTemp").innerHTML = `${temp}°C`
-                iconVal = data.weather[0].icon
-                iconVal = iconVal.slice(-1)
-                const imgSrc = `https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/widgets/${data.weather[0].icon}.png`
-                document.getElementById("weatherimg").src = imgSrc
-                document.getElementById("outpWeather").innerHTML = data.weather[0].description
-                document.getElementById("outMinMax").innerHTML = `Min: ${parseInt(data.main.temp_min)}°C | Max: ${parseInt(data.main.temp_max)}°C | Gefühlt: ${parseInt(data.main.feels_like)}°C`
-                const pressure = data.main.pressure
-                const windgesch = data.wind.speed * 3.6
-                document.getElementById("outpWind").innerHTML = `Wind: ${windgesch.toFixed(0)} Km/h | Luftdruck: ${pressure} hPa`
-                // Schauen, wie man die Standort spezifische Zeit anzeigen kann. Solange ausgeblendet
-                // document.getElementById("outSun").innerHTML = `Sonnenaufgang: ${intTimeConvert(data.sys.sunrise)} | Sonnenuntergang: ${intTimeConvert(data.sys.sunset)}`
-                const lat = data.coord.lat
-                const lon = data.coord.lon
-                timezone = data.timezone
-                requestWeatherForecast(lat, lon)
+                document.getElementById('errorLeiste').hidden = true;
+                document.getElementById('btnAddCity').hidden = false;
+                adress = data.name;
+                document.getElementById('outpOrt').innerHTML = adress;
+                temp = parseInt(data.main.temp);
+                document.getElementById('outpTemp').innerHTML = `${temp}°C`;
+                iconVal = data.weather[0].icon;
+                iconVal = iconVal.slice(-1);
+                const imgSrc = `https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/widgets/${data.weather[0].icon}.png`;
+                document.getElementById('weatherimg').src = imgSrc;
+                document.getElementById('outpWeather').innerHTML =
+                    data.weather[0].description;
+                document.getElementById(
+                    'outMinMax',
+                ).innerHTML = `Min: ${parseInt(
+                    data.main.temp_min,
+                )}°C | Max: ${parseInt(
+                    data.main.temp_max,
+                )}°C | Gefühlt: ${parseInt(data.main.feels_like)}°C`;
+                const pressure = data.main.pressure;
+                const windgesch = data.wind.speed * 3.6;
+                document.getElementById(
+                    'outpWind',
+                ).innerHTML = `Wind: ${windgesch.toFixed(
+                    0,
+                )} Km/h | Luftdruck: ${pressure} hPa`;
+                const lat = data.coord.lat;
+                const lon = data.coord.lon;
+                timezone = data.timezone;
+                requestWeatherForecast(lat, lon);
             })
-            .catch(error => {
-                // document.getElementById("errorLeiste").hidden = false
-                // document.getElementById("btnAddCity").hidden = true
-                // document.getElementById("outpOrt").innerHTML = ""
-                // document.getElementById("weatherimg").src = ""
-                // document.getElementById("outpTemp").innerHTML = "Ups :("
-                // document.getElementById("outpWeather").innerHTML = ""
-                // document.getElementById("outSun").innerHTML = ""
-                // document.getElementById("outpWind").innerHTML = ""
-                // document.getElementById("outMinMax").innerHTML = ""
-                weatherContainer.style.display = "none";
-                if(localStorage.getItem('stored_CityList') === null ) {
-                    cityContainer.style.display = "none";
+            .catch((error) => {
+                weatherContainer.style.display = 'none';
+                if (localStorage.getItem('stored_CityList') === null) {
+                    cityContainer.style.display = 'none';
                 }
-                createNotification('Der Ort konnte nicht gefunden werden :(','alert');
-                adress = ""
-                let index
+                createNotification(
+                    'Der Ort konnte nicht gefunden werden :(',
+                    'alert',
+                );
+                adress = '';
+                let index;
                 for (let i = 0; i <= 5; i++) {
-                    index = `forecastBlock${i}`
-                    document.getElementById(index).hidden = true
+                    index = `forecastBlock${i}`;
+                    document.getElementById(index).hidden = true;
                 }
                 for (let i = 0; i <= 23; i++) {
-                    index = `hourForecastBlock${i}`
-                    document.getElementById(index).hidden = true
+                    index = `hourForecastBlock${i}`;
+                    document.getElementById(index).hidden = true;
                 }
-                // console.log(`Error: ${error}`)
-            })
+            });
     }
 }
 
@@ -111,76 +111,97 @@ function weatherRequest() {
 function requestWeatherForecast(lat, lon) {
     apiLink = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=minutely&appid=253ebb991ba415df809a9978b3885e7e&lang=de&units=metric`;
     fetch(apiLink)
-        .then(response => response.json())
-        .then(data => {
-            console.log(data)
-            let tempMin
-            let tempMax
-            let temp
-            let weatherIcon
-            let imgSrc
-            let index
-            let hour
+        .then((response) => response.json())
+        .then((data) => {
+            // console.log(data);
+            let tempMin;
+            let tempMax;
+            let temp;
+            let weatherIcon;
+            let imgSrc;
+            let index;
+            let hour;
             let weekDay;
 
             // Forecast Stunden Felder einblenden
             for (let i = 0; i <= 23; i++) {
-                index = `hourForecastBlock${i}`
-                document.getElementById(index).hidden = false
-                temp = parseInt(data.hourly[i].temp)
-                weatherIcon = data.hourly[i].weather[0].icon
-                hour = splitVal((intTimeConvert(data.hourly[i].dt + timezone) + ''),' ', 4)
-                hour = splitVal(hour, ':', 0)
-                index = `hourOutp${i}`
-                document.getElementById(index).innerHTML = `${hour} Uhr`
-                index = `hourOutpPlus${i}`
-                document.getElementById(index).innerHTML = `${temp}°C`
-                imgSrc = `https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/widgets/${weatherIcon}.png`
-                index = `hourForecastImg${i}`
-                document.getElementById(index).src = imgSrc
+                index = `hourForecastBlock${i}`;
+                document.getElementById(index).hidden = false;
+                temp = parseInt(data.hourly[i].temp);
+                weatherIcon = data.hourly[i].weather[0].icon;
+                hour = splitVal(
+                    intTimeConvert(data.hourly[i].dt + timezone) + '',
+                    ' ',
+                    4,
+                );
+                hour = splitVal(hour, ':', 0);
+                index = `hourOutp${i}`;
+                document.getElementById(index).innerHTML = `${hour} Uhr`;
+                index = `hourOutpPlus${i}`;
+                document.getElementById(index).innerHTML = `${temp}°C`;
+                imgSrc = `https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/widgets/${weatherIcon}.png`;
+                index = `hourForecastImg${i}`;
+                document.getElementById(index).src = imgSrc;
             }
 
             // Forecast Tage Felder mit Inhalt befüllen
             for (let i = 0; i <= 4; i++) {
-                index = `forecastBlock${i}`
-                document.getElementById(index).hidden = false
-                tempMin = parseInt(data.daily[i + 1].temp.min)
-                tempMax = parseInt(data.daily[i + 1].temp.max)
-                weatherIcon = data.daily[i + 1].weather[0].icon
-                weekDay = splitVal((intTimeConvert(data.daily[i + 1].dt) + ''),' ', 0)
-                weekDay = getDate(weekDay)
-                index = `outpDay${i}`
-                document.getElementById(index).innerHTML = weekDay
-                index = `outpDayPlus${i}`
-                document.getElementById(index).innerHTML = `${tempMin}°C / ${tempMax}°C`
-                imgSrc = `https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/widgets/${weatherIcon}.png`
-                index = `foreCastImg${i}`
-                document.getElementById(index).src = imgSrc
+                index = `forecastBlock${i}`;
+                document.getElementById(index).hidden = false;
+                tempMin = parseInt(data.daily[i + 1].temp.min);
+                tempMax = parseInt(data.daily[i + 1].temp.max);
+                weatherIcon = data.daily[i + 1].weather[0].icon;
+                weekDay = splitVal(
+                    intTimeConvert(data.daily[i + 1].dt) + '',
+                    ' ',
+                    0,
+                );
+                weekDay = getDate(weekDay);
+                index = `outpDay${i}`;
+                document.getElementById(index).innerHTML = weekDay;
+                index = `outpDayPlus${i}`;
+                document.getElementById(
+                    index,
+                ).innerHTML = `${tempMin}°C / ${tempMax}°C`;
+                imgSrc = `https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/widgets/${weatherIcon}.png`;
+                index = `foreCastImg${i}`;
+                document.getElementById(index).src = imgSrc;
             }
-            index = `forecastBlock${5}`
-            document.getElementById(index).hidden = false
+            index = `forecastBlock${5}`;
+            document.getElementById(index).hidden = false;
 
             // Bei Geolocation
-            if(isCurrentLocation === true) {
-                temp = parseInt(data.current.temp)
-                document.getElementById("outpTemp").innerHTML = `${temp}°C`
-                iconVal = data.current.weather[0].icon
-                iconVal = iconVal.slice(-1)
-                console.log(`Datum:${intTimeConvert(data.daily[0].dt)}`)
-                const imgSrc = `https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/widgets/${data.current.weather[0].icon}.png`
-                document.getElementById("weatherimg").src = imgSrc
-                document.getElementById("outpWeather").innerHTML = data.current.weather[0].description
-                document.getElementById("outMinMax").innerHTML = `Min: ${parseInt(data.daily[0].temp.min)}°C | Max: ${parseInt(data.daily[0].temp.max)}°C | Gefühlt: ${parseInt(data.current.feels_like)}°C`
-                const pressure = data.current.pressure
-                const windgesch = data.current.wind_speed * 3.6
-                document.getElementById("outpWind").innerHTML = `Wind: ${windgesch.toFixed(0)} Km/h | Luftdruck: ${pressure} hPa`
+            if (isCurrentLocation === true) {
+                temp = parseInt(data.current.temp);
+                document.getElementById('outpTemp').innerHTML = `${temp}°C`;
+                iconVal = data.current.weather[0].icon;
+                iconVal = iconVal.slice(-1);
+                // console.log(`Datum:${intTimeConvert(data.daily[0].dt)}`);
+                const imgSrc = `https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/widgets/${data.current.weather[0].icon}.png`;
+                document.getElementById('weatherimg').src = imgSrc;
+                document.getElementById('outpWeather').innerHTML =
+                    data.current.weather[0].description;
+                document.getElementById(
+                    'outMinMax',
+                ).innerHTML = `Min: ${parseInt(
+                    data.daily[0].temp.min,
+                )}°C | Max: ${parseInt(
+                    data.daily[0].temp.max,
+                )}°C | Gefühlt: ${parseInt(data.current.feels_like)}°C`;
+                const pressure = data.current.pressure;
+                const windgesch = data.current.wind_speed * 3.6;
+                document.getElementById(
+                    'outpWind',
+                ).innerHTML = `Wind: ${windgesch.toFixed(
+                    0,
+                )} Km/h | Luftdruck: ${pressure} hPa`;
             }
 
-            ausw()
+            ausw();
         })
-        .catch(error => {
-            console.log(`Forecast Err: ${error}`)
-        })
+        .catch((error) => {
+            // console.log(`Forecast Err: ${error}`);
+        });
 }
 
 // Wandelt die Zeit um
@@ -193,64 +214,68 @@ function intTimeConvert(num) {
 function ausw() {
     // Temperatur
     if (temp > 30) {
-        document.getElementById("outpTemp").style.color = 'orange';
+        document.getElementById('outpTemp').style.color = 'orange';
     } else if (temp > 10) {
-        document.getElementById("outpTemp").style.color = 'white';
+        document.getElementById('outpTemp').style.color = 'white';
     } else {
-        document.getElementById("outpTemp").style.color = 'lightblue';
+        document.getElementById('outpTemp').style.color = 'lightblue';
     }
     // Tag / Nacht
-    if(iconVal === 'n') {
-        document.getElementById("weatherCard").style.backgroundColor = 'rgba(0,0,100,0.600';
-    }else{
-        document.getElementById("weatherCard").style.backgroundColor = 'rgba(29, 28, 28, 0.247)';
+    if (iconVal === 'n') {
+        document.getElementById('weatherCard').style.backgroundColor =
+            'rgba(0,0,100,0.600';
+    } else {
+        document.getElementById('weatherCard').style.backgroundColor =
+            'rgba(29, 28, 28, 0.247)';
     }
-
 }
 
 // Lädt die zuerst abgespeicherte Stadt
 function loadData() {
     if (localStorage.getItem('stored_CityList') != null) {
-        cityList = JSON.parse(localStorage.getItem("stored_CityList"));
+        cityList = JSON.parse(localStorage.getItem('stored_CityList'));
         adress = cityList[0];
         weatherRequest();
         showSavedCitys();
         currentLocationButton.hidden = false;
-    }else{
+    } else {
         // Keine Einträge vorhanden
-        weatherContainer.style.display = "none";
-        cityContainer.style.display = "none";
+        weatherContainer.style.display = 'none';
+        cityContainer.style.display = 'none';
     }
 }
 
 // Zeigt abgespeicherte Städte an
 function showSavedCitys() {
-    document.getElementById("outCitys").innerHTML = "";
+    document.getElementById('outCitys').innerHTML = '';
     for (let i = 0; i < cityList.length; i++) {
         const cty = cityList[i];
-        const btn = document.createElement("button");
+        const btn = document.createElement('button');
         btn.appendChild(document.createTextNode(cty));
         btn.onclick = getCity;
-        let ul = document.getElementById("outCitys");
+        let ul = document.getElementById('outCitys');
         ul.appendChild(btn);
     }
 }
 
 // Speichert eine Stadt in den localStorage
 function saveCity() {
-    localStorage.setItem("stored_CityList", JSON.stringify(cityList));
+    localStorage.setItem('stored_CityList', JSON.stringify(cityList));
 }
 
 // Fügt die Stadt in die Liste der Städte hinzu, nach Überprüfung, ob diese bereits vorhanden ist
 function addCity() {
-    if(adress != "") {
+    if (adress != '') {
         if (cityList.includes(adress)) {
-            createNotification('Den Ort hast du bereits abgespeichert','warning');
+            createNotification(
+                `"${adress}" hast du bereits abgespeichert!`,
+                'warning',
+            );
         } else {
-            if (adress != "") {
+            if (adress != '') {
                 cityList.push(adress);
                 saveCity();
-                createNotification(`${adress} wurde gespeichert`,'success')
+                createNotification(`${adress} wurde gespeichert`, 'success');
                 showSavedCitys();
             }
         }
@@ -259,21 +284,22 @@ function addCity() {
 
 // Ausgewählte Stadt anzeigen
 function getCity() {
-    weatherContainer.style.display = "flex";
+    weatherContainer.style.display = 'flex';
     window.scrollTo(0, 0);
     adress = this.innerText;
     weatherRequest();
 }
 
-
 // Lösche die Stadt, falls in der Liste vorhanden
 function delCity() {
-    if(adress != "") {
+    if (adress != '') {
         if (cityList.includes(adress)) {
-            const confirm = window.confirm(`Möchtest du die Stadt "${adress}" wirklich aus Deiner Liste entfernen?`);
-            if(confirm) {
-                for(let i = 0; i < cityList.length; i++) {
-                    if(adress === cityList[i]) {
+            const confirm = window.confirm(
+                `Möchtest du die Stadt "${adress}" wirklich aus Deiner Liste entfernen?`,
+            );
+            if (confirm) {
+                for (let i = 0; i < cityList.length; i++) {
+                    if (adress === cityList[i]) {
                         cityList.splice(i, 1);
                         saveCity();
                         location.reload();
@@ -284,15 +310,14 @@ function delCity() {
     }
 }
 
-
 function getDate(weekDay) {
     let day = '';
     switch (weekDay) {
         case 'Sun':
-            day = 'So'
+            day = 'So';
             break;
         case 'Mon':
-            day = 'Mo'
+            day = 'Mo';
             break;
         case 'Tue':
             day = 'Di';
@@ -316,20 +341,18 @@ function getDate(weekDay) {
     return day;
 }
 
-
 function splitVal(val, marker, pos) {
     const elem = val.split(marker);
     const retVal = elem[pos];
     return retVal;
 }
 
-
 // Geolocation
 function getCurrentLocation() {
-    if(navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(showPosition)
-    }else{
-        createNotification('Geolocation ist nicht verfügbar','alert');
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition);
+    } else {
+        createNotification('Geolocation ist nicht verfügbar', 'alert');
         isCurrentLocation = false;
     }
 }
@@ -338,11 +361,9 @@ function showPosition(position) {
     const lat = position.coords.latitude.toFixed(1);
     const lon = position.coords.longitude.toFixed(1);
     isCurrentLocation = true;
-    //console.log(`Lat: ${lat} / Lon: ${lon}`)
-    document.getElementById("outpOrt").innerHTML = "Mein Standort";
+    document.getElementById('outpOrt').innerHTML = 'Mein Standort';
     requestWeatherForecast(lat, lon);
 }
-
 
 // Toast Notification
 function createNotification(message, messageType) {
@@ -359,5 +380,15 @@ function createNotification(message, messageType) {
     // Nachricht nach festgelegter Zeit wieder entfernen
     setTimeout(() => {
         notifi.remove();
-    }, 5000);
+    }, 2000);
+}
+
+// Stadt markieren, diese wird bei Neustart zuerst geladen
+function startCity() {
+    const cityName = adress;
+    const arrIndex = cityList.indexOf(adress);
+    cityList.splice(arrIndex, 1);
+    cityList.splice(0, 0, cityName);
+    createNotification(`"${cityName}" ist deine neue Startstadt`, 'success');
+    saveCity();
 }
