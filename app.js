@@ -387,8 +387,13 @@ function createNotification(message, messageType) {
 function startCity() {
     const cityName = adress;
     const arrIndex = cityList.indexOf(adress);
-    cityList.splice(arrIndex, 1);
-    cityList.splice(0, 0, cityName);
+    if(arrIndex === -1) {
+        cityList.splice(0, 0, cityName);
+    }else{
+        cityList.splice(arrIndex, 1);
+        cityList.splice(0, 0, cityName);
+    }
     createNotification(`"${cityName}" ist deine neue Startstadt`, 'success');
     saveCity();
+    showSavedCitys();
 }
