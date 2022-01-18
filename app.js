@@ -393,7 +393,7 @@ function startCity() {
         cityList.splice(arrIndex, 1);
         cityList.splice(0, 0, cityName);
     }
-    createNotification(`"${cityName}" ist deine neue Startstadt`, 'success');
+    createNotification(`"${cityName}" wird nun immer beim Start angezeigt`, 'success');
     saveCity();
     showSavedCitys();
 }
