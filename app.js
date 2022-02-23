@@ -1,13 +1,14 @@
-const testLink =
-    'https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&exclude=hourly,daily&appid=253ebb991ba415df809a9978b3885e7e&lang=de&units=metric';
+const ak = '142ebb880ba304df7*8a8867b2774e6e'
 let temp = 0;
 let cityCode = '';
 let apiLink = '';
 let cityList = [];
+let ky = '';
 let adress = '';
 let timezone;
 let iconVal;
 let isCurrentLocation = false;
+
 
 // Button etc.
 const currentLocationButton = document.getElementById('btnCurrLoc');
@@ -18,6 +19,7 @@ const searchField = document.getElementById('inpCityname');
 const toasts = document.getElementById('toasts');
 
 // Load
+ky = dcrK(ak);
 window.onload = loadData();
 
 // Eingegebene Stadt suchen
@@ -41,11 +43,12 @@ window.addEventListener('keydown', (e) => {
 
 // Wetter Request
 function weatherRequest() {
+    console.log(dcrK(ak));
     if (adress != '') {
         if (isNaN(adress)) {
-            apiLink = `https://api.openweathermap.org/data/2.5/weather?q=${adress}&appid=253ebb991ba415df809a9978b3885e7e&lang=de&units=metric`;
+            apiLink = `https://api.openweathermap.org/data/2.5/weather?q=${adress}&appid=${ky}&lang=de&units=metric`;
         } else {
-            apiLink = `https://api.openweathermap.org/data/2.5/weather?zip=${adress},de&APPID=253ebb991ba415df809a9978b3885e7e&lang=de&units=metric`;
+            apiLink = `https://api.openweathermap.org/data/2.5/weather?zip=${adress},de&APPID=${ky}&lang=de&units=metric`;
         }
         fetch(apiLink)
             .then((response) => response.json())
@@ -107,9 +110,29 @@ function weatherRequest() {
     }
 }
 
+
+function dcrK(val) {
+    let newVal = '';
+    for (let i = 0; i < val.length; i++) {
+        if (parseInt(val.charAt(i)) !== undefined && val.charAt(i) <= 9) {
+            let newValEl = parseInt(val.charAt(i)) + 1;
+            newVal += newValEl;
+        } else {
+            let strVal = '';
+            if (val.charAt(i) === '*') {
+                strVal = 0;
+            } else {
+                strVal = val.charAt(i);
+            }
+            newVal += strVal;
+        }
+    }
+    return newVal
+}
+
 // Forecast
 function requestWeatherForecast(lat, lon) {
-    apiLink = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=minutely&appid=253ebb991ba415df809a9978b3885e7e&lang=de&units=metric`;
+    apiLink = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=minutely&appid=${ky}&lang=de&units=metric`;
     fetch(apiLink)
         .then((response) => response.json())
         .then((data) => {
