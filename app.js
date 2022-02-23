@@ -43,7 +43,6 @@ window.addEventListener('keydown', (e) => {
 
 // Wetter Request
 function weatherRequest() {
-    console.log(dcrK(ak));
     if (adress != '') {
         if (isNaN(adress)) {
             apiLink = `https://api.openweathermap.org/data/2.5/weather?q=${adress}&appid=${ky}&lang=de&units=metric`;
