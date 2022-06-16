@@ -10,6 +10,7 @@ let iconVal;
 let isCurrentLocation = false;
 
 
+
 // Button etc.
 const currentLocationButton = document.getElementById('btnCurrLoc');
 const weatherContainer = document.getElementById('weatherCard');
@@ -52,7 +53,6 @@ function weatherRequest() {
         fetch(apiLink)
             .then((response) => response.json())
             .then((data) => {
-                console.log(data.main.humidity);
                 weatherContainer.style.display = 'flex';
                 cityContainer.style.display = 'flex';
                 isCurrentLocation = false;
@@ -68,13 +68,6 @@ function weatherRequest() {
                 document.getElementById('weatherimg').src = imgSrc;
                 document.getElementById('outpWeather').innerHTML =
                     data.weather[0].description;
-                document.getElementById(
-                    'outMinMax',
-                ).innerHTML = `Min: ${parseInt(
-                    data.main.temp_min,
-                )}°C | Max: ${parseInt(
-                    data.main.temp_max,
-                )}°C | Gefühlt: ${parseInt(data.main.feels_like)}°C`;
                 // const pressure = data.main.pressure;
                 const windgesch = data.wind.speed * 3.6;
                 const humidity = data.main.humidity;
@@ -146,6 +139,18 @@ function requestWeatherForecast(lat, lon) {
             let index;
             let hour;
             let weekDay;
+            let timezoneOffset = data.timezone_offset;
+
+            // Von heute Min und Max Temp eintragen
+            tempMin = parseInt(data.daily[0].temp.min);
+            tempMax = parseInt(data.daily[0].temp.max);
+            let tempFeelsLike = parseInt(data.current.feels_like);
+            document.getElementById('outMinMax').innerHTML = `Min: ${tempMin}°C | Max: ${tempMax}°C | Gefühlt:${tempFeelsLike} °C`;
+
+            // UV Index
+            let uvIndex = data.current.uvi;
+            document.getElementById("outUvIndx").innerHTML = `UV-Index: ${uvIndex} - ${inerpreteUvIndex(uvIndex)}`;
+            console.log(data);
 
             // Forecast Stunden Felder einblenden
             for (let i = 0; i <= 23; i++) {
@@ -228,21 +233,51 @@ function requestWeatherForecast(lat, lon) {
         });
 }
 
+
+// UV Index Interpretation
+function inerpreteUvIndex(uvindex) {
+    let instruction = '';
+    const lbl_UvIndex = document.getElementById("outUvIndx");
+    if(uvindex > 11) {
+        instruction = 'extrem - Sonne meiden';
+        lbl_UvIndex.style.color = 'red';
+    }else if(uvindex >= 8 && uvindex < 11) {
+        instruction = 'Sehr hoch - Schutz absolut notwendig';
+        lbl_UvIndex.style.color = 'red';
+    }else if(uvindex >= 6 && uvindex < 8) {
+        instruction = 'hoch - Schutz erforderlich';
+        lbl_UvIndex.style.color = 'orange';
+    }else if(uvindex >= 3 && uvindex < 6) {
+        instruction = 'mittel - Schutz erforderlich';
+        lbl_UvIndex.style.color = 'yellow';
+    }else if(uvindex >= 0 && uvindex < 3) {
+        instruction = 'niedrig - Kein Schutz erforderlich';
+        lbl_UvIndex.style.color = 'white';
+    }
+
+    return instruction;
+}
+
 // Wandelt die Zeit um
 function intTimeConvert(num) {
     let dte = new Date(num * 1000);
+    console.log(dte);
     return dte;
 }
 
 // Auswertung z.B farbliche Änderung bei Temperaturen und Tag / Nacht anzeige
 function ausw() {
     // Temperatur
-    if (temp > 30) {
+    if (temp >= 32) {
+        document.getElementById('outpTemp').style.color = 'red';
+    }else if (temp >= 30) {
         document.getElementById('outpTemp').style.color = 'orange';
+    }else if (temp >= 25) {
+        document.getElementById('outpTemp').style.color = 'yellow';
     } else if (temp > 10) {
         document.getElementById('outpTemp').style.color = 'white';
     } else {
-        document.getElementById('outpTemp').style.color = 'lightblue';
+        document.getElementById('outpTemp').style.color = 'aqua';
     }
     // Tag / Nacht
     if (iconVal === 'n') {

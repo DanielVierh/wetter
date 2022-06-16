@@ -21,6 +21,7 @@ body {
     box-shadow: 3px 3px 15px black;
     border: 1px solid rgba(255, 255, 255, 0.308);
     transition: 1.5s all;
+
 }
 
 @supports (
@@ -109,6 +110,14 @@ button {
     margin: 0px;
     padding: 0px;
     font-size: 1.2rem;
+    text-shadow: 3px 3px 15px black;
+}
+
+.outputLabel2 {
+    margin: 0px;
+    padding: 0px;
+    font-size: 0.8rem;
+    font-weight: bold;
     text-shadow: 3px 3px 15px black;
 }
 
