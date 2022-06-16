@@ -52,6 +52,7 @@ function weatherRequest() {
         fetch(apiLink)
             .then((response) => response.json())
             .then((data) => {
+                console.log(data.main.humidity);
                 weatherContainer.style.display = 'flex';
                 cityContainer.style.display = 'flex';
                 isCurrentLocation = false;
@@ -74,13 +75,14 @@ function weatherRequest() {
                 )}°C | Max: ${parseInt(
                     data.main.temp_max,
                 )}°C | Gefühlt: ${parseInt(data.main.feels_like)}°C`;
-                const pressure = data.main.pressure;
+                // const pressure = data.main.pressure;
                 const windgesch = data.wind.speed * 3.6;
+                const humidity = data.main.humidity;
                 document.getElementById(
                     'outpWind',
                 ).innerHTML = `Wind: ${windgesch.toFixed(
                     0,
-                )} Km/h | Luftdruck: ${pressure} hPa`;
+                )} Km/h | Feuchtigkeit: ${humidity}%`;
                 const lat = data.coord.lat;
                 const lon = data.coord.lon;
                 timezone = data.timezone;
