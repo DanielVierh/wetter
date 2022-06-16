@@ -8,6 +8,8 @@ let adress = '';
 let timezone;
 let iconVal;
 let isCurrentLocation = false;
+let uvIndexisCritical = false;
+let uvIndexIsCriticalUntil= '';
 
 
 
@@ -139,7 +141,9 @@ function requestWeatherForecast(lat, lon) {
             let index;
             let hour;
             let weekDay;
-            let timezoneOffset = data.timezone_offset;
+            // let timezoneOffset = data.timezone_offset;
+            let uvIndex = data.current.uvi;
+            let nextUVIndex = 0;
 
             // Von heute Min und Max Temp eintragen
             tempMin = parseInt(data.daily[0].temp.min);
@@ -147,8 +151,7 @@ function requestWeatherForecast(lat, lon) {
             let tempFeelsLike = parseInt(data.current.feels_like);
             document.getElementById('outMinMax').innerHTML = `Min: ${tempMin}°C | Max: ${tempMax}°C | Gefühlt:${tempFeelsLike} °C`;
 
-            // UV Index
-            let uvIndex = data.current.uvi;
+            // Current UV Index
             document.getElementById("outUvIndx").innerHTML = `UV-Index: ${uvIndex} - ${inerpreteUvIndex(uvIndex)}`;
             console.log(data);
 
@@ -164,6 +167,14 @@ function requestWeatherForecast(lat, lon) {
                     4,
                 );
                 hour = splitVal(hour, ':', 0);
+
+                nextUVIndex =data.hourly[i].uvi;
+                if(uvIndexisCritical === true && nextUVIndex < 3) {
+                    uvIndexisCritical = false;
+                    uvIndexIsCriticalUntil = `${hour} Uhr`;
+                    document.getElementById("outUvIndx").innerHTML = document.getElementById("outUvIndx").innerHTML + ` bis ${uvIndexIsCriticalUntil}`;
+                }
+
                 index = `hourOutp${i}`;
                 document.getElementById(index).innerHTML = `${hour} Uhr`;
                 index = `hourOutpPlus${i}`;
@@ -240,28 +251,31 @@ function inerpreteUvIndex(uvindex) {
     const lbl_UvIndex = document.getElementById("outUvIndx");
     if(uvindex > 11) {
         instruction = 'extrem - Sonne meiden';
+        uvIndexisCritical = true;
         lbl_UvIndex.style.color = 'red';
     }else if(uvindex >= 8 && uvindex < 11) {
         instruction = 'Sehr hoch - Schutz absolut notwendig';
+        uvIndexisCritical = true;
         lbl_UvIndex.style.color = 'red';
     }else if(uvindex >= 6 && uvindex < 8) {
         instruction = 'hoch - Schutz erforderlich';
+        uvIndexisCritical = true;
         lbl_UvIndex.style.color = 'orange';
     }else if(uvindex >= 3 && uvindex < 6) {
         instruction = 'mittel - Schutz erforderlich';
+        uvIndexisCritical = true;
         lbl_UvIndex.style.color = 'yellow';
     }else if(uvindex >= 0 && uvindex < 3) {
         instruction = 'niedrig - Kein Schutz erforderlich';
         lbl_UvIndex.style.color = 'white';
     }
-
     return instruction;
 }
 
 // Wandelt die Zeit um
 function intTimeConvert(num) {
     let dte = new Date(num * 1000);
-    console.log(dte);
+    // console.log(dte);
     return dte;
 }
 
