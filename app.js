@@ -149,7 +149,7 @@ function requestWeatherForecast(lat, lon) {
             tempMin = parseInt(data.daily[0].temp.min);
             tempMax = parseInt(data.daily[0].temp.max);
             let tempFeelsLike = parseInt(data.current.feels_like);
-            document.getElementById('outMinMax').innerHTML = `Min: ${tempMin}°C | Max: ${tempMax}°C | Gefühlt:${tempFeelsLike} °C`;
+            document.getElementById('outMinMax').innerHTML = `Min: ${tempMin}°C | Max: ${tempMax}°C | Gefühlt: ${tempFeelsLike}°C`;
 
             // Current UV Index
             document.getElementById("outUvIndx").innerHTML = `UV-Index: ${uvIndex} - ${inerpreteUvIndex(uvIndex)}`;
