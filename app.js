@@ -195,6 +195,8 @@ function requestWeatherForecast(lat, lon) {
                         lblTempDiff.innerHTML = `Morgen wird es ${tempDiffToday_Tomorrow}°C wärmer`;
                     }else if(tempDiffToday_Tomorrow <= -1){
                         lblTempDiff.innerHTML = `Morgen kühlt es um ${tempDiffToday_Tomorrow}°C ab`;
+                    }else {
+                        lblTempDiff.innerHTML = 'Die Temperatur bleibt morgen stabil';
                     }
                 }
 
@@ -294,15 +296,15 @@ function intTimeConvert(num) {
 function ausw() {
     // Temperatur
     if (temp >= 32) {
-        document.getElementById('outpTemp').style.color = 'red';
+        document.getElementById('outpTemp').style.textShadow = '6px 0px 20px red';
     }else if (temp >= 30) {
-        document.getElementById('outpTemp').style.color = 'orange';
+        document.getElementById('outpTemp').style.textShadow = '6px 0px 20px orange';
     }else if (temp >= 25) {
-        document.getElementById('outpTemp').style.color = 'yellow';
+        document.getElementById('outpTemp').style.textShadow = '6px 0px 20px yellow';
     } else if (temp > 10) {
-        document.getElementById('outpTemp').style.color = 'white';
+        document.getElementById('outpTemp').style.textShadow = '0px 0px 4px white';
     } else {
-        document.getElementById('outpTemp').style.color = 'aqua';
+        document.getElementById('outpTemp').style.textShadow = '6px 0px 20px aqua';
     }
     // Tag / Nacht
     if (iconVal === 'n') {
