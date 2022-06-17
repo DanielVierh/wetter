@@ -187,6 +187,17 @@ function requestWeatherForecast(lat, lon) {
             // Forecast Tage Felder mit Inhalt befüllen
             for (let i = 0; i <= 4; i++) {
                 index = `forecastBlock${i}`;
+                // Checkt, ob es morgen wärmer oder kühler wird
+                if(i === 0) {
+                    const tempDiffToday_Tomorrow = (data.daily[i + 1].temp.max - data.daily[i].temp.max).toFixed(2);
+                    const lblTempDiff = document.getElementById("outpTempDiff");
+                    if (tempDiffToday_Tomorrow >= 1) {
+                        lblTempDiff.innerHTML = `Morgen wird es ${tempDiffToday_Tomorrow}°C wärmer`;
+                    }else if(tempDiffToday_Tomorrow <= -1){
+                        lblTempDiff.innerHTML = `Morgen kühlt es um ${tempDiffToday_Tomorrow}°C ab`;
+                    }
+                }
+
                 document.getElementById(index).hidden = false;
                 tempMin = parseInt(data.daily[i + 1].temp.min);
                 tempMax = parseInt(data.daily[i + 1].temp.max);
