@@ -73,11 +73,8 @@ function weatherRequest() {
                 // const pressure = data.main.pressure;
                 const windgesch = data.wind.speed * 3.6;
                 const humidity = data.main.humidity;
-                document.getElementById(
-                    'outpWind',
-                ).innerHTML = `Wind: ${windgesch.toFixed(
-                    0,
-                )} Km/h | Feuchtigkeit: ${humidity}%`;
+                document.getElementById('outpWind').innerHTML = `${windgesch.toFixed(0)} Km/h`;
+                document.getElementById("outpHumidity").innerHTML = `${humidity}%`
                 const lat = data.coord.lat;
                 const lon = data.coord.lon;
                 timezone = data.timezone;
@@ -149,10 +146,13 @@ function requestWeatherForecast(lat, lon) {
             tempMin = parseInt(data.daily[0].temp.min);
             tempMax = parseInt(data.daily[0].temp.max);
             let tempFeelsLike = parseInt(data.current.feels_like);
-            document.getElementById('outMinMax').innerHTML = `Min: ${tempMin}°C | Max: ${tempMax}°C | Gefühlt: ${tempFeelsLike}°C`;
+            document.getElementById("outp_MinTemp").innerHTML = `Min: ${tempMin}°C`;
+            document.getElementById("outp_MaxTemp").innerHTML = `Max: ${tempMax}°C`;
+            document.getElementById("outp_feltTemp").innerHTML = `Gefühlt: ${tempFeelsLike}°C`;
+            // document.getElementById('outMinMax').innerHTML = `Min: ${tempMin}°C | Max: ${tempMax}°C | Gefühlt: ${tempFeelsLike}°C`;
 
             // Current UV Index
-            document.getElementById("outUvIndx").innerHTML = `UV-Index: ${uvIndex} - ${inerpreteUvIndex(uvIndex)}`;
+            document.getElementById("outUvIndx").innerHTML = `${uvIndex} - ${inerpreteUvIndex(uvIndex)}`;
             console.log(data);
 
             // Forecast Stunden Felder einblenden
@@ -263,23 +263,23 @@ function inerpreteUvIndex(uvindex) {
     let instruction = '';
     const lbl_UvIndex = document.getElementById("outUvIndx");
     if(uvindex > 11) {
-        instruction = 'extrem - Sonne meiden';
+        instruction = 'EXTREM - Sonne meiden';
         uvIndexisCritical = true;
         lbl_UvIndex.style.color = 'red';
     }else if(uvindex >= 8 && uvindex < 11) {
-        instruction = 'Sehr hoch - Schutz absolut notwendig';
+        instruction = 'SEHR HOCH - Schutz absolut notwendig';
         uvIndexisCritical = true;
         lbl_UvIndex.style.color = 'red';
     }else if(uvindex >= 6 && uvindex < 8) {
-        instruction = 'hoch - Schutz erforderlich';
+        instruction = 'HOCH - Schutz erforderlich';
         uvIndexisCritical = true;
         lbl_UvIndex.style.color = 'orange';
     }else if(uvindex >= 3 && uvindex < 6) {
-        instruction = 'mittel - Schutz erforderlich';
+        instruction = 'MITTEL - Schutz erforderlich';
         uvIndexisCritical = true;
         lbl_UvIndex.style.color = 'yellow';
     }else if(uvindex >= 0 && uvindex < 3) {
-        instruction = 'niedrig - Kein Schutz erforderlich';
+        instruction = 'NIEDRIG - Kein Schutz erforderlich';
         lbl_UvIndex.style.color = 'white';
     }
     return instruction;
@@ -296,15 +296,15 @@ function intTimeConvert(num) {
 function ausw() {
     // Temperatur
     if (temp >= 32) {
-        document.getElementById('outpTemp').style.textShadow = '6px 0px 20px red';
+        document.getElementById('outpTemp').style.textShadow = '0px 0px 15px red';
     }else if (temp >= 30) {
-        document.getElementById('outpTemp').style.textShadow = '6px 0px 20px orange';
+        document.getElementById('outpTemp').style.textShadow = '0px 0px 15px orange';
     }else if (temp >= 25) {
-        document.getElementById('outpTemp').style.textShadow = '6px 0px 20px yellow';
+        document.getElementById('outpTemp').style.textShadow = '0px 0px 15px yellow';
     } else if (temp > 10) {
         document.getElementById('outpTemp').style.textShadow = '0px 0px 4px white';
     } else {
-        document.getElementById('outpTemp').style.textShadow = '6px 0px 20px aqua';
+        document.getElementById('outpTemp').style.textShadow = '0px 0px 15px aqua';
     }
     // Tag / Nacht
     if (iconVal === 'n') {
