@@ -21,7 +21,6 @@ body {
     box-shadow: 3px 3px 15px black;
     border: 1px solid rgba(255, 255, 255, 0.308);
     transition: 1.5s all;
-
 }
 
 @supports (
@@ -58,11 +57,9 @@ body {
     align-items: center;
     justify-content: center;
     padding: 0;
-
 }
 
-
-.inputField{
+.inputField {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -96,7 +93,6 @@ button {
     color: black;
     font-weight: bold;
 }
-
 
 .smallbutton {
     width: 60px;
@@ -215,7 +211,6 @@ button {
     }
 }
 
-
 /* Toast Notification */
 /* Der Toastcontainer soll unten rechts fixiert werden */
 #toasts {
@@ -255,7 +250,6 @@ button {
     color: black;
 }
 
-
 .containerWrapper {
     width: 100%;
     height: auto;
@@ -270,7 +264,7 @@ button {
 
 .miniContainer {
     width: 36%;
-    height: 160px;
+    height: 180px;
     font-size: 16px;
     background-color: #0b182d56;
     color: white;
@@ -282,4 +276,20 @@ button {
 
 .outputVal {
     font-size: 2em;
+}
+
+#progress_UV {
+    width: 80%;
+    margin: 0 auto;
+}
+
+#progress_Temp {
+    width: 80%;
+    margin: 0 auto;
+}
+
+.descr {
+    font-size: 9px;
+    margin-top: -1px;
+    letter-spacing: 2px;
 }

@@ -11,8 +11,6 @@ let isCurrentLocation = false;
 let uvIndexisCritical = false;
 let uvIndexIsCriticalUntil= '';
 
-
-
 // Button etc.
 const currentLocationButton = document.getElementById('btnCurrLoc');
 const weatherContainer = document.getElementById('weatherCard');
@@ -20,7 +18,7 @@ const cityContainer = document.getElementById('cityContainer');
 const searchButton = document.getElementById('searchButton');
 const searchField = document.getElementById('inpCityname');
 const toasts = document.getElementById('toasts');
-
+const progressValue_Temp = document.getElementById("progress_Temp");
 // Load
 ky = dcrK(ak);
 window.onload = loadData();
@@ -63,6 +61,7 @@ function weatherRequest() {
                 adress = data.name;
                 document.getElementById('outpOrt').innerHTML = adress;
                 temp = parseInt(data.main.temp);
+                progressValue_Temp.value = temp;
                 document.getElementById('outpTemp').innerHTML = `${temp}°C`;
                 iconVal = data.weather[0].icon;
                 iconVal = iconVal.slice(-1);
@@ -143,8 +142,10 @@ function requestWeatherForecast(lat, lon) {
             let nextUVIndex = 0;
 
             // Von heute Min und Max Temp eintragen
+
             tempMin = parseInt(data.daily[0].temp.min);
             tempMax = parseInt(data.daily[0].temp.max);
+            progressValue_Temp.max = tempMax;
             let tempFeelsLike = parseInt(data.current.feels_like);
             document.getElementById("outp_MinTemp").innerHTML = `Min: ${tempMin}°C`;
             document.getElementById("outp_MaxTemp").innerHTML = `Max: ${tempMax}°C`;
@@ -262,6 +263,9 @@ function requestWeatherForecast(lat, lon) {
 function inerpreteUvIndex(uvindex) {
     let instruction = '';
     const lbl_UvIndex = document.getElementById("outUvIndx");
+    const progressValue_UV = document.getElementById("progress_UV");
+    progressValue_UV.value = uvindex;
+
     if(uvindex > 11) {
         instruction = 'EXTREM - Sonne meiden';
         uvIndexisCritical = true;
@@ -294,6 +298,7 @@ function intTimeConvert(num) {
 
 // Auswertung z.B farbliche Änderung bei Temperaturen und Tag / Nacht anzeige
 function ausw() {
+
     // Temperatur
     if (temp >= 32) {
         document.getElementById('outpTemp').style.textShadow = '0px 0px 15px red';
