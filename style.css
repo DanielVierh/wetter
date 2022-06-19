@@ -189,18 +189,6 @@ button {
     font-size: 0.6rem;
 }
 
-.backgroundLayer {
-    min-width: 15rem;
-    min-height: 15rem;
-    border-radius: 50%;
-    background-color: rgba(243, 243, 164, 0.951);
-    position: fixed;
-    top: 30%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: -5;
-}
-
 .cont {
     display: flex;
     justify-content: center;
@@ -268,10 +256,26 @@ button {
 }
 
 
-/* .fa-trash-alt{
-    color: red;
+.containerWrapper {
+    width: 100%;
+    height: auto;
+    background-color: transparent;
+    border: 3px solid rgba(0, 255, 255, 0.432);
+    border-radius: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
 }
 
-.fa-plus{
-    color: lightgreen;
-} */
+.miniContainer {
+    width: 36%;
+    height: 160px;
+    font-size: 16px;
+    background-color: #3b69b4;
+    color: white;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 10px;
+    text-align: center;
+}
