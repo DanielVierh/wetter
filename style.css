@@ -263,14 +263,14 @@ button {
 }
 
 .miniContainer {
-    width: 36%;
+    width: 35%;
     height: 190px;
     font-size: 16px;
     background-color: #0b182d56;
     color: white;
     border-radius: 10px;
     padding: 10px;
-    margin: 10px;
+    margin: 5px;
     text-align: center;
 }
 

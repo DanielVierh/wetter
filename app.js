@@ -145,6 +145,7 @@ function requestWeatherForecast(lat, lon) {
 
             tempMin = parseInt(data.daily[0].temp.min);
             tempMax = parseInt(data.daily[0].temp.max);
+            progressValue_Temp.min = tempMin;
             progressValue_Temp.max = tempMax;
             let tempFeelsLike = parseInt(data.current.feels_like);
             document.getElementById("outp_MinTemp").innerHTML = `Min: ${tempMin}°C`;
