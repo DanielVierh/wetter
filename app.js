@@ -201,10 +201,6 @@ function requestWeatherForecast(lat, lon) {
                     highestTemp = compareHighestTemp;
                 }
             }
-            console.log(`Deepest ${deepestTemp}`);
-            console.log(`Highest ${highestTemp}`);
-
-            
 
             // Forecast Tage Felder mit Inhalt befüllen
             for (let i = 0; i <= 4; i++) {
@@ -223,11 +219,21 @@ function requestWeatherForecast(lat, lon) {
                 }
 
                 document.getElementById(index).hidden = false;
+
                 tempMin = parseInt(data.daily[i + 1].temp.min);
                 tempMax = parseInt(data.daily[i + 1].temp.max);
-        
+
+                 const totalHeight = highestTemp - deepestTemp;
+                 const margin_Bottom = deepestTemp + tempMin;
+                 const margin_Top = highestTemp - tempMax;
+
                 
-                document.getElementById(`tempDay${i}`).style.height = `${tempMax}px`;
+                // erzeugt Balken für Temp
+                const balken = document.getElementById(`tempDay${i}`);
+                balken.style.height = `${tempMax + 15}px`;
+                balken.style.marginBottom = `${margin_Bottom}px` ;
+                balken.style.marginTop = `${margin_Top}px`;
+
                 
                 weatherIcon = data.daily[i + 1].weather[0].icon;
                 weekDay = splitVal(
