@@ -275,7 +275,7 @@ button {
 }
 
 .outputVal {
-    font-size: 2em;
+    font-size: 1em;
 }
 
 #progress_UV {
@@ -311,4 +311,20 @@ button {
     height: 80px;
     border-radius: 4px;
     background-color: orange;
+}
+
+.wind{
+    width: 2px;
+    height: 40px;
+    background-color: white;
+    margin: 50px auto;
+    transform: rotate(90deg);
+}
+.wind::before {
+    content: '';
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: red;
+    margin: 40px -5px;
 }

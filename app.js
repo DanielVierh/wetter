@@ -54,6 +54,8 @@ function weatherRequest() {
         fetch(apiLink)
             .then((response) => response.json())
             .then((data) => {
+                console.log(data);
+                
                 weatherContainer.style.display = 'flex';
                 cityContainer.style.display = 'flex';
                 isCurrentLocation = false;
@@ -71,9 +73,7 @@ function weatherRequest() {
                     data.weather[0].description;
                 // const pressure = data.main.pressure;
                 const windgesch = data.wind.speed * 3.6;
-                const humidity = data.main.humidity;
                 document.getElementById('outpWind').innerHTML = `${windgesch.toFixed(0)} Km/h`;
-                document.getElementById("outpHumidity").innerHTML = `${humidity}%`
                 const lat = data.coord.lat;
                 const lon = data.coord.lon;
                 timezone = data.timezone;
@@ -137,10 +137,20 @@ function requestWeatherForecast(lat, lon) {
             let index;
             let hour;
             let weekDay;
-            // let timezoneOffset = data.timezone_offset;
+            const timezoneOffset = data.timezone_offset;
+
+            
             let uvIndex = data.current.uvi;
             let nextUVIndex = 0;
 
+            // Windgeschwidigkeit und Richtung
+            let windDeg = data.current.wind_deg;
+            document.getElementById("windDirect").style.transform = `rotate(${windDeg}deg)`
+
+            // Taupunkt und Feuchtigkeit
+            const dewPoint = data.current.dew_point;
+            const humidity = data.current.humidity;
+            document.getElementById("outpHumidity").innerHTML = `${humidity}% <br/><br/> <hr> <strong>Taupunkt</strong> <br/> <br/>${dewPoint}°C`
             // Von heute Min und Max Temp eintragen
 
             tempMin = parseInt(data.daily[0].temp.min);
@@ -165,8 +175,11 @@ function requestWeatherForecast(lat, lon) {
                 document.getElementById(index).hidden = false;
                 temp = parseInt(data.hourly[i].temp);
                 weatherIcon = data.hourly[i].weather[0].icon;
+
+
+                //!Zeitzohne mal rausgenommen aka timezone. Damit stimmt die Deutsche aber nicht die restlichen Zeitzohnen 
                 hour = splitVal(
-                    intTimeConvert(data.hourly[i].dt + timezone) + '',
+                    intTimeConvert(data.hourly[i].dt) + '',
                     ' ',
                     4,
                 );
@@ -222,17 +235,17 @@ function requestWeatherForecast(lat, lon) {
 
                 tempMin = parseInt(data.daily[i + 1].temp.min);
                 tempMax = parseInt(data.daily[i + 1].temp.max);
-
-                 const totalHeight = highestTemp - deepestTemp;
+                
                  const margin_Bottom = deepestTemp + tempMin;
                  const margin_Top = highestTemp - tempMax;
 
                 
-                // erzeugt Balken für Temp
+                // erzeugt Balken für Temperatur
                 const balken = document.getElementById(`tempDay${i}`);
-                balken.style.height = `${tempMax + 15}px`;
+                balken.style.height = `${tempMax + 20}px`;
                 balken.style.marginBottom = `${margin_Bottom}px` ;
                 balken.style.marginTop = `${margin_Top}px`;
+
 
                 
                 weatherIcon = data.daily[i + 1].weather[0].icon;
@@ -241,6 +254,7 @@ function requestWeatherForecast(lat, lon) {
                     ' ',
                     0,
                 );
+
                 weekDay = getDate(weekDay);
                 index = `outpDay${i}`;
                 document.getElementById(index).innerHTML = weekDay;
@@ -321,9 +335,8 @@ function inerpreteUvIndex(uvindex) {
 }
 
 // Wandelt die Zeit um
-function intTimeConvert(num) {
+function intTimeConvert(num) {    
     let dte = new Date(num * 1000);
-    // console.log(dte);
     return dte;
 }
 
