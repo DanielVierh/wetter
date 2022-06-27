@@ -169,17 +169,22 @@ function requestWeatherForecast(lat, lon) {
             document.getElementById("outUvIndx").innerHTML = `${uvIndex} - ${inerpreteUvIndex(uvIndex)}`;
             console.log(data);
 
+            let timeMinusSummertime = 0;
             // Forecast Stunden Felder einblenden
             for (let i = 0; i <= 23; i++) {
                 index = `hourForecastBlock${i}`;
                 document.getElementById(index).hidden = false;
                 temp = parseInt(data.hourly[i].temp);
                 weatherIcon = data.hourly[i].weather[0].icon;
-
-
-                //!Zeitzohne mal rausgenommen aka timezone. Damit stimmt die Deutsche aber nicht die restlichen Zeitzohnen 
+                // ? Sommerzeit wird rausgerechnet
+                const gmt = splitVal(intTimeConvert(data.hourly[i].dt) + '',' ', 5);
+                if(gmt === 'GMT+0200') {
+                    timeMinusSummertime = 3600;
+                }else {
+                    timeMinusSummertime = 0;
+                }
                 hour = splitVal(
-                    intTimeConvert(data.hourly[i].dt) + '',
+                    intTimeConvert(data.hourly[i].dt + timezone - timeMinusSummertime) + '',
                     ' ',
                     4,
                 );
@@ -336,7 +341,7 @@ function inerpreteUvIndex(uvindex) {
 
 // Wandelt die Zeit um
 function intTimeConvert(num) {    
-    let dte = new Date(num * 1000);
+    let dte = new Date(num * 1000);    
     return dte;
 }
 

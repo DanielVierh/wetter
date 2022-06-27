@@ -323,8 +323,9 @@ button {
 .wind::before {
     content: '';
     position: absolute;
-    width: 10px;
-    height: 10px;
+    width: 7px;
+    height: 15px;
+    border-radius: 50%;
     background-color: red;
-    margin: 40px -5px;
+    margin: 40px -4px;
 }
