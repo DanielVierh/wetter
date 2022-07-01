@@ -11,6 +11,7 @@ let isCurrentLocation = false;
 let uvIndexisCritical = false;
 let uvIndexIsCriticalUntil= '';
 
+
 // Button etc.
 const currentLocationButton = document.getElementById('btnCurrLoc');
 const weatherContainer = document.getElementById('weatherCard');
@@ -19,6 +20,7 @@ const searchButton = document.getElementById('searchButton');
 const searchField = document.getElementById('inpCityname');
 const toasts = document.getElementById('toasts');
 const progressValue_Temp = document.getElementById("progress_Temp");
+const ortLabel = document.getElementById("outpOrt");
 
 // Load
 ky = dcrK(ak);
@@ -62,7 +64,7 @@ function weatherRequest() {
                 document.getElementById('errorLeiste').hidden = true;
                 document.getElementById('btnAddCity').hidden = false;
                 adress = data.name;
-                document.getElementById('outpOrt').innerHTML = adress;
+                ortLabel.innerHTML = adress;
                 temp = parseInt(data.main.temp);
                 document.getElementById('outpTemp').innerHTML = `${temp}°C`;
                 iconVal = data.weather[0].icon;
@@ -501,7 +503,7 @@ function showPosition(position) {
     const lat = position.coords.latitude.toFixed(1);
     const lon = position.coords.longitude.toFixed(1);
     isCurrentLocation = true;
-    document.getElementById('outpOrt').innerHTML = 'Mein Standort';
+    ortLabel.innerHTML = 'Mein Standort';
     requestWeatherForecast(lat, lon);
 }
 
@@ -537,3 +539,19 @@ function startCity() {
     saveCity();
     showSavedCitys();
 }
+
+
+// sticky-top
+window.addEventListener("scroll", ()=>{
+    let scrollHeigth = Math.floor(window.pageYOffset)
+    if(scrollHeigth > 100) {
+        ortLabel.classList.add("sticky-top");
+        console.log('Größer');
+    }else{
+        ortLabel.classList.remove("sticky-top");
+        console.log('Kleiner');
+
+    }
+    console.log(scrollHeigth);
+
+})

@@ -329,3 +329,17 @@ button {
     background-color: red;
     margin: 38px -3px;
 }
+
+
+.sticky-top {
+    position: fixed;
+    width: 180px;
+    top: 0;
+    margin: 0 auto;
+    z-index: 50;
+    background-color: #315896bb;
+    border-radius: 40px;
+    padding: 10px;
+    text-align: center;
+    transition: all 1s ease-in-out;
+}
