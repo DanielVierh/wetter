@@ -10,6 +10,8 @@ let iconVal;
 let isCurrentLocation = false;
 let uvIndexisCritical = false;
 let uvIndexIsCriticalUntil= '';
+let weatherType = 'opt_weather';
+let mainData = [];
 
 
 // Button etc.
@@ -21,6 +23,7 @@ const searchField = document.getElementById('inpCityname');
 const toasts = document.getElementById('toasts');
 const progressValue_Temp = document.getElementById("progress_Temp");
 const ortLabel = document.getElementById("outpOrt");
+const typeSelect = document.getElementById("weatherForecastType");
 
 // Load
 ky = dcrK(ak);
@@ -130,6 +133,13 @@ function requestWeatherForecast(lat, lon) {
     fetch(apiLink)
         .then((response) => response.json())
         .then((data) => {
+ 
+            try {
+                mainData = JSON.stringify(data); 
+            } catch (error) {
+                console.log(error);
+            }
+            
             // console.log(data);
             let tempMin;
             let tempMax;
@@ -427,6 +437,7 @@ function addCity() {
 // Ausgewählte Stadt anzeigen
 function getCity() {
     weatherContainer.style.display = 'flex';
+    typeSelect.value = 'opt_temp';
     window.scrollTo(0, 0);
     adress = this.innerText;
     weatherRequest();
@@ -546,12 +557,65 @@ window.addEventListener("scroll", ()=>{
     let scrollHeigth = Math.floor(window.pageYOffset)
     if(scrollHeigth > 100) {
         ortLabel.classList.add("sticky-top");
-        console.log('Größer');
     }else{
         ortLabel.classList.remove("sticky-top");
-        console.log('Kleiner');
-
     }
-    console.log(scrollHeigth);
-
 })
+
+// Bei 24 Stunden Anzeige die Werte auf UV, Wind, Wetter etc ändern
+function getWeathertype(selectObject) {
+    const value = selectObject.value;  
+    changeWeatherType(value)
+  }
+
+
+  function changeWeatherType(type) {
+
+    const savedData = JSON.parse(mainData)
+    let timeMinusSummertime = 0;
+    for (let i = 0; i <= 23; i++) {
+        index = `hourForecastBlock${i}`;
+        document.getElementById(index).hidden = false;
+        temp = parseInt(savedData.hourly[i].temp);
+        weatherIcon = savedData.hourly[i].weather[0].icon;
+        nextUVIndex =savedData.hourly[i].uvi;
+        const nextHumidity = savedData.hourly[i].humidity;
+        const nextWind = savedData.hourly[i].wind_speed;
+        const windgesch = nextWind * 3.6;
+
+                // ? Sommerzeit wird rausgerechnet 
+                const gmt = splitVal(intTimeConvert(savedData.hourly[i].dt) + '',' ', 5);
+                if(gmt === 'GMT+0200') {
+                    timeMinusSummertime = 3600;
+                }else {
+                    timeMinusSummertime = 0;
+                }
+        hour = splitVal(
+            intTimeConvert(savedData.hourly[i].dt + timezone - timeMinusSummertime) + '',
+            ' ',
+            4,
+        );
+        hour = splitVal(hour, ':', 0);
+
+        index = `hourOutp${i}`;
+        document.getElementById(index).innerHTML = `${hour} Uhr`;
+        index = `hourOutpPlus${i}`;
+        if(type === 'opt_uvindex') {
+            document.getElementById(index).innerHTML = `${nextUVIndex}`;
+        }
+        if(type === 'opt_temp') {
+            document.getElementById(index).innerHTML = `${temp}°C`;
+        }
+        if(type === 'opt_humidity') {
+            document.getElementById(index).innerHTML = `${nextHumidity} %`;
+        }
+        if(type === 'opt_wind') {
+            document.getElementById(index).innerHTML = `${windgesch.toFixed(0)} kmh`;
+        }
+        imgSrc = `https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/widgets/${weatherIcon}.png`;
+        document.getElementById(index).src = imgSrc;
+
+        index = `hourForecastImg${i}`;
+        
+    }
+  }

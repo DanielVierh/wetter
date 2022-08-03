@@ -42,7 +42,6 @@
                 <progress id="progress_Temp" value="11" max="12"></progress>
                 <p class="descr">Akt. Temperatur</p>
                 <p id="outp_feltTemp"></p>
-
             </div>
 
             <div class="miniContainer">
@@ -64,6 +63,14 @@
 
         <!-- Sunden Vorhersage -->
         <h4 style="text-decoration: underline;">24 Stunden Vorhersage</h4>
+
+        <select id="weatherForecastType" onchange="getWeathertype(this)" class="optionfield"> 
+            <option value="opt_temp">Temperatur</option>
+            <option value="opt_uvindex">UV-Index</option>
+            <option value="opt_wind">Wind</option>
+            <option value="opt_humidity">Feuchtigkeit</option>
+        </select>
+
         <div class="hourForecastContainer">
             <div class="std" id="hourForecastBlock0" hidden>
                 <p class="forecastTextHour" id="hourOutp0">-</p>

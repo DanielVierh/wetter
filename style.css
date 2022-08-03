@@ -346,3 +346,15 @@ button {
     text-align: center;
     transition: all 1s ease-in-out;
 }
+
+.optionfield {
+    background-color: #315896bb;
+    color: white;
+    border-radius: 10px;
+    text-align: center;
+    height: 30px;
+    width: 150px;
+    letter-spacing: 1.5px;
+    box-shadow: 0 0 5px white;
+    margin-bottom: 15px;
+}
