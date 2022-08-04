@@ -610,7 +610,7 @@ function getWeathertype(selectObject) {
             document.getElementById(index).innerHTML = `${nextHumidity} %`;
         }
         if(type === 'opt_wind') {
-            document.getElementById(index).innerHTML = `${windgesch.toFixed(0)} kmh`;
+            document.getElementById(index).innerHTML = `${windgesch.toFixed(0)}`;
         }
         imgSrc = `https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/widgets/${weatherIcon}.png`;
         document.getElementById(index).src = imgSrc;
