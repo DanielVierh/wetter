@@ -161,7 +161,11 @@ button {
 .forecastText {
     height: 10px;
     margin: 0;
-    font-size: 0.8rem;
+    font-size: 0.8em;
+}
+.forecastText.active {
+    font-size: .6em;
+    margin-top: -8px;
 }
 
 .hourForecastContainer {
@@ -358,3 +362,4 @@ button {
     box-shadow: 0 0 5px white;
     margin-bottom: 15px;
 }
+

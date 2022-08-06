@@ -237,7 +237,7 @@ function requestWeatherForecast(lat, lon) {
                 index = `forecastBlock${i}`;
                 // Checkt, ob es morgen wärmer oder kühler wird
                 if(i === 0) {
-                    const tempDiffToday_Tomorrow = (data.daily[i + 1].temp.max - data.daily[i].temp.max).toFixed(2);
+                    const tempDiffToday_Tomorrow = (data.daily[i + 1].temp.max - data.daily[i].temp.max).toFixed(1);
                     const lblTempDiff = document.getElementById("outpTempDiff");
                     if (tempDiffToday_Tomorrow >= 1) {
                         lblTempDiff.innerHTML = `Morgen wird es ${tempDiffToday_Tomorrow}°C wärmer`;
@@ -276,9 +276,7 @@ function requestWeatherForecast(lat, lon) {
                 index = `outpDay${i}`;
                 document.getElementById(index).innerHTML = weekDay;
                 index = `outpDayPlus${i}`;
-                document.getElementById(
-                    index,
-                ).innerHTML = `${tempMin}°C / ${tempMax}°C`;
+                document.getElementById(index).innerHTML = `${tempMin}°C / ${tempMax}°C`;
                 imgSrc = `https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/widgets/${weatherIcon}.png`;
                 index = `foreCastImg${i}`;
                 document.getElementById(index).src = imgSrc;
@@ -602,19 +600,22 @@ function getWeathertype(selectObject) {
         index = `hourOutpPlus${i}`;
         if(type === 'opt_uvindex') {
             document.getElementById(index).innerHTML = `${nextUVIndex}`;
+            document.getElementById(index).classList.remove("active");
         }
         if(type === 'opt_temp') {
             document.getElementById(index).innerHTML = `${temp}°C`;
+            document.getElementById(index).classList.remove("active");
         }
         if(type === 'opt_humidity') {
             document.getElementById(index).innerHTML = `${nextHumidity} %`;
+            document.getElementById(index).classList.remove("active");
         }
         if(type === 'opt_wind') {
-            document.getElementById(index).innerHTML = `${windgesch.toFixed(0)}`;
+            document.getElementById(index).innerHTML = `${windgesch.toFixed(0)} Km/h`;
+            document.getElementById(index).classList.add("active");
         }
         imgSrc = `https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/widgets/${weatherIcon}.png`;
         document.getElementById(index).src = imgSrc;
-
         index = `hourForecastImg${i}`;
         
     }
