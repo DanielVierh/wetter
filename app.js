@@ -24,7 +24,7 @@ const toasts = document.getElementById('toasts');
 const progressValue_Temp = document.getElementById("progress_Temp");
 const ortLabel = document.getElementById("outpOrt");
 const typeSelect = document.getElementById("weatherForecastType");
-
+const tempLabel = document.getElementById("outpTemp");
 // Load
 ky = dcrK(ak);
 window.onload = loadData();
@@ -37,8 +37,6 @@ function showWeather() {
     }
     weatherRequest();
     searchField.value = '';
-    // weatherContainer.style.display = "flex";
-    // cityContainer.style.display = "flex";
 }
 
 // Wenn mit Enter gesucht wird
@@ -69,14 +67,17 @@ function weatherRequest() {
                 adress = data.name;
                 ortLabel.innerHTML = adress;
                 temp = parseInt(data.main.temp);
-                document.getElementById('outpTemp').innerHTML = `${temp}°C`;
+                //document.getElementById('outpTemp').innerHTML = `${temp}°C`;
+                document.getElementById('outpTemp').innerHTML = `🌡`;
+                setTimeout(() => {
+                    initUpcountingTemp(temp); 
+                }, 1000);
                 iconVal = data.weather[0].icon;
                 iconVal = iconVal.slice(-1);
                 const imgSrc = `https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/widgets/${data.weather[0].icon}.png`;
                 document.getElementById('weatherimg').src = imgSrc;
                 document.getElementById('outpWeather').innerHTML =
-                    data.weather[0].description;
-                // const pressure = data.main.pressure;
+                data.weather[0].description;
                 const windgesch = data.wind.speed * 3.6;
                 document.getElementById('outpWind').innerHTML = `${windgesch.toFixed(0)} Km/h`;
                 const lat = data.coord.lat;
@@ -620,3 +621,26 @@ function getWeathertype(selectObject) {
         
     }
   }
+
+
+//   Bugfix Temp Balken
+//   Sonnen auf-untergang
+
+//   Animation von Temp
+let load = -50;
+let intv =  undefined;
+
+function initUpcountingTemp(temperature) {
+    load = -50;
+    intv =  setInterval( function() { countingUp(temperature); }, 17 );
+}
+
+function countingUp(temperature) {    
+    load++;
+    if (load === temperature) {
+        clearInterval(intv);
+        load = temperature;
+    }
+    tempLabel.innerText = `${load}°C`;
+}
+
