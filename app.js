@@ -58,7 +58,7 @@ function weatherRequest() {
             .then((response) => response.json())
             .then((data) => {
                 console.log(data);
-                
+
                 weatherContainer.style.display = 'flex';
                 cityContainer.style.display = 'flex';
                 isCurrentLocation = false;
@@ -70,7 +70,7 @@ function weatherRequest() {
                 //document.getElementById('outpTemp').innerHTML = `${temp}°C`;
                 document.getElementById('outpTemp').innerHTML = `🌡`;
                 setTimeout(() => {
-                    initUpcountingTemp(temp); 
+                    initUpcountingTemp(temp);
                 }, 1000);
                 iconVal = data.weather[0].icon;
                 iconVal = iconVal.slice(-1);
@@ -109,6 +109,35 @@ function weatherRequest() {
 }
 
 
+
+
+
+let meineKarte = L.map('karte').setView([51.162290, 6.462739], 2);
+
+function loadMap(lat, lon) {
+
+    let mapPlace = {
+        "type": "Point",
+        "coordinates": []
+    }
+    let mapOverViewCoord = []
+    mapPlace.coordinates.push(lon)
+    mapPlace.coordinates.push(lat)
+    mapOverViewCoord.push(lat)
+    mapOverViewCoord.push(lon)
+    console.log(`mapPlace.coordinates: ${mapPlace.coordinates}`);
+
+    meineKarte.remove();
+    meineKarte = L.map('karte').setView(mapOverViewCoord, 3);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png', {
+    maxZoom: 900, attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'}).addTo(meineKarte);
+
+    L.geoJSON(mapPlace).addTo(meineKarte);
+}
+
+
+
 function dcrK(val) {
     let newVal = '';
     for (let i = 0; i < val.length; i++) {
@@ -134,13 +163,13 @@ function requestWeatherForecast(lat, lon) {
     fetch(apiLink)
         .then((response) => response.json())
         .then((data) => {
- 
+
             try {
-                mainData = JSON.stringify(data); 
+                mainData = JSON.stringify(data);
             } catch (error) {
                 console.log(error);
             }
-            
+
             // console.log(data);
             let tempMin;
             let tempMax;
@@ -152,7 +181,7 @@ function requestWeatherForecast(lat, lon) {
             let weekDay;
             const timezoneOffset = data.timezone_offset;
 
-            
+
             let uvIndex = data.current.uvi;
             let nextUVIndex = 0;
 
@@ -168,7 +197,7 @@ function requestWeatherForecast(lat, lon) {
 
             tempMin = parseInt(data.daily[0].temp.min);
             tempMax = parseInt(data.daily[0].temp.max);
-            
+
             const tempInPercent = parseInt(data.current.temp) * 100 / tempMax;
             progressValue_Temp.max = 100;
             progressValue_Temp.value = tempInPercent;
@@ -253,11 +282,11 @@ function requestWeatherForecast(lat, lon) {
 
                 tempMin = parseInt(data.daily[i + 1].temp.min);
                 tempMax = parseInt(data.daily[i + 1].temp.max);
-                
+
                  const margin_Bottom = deepestTemp + tempMin;
                  const margin_Top = highestTemp - tempMax;
 
-                
+
                 // erzeugt Balken für Temperatur
                 const balken = document.getElementById(`tempDay${i}`);
                 balken.style.height = `${tempMax + 20}px`;
@@ -265,7 +294,7 @@ function requestWeatherForecast(lat, lon) {
                 balken.style.marginTop = `${margin_Top}px`;
 
 
-                
+
                 weatherIcon = data.daily[i + 1].weather[0].icon;
                 weekDay = splitVal(
                     intTimeConvert(data.daily[i + 1].dt) + '',
@@ -312,6 +341,11 @@ function requestWeatherForecast(lat, lon) {
                 )} Km/h | Luftdruck: ${pressure} hPa`;
             }
 
+            setTimeout(() => {
+                console.warn(`Logge: ${lat}, ${lon}`)
+                loadMap(lat, lon)
+            }, 2000);
+
             ausw();
         })
         .catch((error) => {
@@ -351,8 +385,8 @@ function inerpreteUvIndex(uvindex) {
 }
 
 // Wandelt die Zeit um
-function intTimeConvert(num) {    
-    let dte = new Date(num * 1000);    
+function intTimeConvert(num) {
+    let dte = new Date(num * 1000);
     return dte;
 }
 
@@ -563,7 +597,7 @@ window.addEventListener("scroll", ()=>{
 
 // Bei 24 Stunden Anzeige die Werte auf UV, Wind, Wetter etc ändern
 function getWeathertype(selectObject) {
-    const value = selectObject.value;  
+    const value = selectObject.value;
     changeWeatherType(value)
   }
 
@@ -582,7 +616,7 @@ function getWeathertype(selectObject) {
         const nextWind = savedData.hourly[i].wind_speed;
         const windgesch = nextWind * 3.6;
 
-                // ? Sommerzeit wird rausgerechnet 
+                // ? Sommerzeit wird rausgerechnet
                 const gmt = splitVal(intTimeConvert(savedData.hourly[i].dt) + '',' ', 5);
                 if(gmt === 'GMT+0200') {
                     timeMinusSummertime = 3600;
@@ -618,7 +652,7 @@ function getWeathertype(selectObject) {
         imgSrc = `https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/widgets/${weatherIcon}.png`;
         document.getElementById(index).src = imgSrc;
         index = `hourForecastImg${i}`;
-        
+
     }
   }
 
@@ -635,7 +669,7 @@ function initUpcountingTemp(temperature) {
     intv =  setInterval( function() { countingUp(temperature); }, 17 );
 }
 
-function countingUp(temperature) {    
+function countingUp(temperature) {
     load++;
     if (load === temperature) {
         clearInterval(intv);
@@ -643,4 +677,3 @@ function countingUp(temperature) {
     }
     tempLabel.innerText = `${load}°C`;
 }
-

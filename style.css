@@ -363,3 +363,10 @@ button {
     margin-bottom: 15px;
 }
 
+
+.karte {
+    height: 300px;
+    width: 90vw;
+    margin: 0 auto;
+    border-radius: 10px;
+  }
