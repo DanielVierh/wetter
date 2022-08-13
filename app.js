@@ -12,7 +12,7 @@ let uvIndexisCritical = false;
 let uvIndexIsCriticalUntil= '';
 let weatherType = 'opt_weather';
 let mainData = [];
-
+let meineKarte = L.map('karte').setView([51.162290, 6.462739], 2);
 
 // Button etc.
 const currentLocationButton = document.getElementById('btnCurrLoc');
@@ -112,7 +112,7 @@ function weatherRequest() {
 
 
 
-let meineKarte = L.map('karte').setView([51.162290, 6.462739], 2);
+
 
 function loadMap(lat, lon) {
 
@@ -427,6 +427,7 @@ function loadData() {
         // Keine Einträge vorhanden
         weatherContainer.style.display = 'none';
         cityContainer.style.display = 'none';
+        loadMap(51.162290, 6.462739);
     }
 }
 
@@ -657,10 +658,10 @@ function getWeathertype(selectObject) {
   }
 
 
-//   Bugfix Temp Balken
-//   Sonnen auf-untergang
+//Todo   Bugfix Temp Balken
+//Todo   Sonnen auf-untergang
 
-//   Animation von Temp
+//?   Animation von Temp
 let load = -50;
 let intv =  undefined;
 
