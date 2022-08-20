@@ -25,6 +25,7 @@ const progressValue_Temp = document.getElementById("progress_Temp");
 const ortLabel = document.getElementById("outpOrt");
 const typeSelect = document.getElementById("weatherForecastType");
 const tempLabel = document.getElementById("outpTemp");
+const outSun = document.getElementById("outSun");
 // Load
 ky = dcrK(ak);
 window.onload = loadData();
@@ -193,6 +194,30 @@ function requestWeatherForecast(lat, lon) {
             const dewPoint = data.current.dew_point;
             const humidity = data.current.humidity;
             document.getElementById("outpHumidity").innerHTML = `${humidity}% <br/><br/> <hr> <strong>Taupunkt</strong> <br/> <br/>${dewPoint}°C`
+            
+
+            // Sonnen auf - untergang
+            // let timeMinusSummertime = 0;
+            
+            // if(splitVal(intTimeConvert(data.current.sunrise) + '', " ", 5) === 'GMT+0200') {
+            //     timeMinusSummertime = 3600;
+            // }else {
+            //     timeMinusSummertime = 0;
+            // }
+            // Sonnenaufgang roh
+ 
+            //let sunriseRaw = splitVal(intTimeConvert(data.current.sunrise + timezone - timeMinusSummertime - 1800)  + '', " ", 4);
+            const sunriseRaw = intTimeConvert(data.current.sunrise + timezone - 7200);
+            const sunrisetime = splitVal(sunriseRaw  + '', " ", 4)
+            const sunriseT = `${splitVal(sunrisetime + '' , ":", 0)}:${splitVal(sunrisetime + '' , ":", 1)}`;
+
+            const sunsetRaw = intTimeConvert(data.current.sunset + timezone - 7200);
+            const sunsetTime = splitVal(sunsetRaw  + '', " ", 4)
+            const sunsetT = `${splitVal(sunsetTime + '' , ":", 0)}:${splitVal(sunsetTime + '' , ":", 1)}`;
+
+            outSun.innerHTML = "⬆️ " + sunriseT + " |  ⬇️ " + sunsetT;
+            
+            
             // Von heute Min und Max Temp eintragen
 
             tempMin = parseInt(data.daily[0].temp.min);
@@ -211,7 +236,7 @@ function requestWeatherForecast(lat, lon) {
             document.getElementById("outUvIndx").innerHTML = `${uvIndex} - ${inerpreteUvIndex(uvIndex)}`;
             console.log(data);
 
-            let timeMinusSummertime = 0;
+            timeMinusSummertime = 0;
             // Forecast Stunden Felder einblenden
             for (let i = 0; i <= 23; i++) {
                 index = `hourForecastBlock${i}`;
@@ -220,6 +245,7 @@ function requestWeatherForecast(lat, lon) {
                 weatherIcon = data.hourly[i].weather[0].icon;
                 // ? Sommerzeit wird rausgerechnet
                 const gmt = splitVal(intTimeConvert(data.hourly[i].dt) + '',' ', 5);
+                
                 if(gmt === 'GMT+0200') {
                     timeMinusSummertime = 3600;
                 }else {
