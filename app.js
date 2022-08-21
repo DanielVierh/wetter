@@ -194,19 +194,20 @@ function requestWeatherForecast(lat, lon) {
             const dewPoint = data.current.dew_point;
             const humidity = data.current.humidity;
             document.getElementById("outpHumidity").innerHTML = `${humidity}% <br/><br/> <hr> <strong>Taupunkt</strong> <br/> <br/>${dewPoint}°C`
-            
+
 
             // Sonnen auf - untergang
             // let timeMinusSummertime = 0;
-            
+
             // if(splitVal(intTimeConvert(data.current.sunrise) + '', " ", 5) === 'GMT+0200') {
             //     timeMinusSummertime = 3600;
             // }else {
             //     timeMinusSummertime = 0;
             // }
             // Sonnenaufgang roh
- 
+
             //let sunriseRaw = splitVal(intTimeConvert(data.current.sunrise + timezone - timeMinusSummertime - 1800)  + '', " ", 4);
+
             const sunriseRaw = intTimeConvert(data.current.sunrise + timezone - 7200);
             const sunrisetime = splitVal(sunriseRaw  + '', " ", 4)
             const sunriseT = `${splitVal(sunrisetime + '' , ":", 0)}:${splitVal(sunrisetime + '' , ":", 1)}`;
@@ -216,8 +217,17 @@ function requestWeatherForecast(lat, lon) {
             const sunsetT = `${splitVal(sunsetTime + '' , ":", 0)}:${splitVal(sunsetTime + '' , ":", 1)}`;
 
             outSun.innerHTML = "⬆️ " + sunriseT + " |  ⬇️ " + sunsetT;
-            
-            
+
+
+            // Akt. Ortsdatum & Zeit
+            const dateTimeNowRaw = intTimeConvert(data.current.dt + timezone - 7200);
+            const dateTimeNow_Day = splitVal(dateTimeNowRaw  + '', " ", 2);
+            const dateTimeNow_Month = splitVal(dateTimeNowRaw  + '', " ", 1);
+            const dateTimeNow_TIME = splitVal(dateTimeNowRaw  + '', " ", 4);
+            const dateTimeNow_Hour = splitVal(dateTimeNow_TIME  + '', ":", 0)
+            const dateTimeNow_Minute = splitVal(dateTimeNow_TIME  + '', ":", 1)
+            document.getElementById("outCurrDatetime").innerHTML = `${dateTimeNow_Day}.${dateTimeNow_Month} | ${dateTimeNow_Hour}:${dateTimeNow_Minute}`;
+
             // Von heute Min und Max Temp eintragen
 
             tempMin = parseInt(data.daily[0].temp.min);
@@ -230,7 +240,7 @@ function requestWeatherForecast(lat, lon) {
             const currentTempProzentdiff = (currentDiff * 100) / todayTempDiff;
             const currentTempProcent = 100 - currentTempProzentdiff;
 
-            
+
 
             progressValue_Temp.value = currentTempProcent;
             let tempFeelsLike = parseInt(data.current.feels_like);
@@ -251,7 +261,7 @@ function requestWeatherForecast(lat, lon) {
                 weatherIcon = data.hourly[i].weather[0].icon;
                 // ? Sommerzeit wird rausgerechnet
                 const gmt = splitVal(intTimeConvert(data.hourly[i].dt) + '',' ', 5);
-                
+
                 if(gmt === 'GMT+0200') {
                     timeMinusSummertime = 3600;
                 }else {
