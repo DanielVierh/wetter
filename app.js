@@ -222,15 +222,21 @@ function requestWeatherForecast(lat, lon) {
 
             tempMin = parseInt(data.daily[0].temp.min);
             tempMax = parseInt(data.daily[0].temp.max);
-
-            const tempInPercent = parseInt(data.current.temp) * 100 / tempMax;
             progressValue_Temp.max = 100;
-            progressValue_Temp.value = tempInPercent;
+
+            const todayTempDiff = parseInt(tempMax - tempMin);
+            const currentTemp = parseInt(data.current.temp);
+            const currentDiff = tempMax - currentTemp;
+            const currentTempProzentdiff = (currentDiff * 100) / todayTempDiff;
+            const currentTempProcent = 100 - currentTempProzentdiff;
+
+            
+
+            progressValue_Temp.value = currentTempProcent;
             let tempFeelsLike = parseInt(data.current.feels_like);
             document.getElementById("outp_MinTemp").innerHTML = `Min: ${tempMin}°C`;
             document.getElementById("outp_MaxTemp").innerHTML = `Max: ${tempMax}°C`;
             document.getElementById("outp_feltTemp").innerHTML = `Gefühlt: ${tempFeelsLike}°C`;
-            // document.getElementById('outMinMax').innerHTML = `Min: ${tempMin}°C | Max: ${tempMax}°C | Gefühlt: ${tempFeelsLike}°C`;
 
             // Current UV Index
             document.getElementById("outUvIndx").innerHTML = `${uvIndex} - ${inerpreteUvIndex(uvIndex)}`;
