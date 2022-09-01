@@ -345,8 +345,10 @@ button {
     margin: 0 auto;
     z-index: 50;
     font-size: 1.5em;
-    background-color: #315896bb;
+    background-color: #31589660;
+    backdrop-filter: blur(5px);
     border-radius: 40px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
     padding: 15px;
     text-align: center;
     transition: all 1s ease-in-out;
@@ -379,3 +381,27 @@ button {
     font-size: .8em;
     text-shadow: 3px 3px 15px black;
   }
+
+
+  .sunstand {
+      width: 100px;
+      height: 2px;
+      border: 1px solid white;
+      margin: 0 15px 30px 15px;
+      position: relative;
+      transition: all 1s ease-in-out;
+  }
+
+  .sunstand::after{
+      content: '';
+      position: absolute;
+      top: -8px;
+      left:0;
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      border: 2px solid yellow;
+      background-color: white;
+      box-shadow: 0 0 15px yellow;
+  }
+

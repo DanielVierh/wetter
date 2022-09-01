@@ -217,7 +217,7 @@ function requestWeatherForecast(lat, lon) {
             const sunsetT = `${splitVal(sunsetTime + '' , ":", 0)}:${splitVal(sunsetTime + '' , ":", 1)}`;
 
             outSun.innerHTML = "⬆️ " + sunriseT + " |  ⬇️ " + sunsetT;
-
+            
 
             // Akt. Ortsdatum & Zeit
             const dateTimeNowRaw = intTimeConvert(data.current.dt + timezone - 7200);
@@ -228,6 +228,46 @@ function requestWeatherForecast(lat, lon) {
             const dateTimeNow_Minute = splitVal(dateTimeNow_TIME  + '', ":", 1)
             document.getElementById("outCurrDatetime").innerHTML = `${dateTimeNow_Day}.${dateTimeNow_Month} | ${dateTimeNow_Hour}:${dateTimeNow_Minute}`;
 
+            // Sonnenstand ermitteln
+            let isAfterSunset = false;
+            let isAfterSunrise = false;
+            let isBeforeSunrise = false;
+            let isBeforeSunset = false; // Wird noch nicht benutzt. Mal gucken...
+
+            if(dateTimeNowRaw > sunsetRaw ) {
+                isAfterSunset = true;
+            }
+            if(dateTimeNowRaw > sunriseRaw) {
+                isAfterSunrise = true;
+            }
+            if(dateTimeNowRaw < sunriseRaw) {
+                isBeforeSunrise = true;
+            }
+            if(dateTimeNowRaw < sunsetRaw) {
+                isBeforeSunset = true;
+            }
+            
+            if(isAfterSunrise === true && isAfterSunset === true && isBeforeSunrise == false ) {
+                // ? Abends vor Mitternacht
+                var styleElem = document.head.appendChild(document.createElement("style"));
+                styleElem.innerHTML = "#sunstand:after {left: 100px; top: 0px; background-Color: transparent;}";
+                
+            }else if(isAfterSunrise === false && isAfterSunset === false && isBeforeSunrise == true) {
+                // ? Nachts nach Mitternacht
+                var styleElem = document.head.appendChild(document.createElement("style"));
+                styleElem.innerHTML = "#sunstand:after {left: 0px; top: 0px; background-Color: transparent;}";
+            }else {
+                // ? Tagsüber
+                const todayTimeDiff = sunsetRaw - sunriseRaw;
+                const currentTimeDiff = sunsetRaw - dateTimeNowRaw;
+                const currentTimeProzentDiff = (currentTimeDiff * 100) / todayTimeDiff;
+                const currentTimeProzent = parseInt(100 - currentTimeProzentDiff);               
+                var styleElem = document.head.appendChild(document.createElement("style"));
+                styleElem.innerHTML = `#sunstand:after {left: ${currentTimeProzent}px; top: -8px; background-Color: yellow;}`;
+            }
+
+
+            
             // Von heute Min und Max Temp eintragen
 
             tempMin = parseInt(data.daily[0].temp.min);
