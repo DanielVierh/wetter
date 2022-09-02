@@ -131,6 +131,8 @@ button {
     -moz-backdrop-filter: blur(30px);
     box-shadow: 5px 5px 15px black;
     border: 1px solid rgba(255, 255, 255, 0.308);
+    box-shadow: 0 0 20px white, inset 0 0 20px white;
+    border: 1px solid rgba(221, 215, 215, 0.336);
 }
 
 .foreCastCont {
