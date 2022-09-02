@@ -489,11 +489,11 @@ function ausw() {
     }
     // Tag / Nacht
     if (iconVal === 'n') {
-        document.getElementById('weatherCard').style.backgroundColor =
-            'rgba(0,0,100,0.600';
+        document.getElementById('weatherCard').style.backgroundColor = 'rgba(0,0,100,0.600';
+        document.getElementById("weatherimg").style.boxShadow = '0px 0px 10px rgba(255,255,255,0.4)';
     } else {
-        document.getElementById('weatherCard').style.backgroundColor =
-            'rgba(29, 28, 28, 0.247)';
+        document.getElementById('weatherCard').style.backgroundColor = 'rgba(29, 28, 28, 0.247)';
+        document.getElementById("weatherimg").style.boxShadow = '0px 0px 20px rgba(255,255,255,1), inset 0 0 15px white';
     }
 }
 
@@ -738,10 +738,6 @@ function getWeathertype(selectObject) {
 
     }
   }
-
-
-//Todo   Bugfix Temp Balken
-//Todo   Sonnen auf-untergang
 
 //?   Animation von Temp
 let load = -50;
