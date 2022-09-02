@@ -250,12 +250,12 @@ function requestWeatherForecast(lat, lon) {
             if(isAfterSunrise === true && isAfterSunset === true && isBeforeSunrise == false ) {
                 // ? Abends vor Mitternacht
                 var styleElem = document.head.appendChild(document.createElement("style"));
-                styleElem.innerHTML = "#sunstand:after {left: 100px; top: 0px; background-Color: transparent;}";
+                styleElem.innerHTML = "#sunstand:after {left: 95px; top: 0px; background-Color: transparent;}";
                 
             }else if(isAfterSunrise === false && isAfterSunset === false && isBeforeSunrise == true) {
                 // ? Nachts nach Mitternacht
                 var styleElem = document.head.appendChild(document.createElement("style"));
-                styleElem.innerHTML = "#sunstand:after {left: 0px; top: 0px; background-Color: transparent;}";
+                styleElem.innerHTML = "#sunstand:after {left: -15px; top: -3px; background-Color: transparent;}";
             }else {
                 // ? Tagsüber
                 const todayTimeDiff = sunsetRaw - sunriseRaw;
@@ -263,7 +263,7 @@ function requestWeatherForecast(lat, lon) {
                 const currentTimeProzentDiff = (currentTimeDiff * 100) / todayTimeDiff;
                 const currentTimeProzent = parseInt(100 - currentTimeProzentDiff);               
                 var styleElem = document.head.appendChild(document.createElement("style"));
-                styleElem.innerHTML = `#sunstand:after {left: ${currentTimeProzent}px; top: -8px; background-Color: yellow;}`;
+                styleElem.innerHTML = `#sunstand:after {left: ${currentTimeProzent - 5}px; top: -8px; background-Color: yellow;}`;
             }
 
 
