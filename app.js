@@ -267,7 +267,46 @@ function requestWeatherForecast(lat, lon) {
             }
 
 
-            
+
+            // Mondphase
+            const moonphaseToday = data.daily[0].moon_phase;
+            const moonphaseTomorrow = data.daily[1].moon_phase;
+            let moonPhaseTrend = '';
+            if(moonphaseToday < moonphaseTomorrow) {
+                moonPhaseTrend = 'zunehmend';
+            }else {
+                moonPhaseTrend = 'abnehmend';
+            }
+            const moonriseRaw = intTimeConvert(data.daily[0].moonrise + timezone - 7200);
+            const moonrisetime = splitVal(moonriseRaw  + '', " ", 4)
+            const moonriseT = `${splitVal(moonrisetime + '' , ":", 0)}:${splitVal(moonrisetime + '' , ":", 1)}`;
+
+            const moonSetRaw =  intTimeConvert(data.daily[0].moonset + timezone - 7200);
+            const moonsetTime = splitVal(moonSetRaw  + '', " ", 4)
+            const moonsetT = `${splitVal(moonsetTime + '' , ":", 0)}:${splitVal(moonsetTime + '' , ":", 1)}`;
+
+            document.getElementById("outpMoonPhase").innerHTML = `${moonphaseToday}% ${moonPhaseTrend}. Morgen ${moonphaseTomorrow}%`
+            document.getElementById("outpMoonRise").innerHTML = `${moonriseT}`;
+            document.getElementById("outpMoonSet").innerHTML = `${moonsetT}`;
+
+            //###################################
+            // Regen
+            let rain = 0;
+            let tomorrowRain = 0;
+            try {
+                rain = data.daily[0].rain;
+                tomorrowRain = data.daily[1].rain;
+                if(rain === undefined) {
+                    rain = 0;
+                }
+                if(tomorrowRain === undefined) {
+                    tomorrowRain = 0;
+                }
+            } catch (error) {
+                console.log(error);
+            }
+            document.getElementById("outpRain").innerHTML = `${rain} mm erwartet`;
+            document.getElementById("outputRainTomorrow").innerHTML = `Es werden ${tomorrowRain} mm Regen erwartet`;
             // Von heute Min und Max Temp eintragen
 
             tempMin = parseInt(data.daily[0].temp.min);

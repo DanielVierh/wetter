@@ -291,6 +291,7 @@ button {
     margin: 0 auto;
 }
 
+
 #progress_Temp {
     width: 80%;
     margin: 0 auto;
@@ -407,3 +408,31 @@ button {
       box-shadow: 0 0 15px yellow;
   }
 
+
+  .tomorrowCont {
+      height: auto;
+      width: 100%;
+      border: 1px solid gray;
+      border-radius: 30px;
+      margin: 30px auto;
+      box-shadow: 0 15px 10px black;
+  }
+
+  .alertContainer {
+    display: none;
+  }
+
+
+
+  .alertContainer.active{
+    display: block;
+    background-color: rgba(255, 0, 0, 0.685);
+    color: white;
+    font-weight: bold;
+    height: auto;
+    width: 100%;
+    border: 1px solid gray;
+    border-radius: 15px;
+    margin: 30px auto;
+    box-shadow: 0 15px 10px black;
+  }
