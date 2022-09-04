@@ -55,7 +55,6 @@ function weatherRequest() {
         } else {
             apiLink = `https://api.openweathermap.org/data/2.5/weather?zip=${adress},de&APPID=${ky}&lang=de&units=metric`;
         }
-        console.log(`${ky}`);
         
         fetch(apiLink)
             .then((response) => response.json())
