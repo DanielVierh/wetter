@@ -809,6 +809,6 @@ function getAirPollutionInfo(latitude, longitude) {
             document.getElementById("airQualiBox").style.backgroundColor = `${airQualityColor[airQuality]}`
             document.getElementById("errorlog").innerHTML = 'getAirPollutionInfo = ok';
         }).catch((error) => {
-            document.getElementById("errorlog").innerHTML = error;
+            document.getElementById("errorlog").innerHTML = error + " | " + error.message;
         });
 }
