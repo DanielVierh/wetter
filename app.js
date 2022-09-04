@@ -87,7 +87,9 @@ function weatherRequest() {
                 const lon = data.coord.lon;
                 timezone = data.timezone;
                 requestWeatherForecast(lat, lon);
-                getAirPollutionInfo(lat, lon);
+                setTimeout(() => {
+                    getAirPollutionInfo(lat, lon);
+                }, 1500);
             })
             .catch((error) => {
                 weatherContainer.style.display = 'none';
