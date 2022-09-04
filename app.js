@@ -796,7 +796,7 @@ function countingUp(temperature) {
 
 
 function getAirPollutionInfo(latitude, longitude) {
-    const pollutionLink = `http://api.openweathermap.org/data/2.5/air_pollution?lat=${latitude}&lon=${longitude}&appid=${ky}`;
+    const pollutionLink = `https://api.openweathermap.org/data/2.5/air_pollution?lat=${latitude}&lon=${longitude}&appid=${ky}`;
     fetch(pollutionLink)
         .then((response)=> response.json())
         .then((data) => {
