@@ -795,8 +795,8 @@ function countingUp(temperature) {
 
 
 
-function getAirPollutionInfo(lat, lon) {
-    const pollutionLink = `http://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${ky}`;
+function getAirPollutionInfo(latitude, longitude) {
+    const pollutionLink = `http://api.openweathermap.org/data/2.5/air_pollution?lat=${latitude}&lon=${longitude}&appid=${ky}`;
     fetch(pollutionLink)
         .then((response)=> response.json())
         .then((data) => {
@@ -807,5 +807,8 @@ function getAirPollutionInfo(lat, lon) {
             const airQuality = data.list[0].main.aqi;
             document.getElementById("outpAirQuali").innerHTML = `Luftqualität: ${airQuality} - ${airQualityList[airQuality]}`;
             document.getElementById("airQualiBox").style.backgroundColor = `${airQualityColor[airQuality]}`
-        })
+            document.getElementById("errorlog").innerHTML = 'getAirPollutionInfo = ok';
+        }).catch((error) => {
+            document.getElementById("errorlog").innerHTML = error;
+        });
 }
