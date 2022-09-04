@@ -55,6 +55,8 @@ function weatherRequest() {
         } else {
             apiLink = `https://api.openweathermap.org/data/2.5/weather?zip=${adress},de&APPID=${ky}&lang=de&units=metric`;
         }
+        console.log(`${ky}`);
+        
         fetch(apiLink)
             .then((response) => response.json())
             .then((data) => {
@@ -85,6 +87,7 @@ function weatherRequest() {
                 const lon = data.coord.lon;
                 timezone = data.timezone;
                 requestWeatherForecast(lat, lon);
+                getAirPollutionInfo(lat, lon);
             })
             .catch((error) => {
                 weatherContainer.style.display = 'none';
@@ -126,7 +129,6 @@ function loadMap(lat, lon) {
     mapPlace.coordinates.push(lat)
     mapOverViewCoord.push(lat)
     mapOverViewCoord.push(lon)
-    console.log(`mapPlace.coordinates: ${mapPlace.coordinates}`);
 
     meineKarte.remove();
     meineKarte = L.map('karte').setView(mapOverViewCoord, 3);
@@ -204,19 +206,13 @@ function requestWeatherForecast(lat, lon) {
             // }else {
             //     timeMinusSummertime = 0;
             // }
-            // Sonnenaufgang roh
-
-            //let sunriseRaw = splitVal(intTimeConvert(data.current.sunrise + timezone - timeMinusSummertime - 1800)  + '', " ", 4);
-
+            // Sonnenaufgang roh für Sonnenstand
             const sunriseRaw = intTimeConvert(data.current.sunrise + timezone - 7200);
-            const sunrisetime = splitVal(sunriseRaw  + '', " ", 4)
-            const sunriseT = `${splitVal(sunrisetime + '' , ":", 0)}:${splitVal(sunrisetime + '' , ":", 1)}`;
-
             const sunsetRaw = intTimeConvert(data.current.sunset + timezone - 7200);
-            const sunsetTime = splitVal(sunsetRaw  + '', " ", 4)
-            const sunsetT = `${splitVal(sunsetTime + '' , ":", 0)}:${splitVal(sunsetTime + '' , ":", 1)}`;
-
-            outSun.innerHTML = "⬆️ " + sunriseT + " |  ⬇️ " + sunsetT;
+            // Für Anzeige Auf-Untergang
+            const sunrise = rawDatetime_in_Time(data.current.sunrise);
+            const sunset = rawDatetime_in_Time(data.current.sunset);
+            outSun.innerHTML = "⬆️ " + sunrise + " |  ⬇️ " + sunset;
             
 
             // Akt. Ortsdatum & Zeit
@@ -277,17 +273,10 @@ function requestWeatherForecast(lat, lon) {
             }else {
                 moonPhaseTrend = 'abnehmend';
             }
-            const moonriseRaw = intTimeConvert(data.daily[0].moonrise + timezone - 7200);
-            const moonrisetime = splitVal(moonriseRaw  + '', " ", 4)
-            const moonriseT = `${splitVal(moonrisetime + '' , ":", 0)}:${splitVal(moonrisetime + '' , ":", 1)}`;
-
-            const moonSetRaw =  intTimeConvert(data.daily[0].moonset + timezone - 7200);
-            const moonsetTime = splitVal(moonSetRaw  + '', " ", 4)
-            const moonsetT = `${splitVal(moonsetTime + '' , ":", 0)}:${splitVal(moonsetTime + '' , ":", 1)}`;
-
-            document.getElementById("outpMoonPhase").innerHTML = `${moonphaseToday}% ${moonPhaseTrend}. Morgen ${moonphaseTomorrow}%`
-            document.getElementById("outpMoonRise").innerHTML = `${moonriseT}`;
-            document.getElementById("outpMoonSet").innerHTML = `${moonsetT}`;
+ 
+            //document.getElementById("outpMoonPhase").innerHTML = `${moonphaseToday}% ${moonPhaseTrend}. Morgen ${moonphaseTomorrow}%`
+            document.getElementById("outpMoonRise").innerHTML = `${rawDatetime_in_Time(data.daily[0].moonrise)}`;
+            document.getElementById("outpMoonSet").innerHTML = `${rawDatetime_in_Time(data.daily[0].moonset)}`;
 
             //###################################
             // Regen
@@ -463,7 +452,6 @@ function requestWeatherForecast(lat, lon) {
             }
 
             setTimeout(() => {
-                console.warn(`Logge: ${lat}, ${lon}`)
                 loadMap(lat, lon)
             }, 2000);
 
@@ -649,6 +637,14 @@ function getDate(weekDay) {
     return day;
 }
 
+// Funktion, welche ein Uhrzeit extrahiert. In Berücksichtigung der Zeitzohne
+function rawDatetime_in_Time(rawDatetime) {
+    const raw = intTimeConvert(rawDatetime + timezone - 7200);
+    const time = splitVal(raw  + '', " ", 4);
+    const pureTime = `${splitVal(time + '' , ":", 0)}:${splitVal(time + '' , ":", 1)}`;
+    return pureTime;
+}
+
 function splitVal(val, marker, pos) {
     const elem = val.split(marker);
     const retVal = elem[pos];
@@ -794,4 +790,21 @@ function countingUp(temperature) {
         load = temperature;
     }
     tempLabel.innerText = `${load}°C`;
+}
+
+
+
+function getAirPollutionInfo(lat, lon) {
+    const pollutionLink = `http://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${ky}`;
+    fetch(pollutionLink)
+        .then((response)=> response.json())
+        .then((data) => {
+           // console.log(data);
+            
+            const airQualityList = ['/', 'SEHR GUT', 'GUT', 'MODERAT', 'SCHLECHT', 'SEHR SCHLECHT']
+            const airQualityColor = ['transparent', 'green', 'rgba(144, 238, 144, 0.678)', 'yellow', 'orange', 'red']
+            const airQuality = data.list[0].main.aqi;
+            document.getElementById("outpAirQuali").innerHTML = `Luftqualität: ${airQuality} - ${airQualityList[airQuality]}`;
+            document.getElementById("airQualiBox").style.backgroundColor = `${airQualityColor[airQuality]}`
+        })
 }
