@@ -13,6 +13,7 @@ let uvIndexIsCriticalUntil= '';
 let weatherType = 'opt_weather';
 let mainData = [];
 let meineKarte = L.map('karte').setView([51.162290, 6.462739], 2);
+let airQualityInfoboxIsVisible = false;
 
 // Button etc.
 const currentLocationButton = document.getElementById('btnCurrLoc');
@@ -26,6 +27,10 @@ const ortLabel = document.getElementById("outpOrt");
 const typeSelect = document.getElementById("weatherForecastType");
 const tempLabel = document.getElementById("outpTemp");
 const outSun = document.getElementById("outSun");
+const infoBtn = document.getElementById("infoBtn");
+const detailContainer = document.getElementById("detailContainer");
+
+
 // Load
 ky = dcrK(ak);
 window.onload = loadData();
@@ -47,6 +52,9 @@ window.addEventListener('keydown', (e) => {
     }
 });
 
+// Interessant wenn die Map location marker funtioniert
+// https://openweathermap.org/api/geocoding-api   -- Reverse geocoding
+
 // Wetter Request
 function weatherRequest() {
     if (adress != '') {
@@ -55,7 +63,7 @@ function weatherRequest() {
         } else {
             apiLink = `https://api.openweathermap.org/data/2.5/weather?zip=${adress},de&APPID=${ky}&lang=de&units=metric`;
         }
-        
+
         fetch(apiLink)
             .then((response) => response.json())
             .then((data) => {
@@ -86,6 +94,7 @@ function weatherRequest() {
                 const lon = data.coord.lon;
                 timezone = data.timezone;
                 requestWeatherForecast(lat, lon);
+                document.getElementById("outpAirQuali").innerHTML = 'Lade Werte ...';
                 setTimeout(() => {
                     getAirPollutionInfo(lat, lon);
                 }, 1500);
@@ -214,7 +223,7 @@ function requestWeatherForecast(lat, lon) {
             const sunrise = rawDatetime_in_Time(data.current.sunrise);
             const sunset = rawDatetime_in_Time(data.current.sunset);
             outSun.innerHTML = "⬆️ " + sunrise + " |  ⬇️ " + sunset;
-            
+
 
             // Akt. Ortsdatum & Zeit
             const dateTimeNowRaw = intTimeConvert(data.current.dt + timezone - 7200);
@@ -243,12 +252,12 @@ function requestWeatherForecast(lat, lon) {
             if(dateTimeNowRaw < sunsetRaw) {
                 isBeforeSunset = true;
             }
-            
+
             if(isAfterSunrise === true && isAfterSunset === true && isBeforeSunrise == false ) {
                 // ? Abends vor Mitternacht
                 var styleElem = document.head.appendChild(document.createElement("style"));
                 styleElem.innerHTML = "#sunstand:after {left: 95px; top: 0px; background-Color: transparent;}";
-                
+
             }else if(isAfterSunrise === false && isAfterSunset === false && isBeforeSunrise == true) {
                 // ? Nachts nach Mitternacht
                 var styleElem = document.head.appendChild(document.createElement("style"));
@@ -258,7 +267,7 @@ function requestWeatherForecast(lat, lon) {
                 const todayTimeDiff = sunsetRaw - sunriseRaw;
                 const currentTimeDiff = sunsetRaw - dateTimeNowRaw;
                 const currentTimeProzentDiff = (currentTimeDiff * 100) / todayTimeDiff;
-                const currentTimeProzent = parseInt(100 - currentTimeProzentDiff);               
+                const currentTimeProzent = parseInt(100 - currentTimeProzentDiff);
                 var styleElem = document.head.appendChild(document.createElement("style"));
                 styleElem.innerHTML = `#sunstand:after {left: ${currentTimeProzent - 5}px; top: -8px; background-Color: yellow;}`;
             }
@@ -274,7 +283,7 @@ function requestWeatherForecast(lat, lon) {
             }else {
                 moonPhaseTrend = 'abnehmend';
             }
- 
+
             //document.getElementById("outpMoonPhase").innerHTML = `${moonphaseToday}% ${moonPhaseTrend}. Morgen ${moonphaseTomorrow}%`
             document.getElementById("outpMoonRise").innerHTML = `${rawDatetime_in_Time(data.daily[0].moonrise)}`;
             document.getElementById("outpMoonSet").innerHTML = `${rawDatetime_in_Time(data.daily[0].moonset)}`;
@@ -800,15 +809,71 @@ function getAirPollutionInfo(latitude, longitude) {
     fetch(pollutionLink)
         .then((response)=> response.json())
         .then((data) => {
-           // console.log(data);
-            
+            console.log(data);
+            const airQualiBox = document.getElementById("airQualiBox");
             const airQualityList = ['/', 'SEHR GUT', 'GUT', 'MODERAT', 'SCHLECHT', 'SEHR SCHLECHT']
-            const airQualityColor = ['transparent', 'green', 'rgba(144, 238, 144, 0.678)', 'yellow', 'orange', 'red']
+            const airQualityColor = ['transparent', 'green', 'rgba(144, 238, 144, 0.678)', 'rgba(255, 196, 0, 0.669)', 'rgba(180, 89, 9, 0.938)', 'red']
             const airQuality = data.list[0].main.aqi;
-            document.getElementById("outpAirQuali").innerHTML = `Luftqualität: ${airQuality} - ${airQualityList[airQuality]}`;
-            document.getElementById("airQualiBox").style.backgroundColor = `${airQualityColor[airQuality]}`
-            document.getElementById("errorlog").innerHTML = 'getAirPollutionInfo = ok';
+            document.getElementById("outpAirQuali").innerHTML = `${airQuality} - ${airQualityList[airQuality]}`;
+            airQualiBox.style.backgroundColor = `${airQualityColor[airQuality]}`;
+
+            infoBtn.classList.remove("active");
+            airQualityInfoboxIsVisible = false;
+            detailContainer.classList.remove("active");
+            const no2 = data.list[0].components.no2;
+            const o3 = data.list[0].components.o3;
+            const pm2_5 = data.list[0].components.pm2_5;
+            const pm10 = data.list[0].components.pm10;
+
+
+
+            if(airQuality >= 3) {
+
+                let pollutionArray = [];
+                let infostring = '';
+
+                if(no2 >= 100 ) {
+                    pollutionArray.push(`Stickstoffdioxid: ${no2} (moderat ab 100) <br>`);
+                    console.log('true');
+                }
+                if(o3 >= 120 ) {
+                    pollutionArray.push(`Ozon: ${o3} (moderat ab 120) <br>`);
+                    console.log('true');
+                }
+                if(pm2_5 >= 30 ) {
+                    pollutionArray.push(`Feinstaub(pm2_5): ${pm2_5} (moderat ab 30) <br>`);
+                    console.log('true');
+                }
+                if(pm10 >= 50 ) {
+                    pollutionArray.push(`Feinstaub(pm10): ${pm10} (moderat ab 50) <br>`);
+                    console.log('true');
+                }
+
+                for(let i = 0; i < pollutionArray.length; i++) {
+                    infostring = infostring + pollutionArray[i];
+                }
+
+
+                    infoBtn.classList.add("active");
+                    document.getElementById("detainTextAirQuality").innerHTML = infostring;
+            }
+            // Debugging
+            //document.getElementById("errorlog").innerHTML = 'getAirPollutionInfo = ok';
         }).catch((error) => {
-            document.getElementById("errorlog").innerHTML = error + " | " + error.message;
+            //document.getElementById("errorlog").innerHTML = error + " | " + error.message;
         });
+}
+
+
+function toggleInfoBox() {
+
+    if(airQualityInfoboxIsVisible === false) {
+        detailContainer.classList.add("active");
+        airQualityInfoboxIsVisible = true;
+        infoBtn.innerHTML = 'Infos ausblenden';
+    }else {
+        detailContainer.classList.remove("active");
+        airQualityInfoboxIsVisible = false;
+        infoBtn.innerHTML = 'Mehr Infos';
+    }
 }

@@ -78,10 +78,19 @@
                 <p style="text-decoration: underline;"><strong>Regen</strong></p>
                 <p id="outpRain" class="outputVal" style="font-size: 1.3em;">0 mm erwartet</p>
             </div>
-            <div class="miniContainer small" id="airQualiBox">
-                <p style="text-decoration: underline;"><strong>Luftqualität</strong></p>
-                <p id="outpAirQuali" class="outputVal" style="font-weight: bold; font-size: 1em;"></p>
+
+        </div>
+
+        <div class="miniContainer small" id="airQualiBox">
+            <p style="text-decoration: underline;"><strong>Luftqualität</strong></p>
+            <p id="outpAirQuali" class="outputVal" style="font-weight: bold; font-size: 1em;">Lade Werte ...</p>
+            <button onclick="toggleInfoBox()" class="infobutton" id="infoBtn">Mehr Infos</button>
+            <div class="moreAirQualityInfo" id="detailContainer">
+                <p id="detainTextAirQuality"></p>
+                <a href="https://en.wikipedia.org/wiki/Air_quality_index#CAQI">wikipedia - Air quality index</a>
             </div>
+
+
         </div>
 
         <!-- Sunden Vorhersage -->
@@ -258,7 +267,7 @@
             <p id="outpTempDiff"></p>
             <p id="outputRainTomorrow">0 mm Regen erwartet</p>
         </div>
-        
+
 
 
 
@@ -285,7 +294,7 @@
    <p>v 7.6 | 04.09.22</p>
 
    <p id="errorlog"></p>
-   
+
 
 
     <script src="app.js"></script>

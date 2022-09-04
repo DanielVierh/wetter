@@ -281,19 +281,51 @@ button {
     margin: 5px;
     text-align: center;
     box-shadow: 0 5px 5px black;
+
 }
 
 .small {
     width: 100%;
-    max-width: 260px;
-    height: auto;  
+    max-width: 300px;
+    height: auto;
     padding: 5px;
     color: white;
     border: 1px solid gray;
     border-radius: 15px;
     margin: 20px auto;
     box-shadow: 0 15px 10px black;
+    transition: all 1s ease-in-out;
 }
+
+.small a {
+    color: black;
+}
+
+#detainTextAirQuality {
+    font-size: .8em;
+    text-align: center;
+}
+
+.infobutton {
+    display: none;
+}
+
+.infobutton.active {
+    display: block;
+    cursor: pointer;
+    width: 50%;
+    margin: 0 auto;
+    background-color: rgba(0, 0, 0, 0.886);
+}
+
+.moreAirQualityInfo {
+    display: none;
+}
+
+.moreAirQualityInfo.active {
+    display: block;
+}
+
 
 .outputVal {
     font-size: 1em;
