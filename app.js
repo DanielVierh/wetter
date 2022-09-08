@@ -29,6 +29,7 @@ const tempLabel = document.getElementById("outpTemp");
 const outSun = document.getElementById("outSun");
 const infoBtn = document.getElementById("infoBtn");
 const detailContainer = document.getElementById("detailContainer");
+const outpSmallCurrentTemp = document.getElementById("outpSmallTemp");
 
 
 // Load
@@ -325,6 +326,7 @@ function requestWeatherForecast(lat, lon) {
             document.getElementById("outp_MinTemp").innerHTML = `Min: ${tempMin}°C`;
             document.getElementById("outp_MaxTemp").innerHTML = `Max: ${tempMax}°C`;
             document.getElementById("outp_feltTemp").innerHTML = `Gefühlt: ${tempFeelsLike}°C`;
+            outpSmallCurrentTemp.innerHTML = `${currentTemp}°C`;
 
             // Current UV Index
             document.getElementById("outUvIndx").innerHTML = `${uvIndex} - ${inerpreteUvIndex(uvIndex)}`;

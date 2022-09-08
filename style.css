@@ -348,6 +348,12 @@ button {
     letter-spacing: 2px;
 }
 
+.smallTemp {
+    font-size: 10px;
+    margin-bottom: -5px;
+    letter-spacing: 2px;
+}
+
 
 .tempContainer {
     width: 100%;
