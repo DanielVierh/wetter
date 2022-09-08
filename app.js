@@ -310,7 +310,7 @@ function requestWeatherForecast(lat, lon) {
             if(tomorrowRain === 0) {
                 document.getElementById("outputRainTomorrow").innerHTML = `Es bleibt morgen trocken.`;
             }else {
-                document.getElementById("outputRainTomorrow").innerHTML = `Im laufe des Tages ${tomorrowRain} mm Regen erwartet.`;
+                document.getElementById("outputRainTomorrow").innerHTML = `Im laufe des Tages werden ${tomorrowRain} mm Regen erwartet.`;
             }
             // Von heute Min und Max Temp eintragen
 
