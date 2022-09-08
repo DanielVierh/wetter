@@ -305,8 +305,13 @@ function requestWeatherForecast(lat, lon) {
             } catch (error) {
                 console.log(error);
             }
-            document.getElementById("outpRain").innerHTML = `${rain} mm erwartet`;
-            document.getElementById("outputRainTomorrow").innerHTML = `Es werden ${tomorrowRain} mm Regen erwartet`;
+            document.getElementById("outpRain").innerHTML = `${rain} mm`;
+            
+            if(tomorrowRain === 0) {
+                document.getElementById("outputRainTomorrow").innerHTML = `Es bleibt morgen trocken.`;
+            }else {
+                document.getElementById("outputRainTomorrow").innerHTML = `Im laufe des Tages ${tomorrowRain} mm Regen erwartet.`;
+            }
             // Von heute Min und Max Temp eintragen
 
             tempMin = parseInt(data.daily[0].temp.min);
@@ -392,11 +397,11 @@ function requestWeatherForecast(lat, lon) {
                     const tempDiffToday_Tomorrow = (data.daily[i + 1].temp.max - data.daily[i].temp.max).toFixed(1);
                     const lblTempDiff = document.getElementById("outpTempDiff");
                     if (tempDiffToday_Tomorrow >= 1) {
-                        lblTempDiff.innerHTML = `Morgen wird es ${tempDiffToday_Tomorrow}°C wärmer`;
+                        lblTempDiff.innerHTML = `Morgen wird es ${tempDiffToday_Tomorrow}°C wärmer.`;
                     }else if(tempDiffToday_Tomorrow <= -1){
-                        lblTempDiff.innerHTML = `Morgen kühlt es um ${tempDiffToday_Tomorrow}°C ab`;
+                        lblTempDiff.innerHTML = `Morgen kühlt es um ${tempDiffToday_Tomorrow}°C ab.`;
                     }else {
-                        lblTempDiff.innerHTML = 'Die Temperatur bleibt morgen stabil';
+                        lblTempDiff.innerHTML = 'Die Temperatur bleibt morgen stabil.';
                     }
                 }
 

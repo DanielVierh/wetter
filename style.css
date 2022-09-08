@@ -324,6 +324,19 @@ button {
 
 .moreAirQualityInfo.active {
     display: block;
+    animation: openSmooth .7s ease-in-out;
+}
+
+
+@keyframes openSmooth {
+    0% {
+        height: 0px;
+        color: transparent;
+    }
+    100%{
+        height: 150px;
+        color: white;
+    }
 }
 
 
@@ -405,6 +418,21 @@ button {
     padding: 15px;
     text-align: center;
     transition: all 1s ease-in-out;
+    animation: ping 12s infinite;
+}
+
+@keyframes ping {
+    0% {
+        box-shadow: 0 0 10px white;
+    }
+
+    50% {
+        box-shadow: 0 0 50px rgba(255, 255, 2550, 0.507);
+    }
+
+    100% {
+        box-shadow: 0 0 10px white;
+    }
 }
 
 .optionfield {
@@ -463,6 +491,7 @@ button {
   .tomorrowCont {
       height: auto;
       width: 100%;
+      max-width: 600px;
       border: 1px solid gray;
       border-radius: 30px;
       margin: 30px auto;
@@ -472,6 +501,7 @@ button {
   .alertContainer {
     display: none;
   }
+
 
 
 
