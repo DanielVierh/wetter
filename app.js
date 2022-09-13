@@ -108,6 +108,7 @@ function weatherRequest() {
                 createNotification(
                     'Der Ort konnte nicht gefunden werden :(',
                     'alert',
+                    2000
                 );
                 adress = '';
                 let index;
@@ -210,6 +211,7 @@ function requestWeatherForecast(lat, lon) {
                 document.getElementById("outpAlertStart").innerHTML = 'Start: ' + alertStart;
                 document.getElementById("outpAlertEnd").innerHTML = 'Ende: ' + alertEnd;
                 document.getElementById("outpAlertSource").innerHTML = 'Quelle: ' + alertSender;
+                createNotification(`Wetteralarm: ${alertEvent}`, "alert", 7000)
             }else {
                 alertContainer.classList.remove("active");
             }
@@ -601,12 +603,13 @@ function addCity() {
             createNotification(
                 `"${adress}" hast du bereits abgespeichert!`,
                 'warning',
+                3000
             );
         } else {
             if (adress != '') {
                 cityList.push(adress);
                 saveCity();
-                createNotification(`${adress} wurde gespeichert`, 'success');
+                createNotification(`${adress} wurde gespeichert`, 'success', 3000);
                 showSavedCitys();
             }
         }
@@ -692,7 +695,7 @@ function getCurrentLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(showPosition);
     } else {
-        createNotification('Geolocation ist nicht verfügbar', 'alert');
+        createNotification('Geolocation ist nicht verfügbar', 'alert', 3000);
         isCurrentLocation = false;
     }
 }
@@ -706,7 +709,7 @@ function showPosition(position) {
 }
 
 // Toast Notification
-function createNotification(message, messageType) {
+function createNotification(message, messageType, showTime) {
     // Erstelle Div
     const notifi = document.createElement('div');
     // Füge Klasse hinzu
@@ -720,7 +723,7 @@ function createNotification(message, messageType) {
     // Nachricht nach festgelegter Zeit wieder entfernen
     setTimeout(() => {
         notifi.remove();
-    }, 2000);
+    }, showTime);
 }
 
 // Stadt markieren, diese wird bei Neustart zuerst geladen
@@ -733,7 +736,7 @@ function startCity() {
         cityList.splice(arrIndex, 1);
         cityList.splice(0, 0, cityName);
     }
-    createNotification(`"${cityName}" wird nun immer beim Start angezeigt`, 'success');
+    createNotification(`"${cityName}" wird nun immer beim Start angezeigt`, 'success', 2000);
     saveCity();
     showSavedCitys();
 }
