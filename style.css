@@ -272,7 +272,7 @@ button {
 .miniContainer {
     width: 35%;
     max-width: 270px;
-    height: 190px;
+    height: 200px;
     font-size: 16px;
     background-color: #0b182d56;
     color: white;
@@ -516,4 +516,9 @@ button {
     border-radius: 15px;
     margin: 30px auto;
     box-shadow: 0 15px 10px black;
+  }
+
+  .alertContainer.active p{
+    padding: 10px;
+    font-size: .8em;
   }

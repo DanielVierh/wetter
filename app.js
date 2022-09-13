@@ -30,7 +30,7 @@ const outSun = document.getElementById("outSun");
 const infoBtn = document.getElementById("infoBtn");
 const detailContainer = document.getElementById("detailContainer");
 const outpSmallCurrentTemp = document.getElementById("outpSmallTemp");
-
+const alertContainer = document.getElementById("alertContainer");
 
 // Load
 ky = dcrK(ak);
@@ -195,6 +195,25 @@ function requestWeatherForecast(lat, lon) {
             let weekDay;
             const timezoneOffset = data.timezone_offset;
 
+            if(data.alerts) {
+                console.log('Alaaarm, Alaaaaarm');
+                const alertBody = data.alerts[0].description;
+                const alertEvent = data.alerts[0].event;
+                const alertStart = intTimeConvert(data.alerts[0].start);
+                const alertEnd = intTimeConvert(data.alerts[0].end);
+                const alertSender = data.alerts[0].sender_name;
+
+                alertContainer.classList.add("active");
+
+                document.getElementById("outpAlertTitle").innerHTML = alertEvent;
+                document.getElementById("outpAlertMessage").innerHTML = alertBody;
+                document.getElementById("outpAlertStart").innerHTML = 'Start: ' + alertStart;
+                document.getElementById("outpAlertEnd").innerHTML = 'Ende: ' + alertEnd;
+                document.getElementById("outpAlertSource").innerHTML = 'Quelle: ' + alertSender;
+            }else {
+                alertContainer.classList.remove("active");
+            }
+
 
             let uvIndex = data.current.uvi;
             let nextUVIndex = 0;
@@ -306,7 +325,7 @@ function requestWeatherForecast(lat, lon) {
                 console.log(error);
             }
             document.getElementById("outpRain").innerHTML = `${rain} mm`;
-            
+
             if(tomorrowRain === 0) {
                 document.getElementById("outputRainTomorrow").innerHTML = `Es bleibt morgen trocken.`;
             }else {
