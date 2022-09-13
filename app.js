@@ -14,6 +14,8 @@ let weatherType = 'opt_weather';
 let mainData = [];
 let meineKarte = L.map('karte').setView([51.162290, 6.462739], 2);
 let airQualityInfoboxIsVisible = false;
+let alertInfoboxIsVisible = false;
+
 
 // Button etc.
 const currentLocationButton = document.getElementById('btnCurrLoc');
@@ -31,6 +33,9 @@ const infoBtn = document.getElementById("infoBtn");
 const detailContainer = document.getElementById("detailContainer");
 const outpSmallCurrentTemp = document.getElementById("outpSmallTemp");
 const alertContainer = document.getElementById("alertContainer");
+const alertDetailContainer = document.getElementById("alertDetailContainer");
+const btnAlert = document.getElementById("btnAlert")
+
 
 // Load
 ky = dcrK(ak);
@@ -205,6 +210,9 @@ function requestWeatherForecast(lat, lon) {
                 const alertSender = data.alerts[0].sender_name;
 
                 alertContainer.classList.add("active");
+                alertDetailContainer.classList.remove("active");
+                alertInfoboxIsVisible = false;
+
 
                 document.getElementById("outpAlertTitle").innerHTML = alertEvent;
                 document.getElementById("outpAlertMessage").innerHTML = alertBody;
@@ -904,5 +912,19 @@ function toggleInfoBox() {
         detailContainer.classList.remove("active");
         airQualityInfoboxIsVisible = false;
         infoBtn.innerHTML = 'Mehr Infos';
+    }
+}
+
+
+function toggleAlertBox() {
+
+    if(alertInfoboxIsVisible === false) {
+        alertDetailContainer.classList.add("active");
+        alertInfoboxIsVisible = true;
+        btnAlert.innerHTML = 'Infos ausblenden';
+    }else {
+        alertDetailContainer.classList.remove("active");
+        alertInfoboxIsVisible = false;
+        btnAlert.innerHTML = 'Mehr Infos';
     }
 }

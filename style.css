@@ -502,6 +502,15 @@ button {
     display: none;
   }
 
+  .moreAlertInfo {
+    display: none;
+
+}
+
+.moreAlertInfo.active {
+    display: block;
+}
+
 
 
 
