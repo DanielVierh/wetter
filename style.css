@@ -521,10 +521,12 @@ button {
     font-weight: bold;
     height: auto;
     width: 100%;
+    max-width: 600px;
     border: 1px solid gray;
     border-radius: 15px;
     margin: 30px auto;
     box-shadow: 0 15px 10px black;
+    padding-bottom: 25px;
   }
 
   .alertContainer.active p{
