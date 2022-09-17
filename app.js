@@ -214,9 +214,11 @@ function requestWeatherForecast(lat, lon) {
                 if(alertAmount > 1) {
                     btnShowMoreAlerts.classList.add("active");
                     outpAlertHeadline.innerHTML = "Wetteralarm " + "1/" + alertAmount;
+                    createNotification( alertAmount + " Wetteralarm Meldungen sind vorhanden", "alert", 7000)
                 }else {
                     btnShowMoreAlerts.classList.remove("active");
                     outpAlertHeadline.innerHTML = "Wetteralarm " + "1/" + alertAmount;
+                    createNotification( alertAmount + " Wetteralarm ist vorhanden", "alert", 7000)
                 }
 
                 // Weiter Button
@@ -226,7 +228,6 @@ function requestWeatherForecast(lat, lon) {
                     }else {
                         showAlert = 0;
                     }
-                    console.log(showAlert);
                     alertBody = data.alerts[showAlert].description;
                     alertEvent = data.alerts[showAlert].event;
                     alertStart = intTimeConvert(data.alerts[showAlert].start);
@@ -253,12 +254,11 @@ function requestWeatherForecast(lat, lon) {
                 document.getElementById("outpAlertStart").innerHTML = 'Start: ' + alertStart;
                 document.getElementById("outpAlertEnd").innerHTML = 'Ende: ' + alertEnd;
                 document.getElementById("outpAlertSource").innerHTML = 'Quelle: ' + alertSender;
-                createNotification(`Wetteralarm: ${alertEvent}`, "alert", 7000)
             }else {
                 alertContainer.classList.remove("active");
             }
 
-
+            // UV Index
             let uvIndex = data.current.uvi;
             let nextUVIndex = 0;
 
