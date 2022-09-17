@@ -502,6 +502,10 @@ button {
     display: none;
   }
 
+  .moreAlertsButton {
+      
+  }
+
   .moreAlertInfo {
     display: none;
 
