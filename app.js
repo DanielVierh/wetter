@@ -15,7 +15,7 @@ let mainData = [];
 let meineKarte = L.map('karte').setView([51.162290, 6.462739], 2);
 let airQualityInfoboxIsVisible = false;
 let alertInfoboxIsVisible = false;
-
+let showAlert = 0;
 
 // Button etc.
 const currentLocationButton = document.getElementById('btnCurrLoc');
@@ -35,8 +35,8 @@ const outpSmallCurrentTemp = document.getElementById("outpSmallTemp");
 const alertContainer = document.getElementById("alertContainer");
 const alertDetailContainer = document.getElementById("alertDetailContainer");
 const btnAlert = document.getElementById("btnAlert")
-
-
+const btnShowMoreAlerts = document.getElementById("btnShowMoreAlerts");
+const outpAlertHeadline = document.getElementById("outpAlertHeadline");
 // Load
 ky = dcrK(ak);
 window.onload = loadData();
@@ -201,30 +201,64 @@ function requestWeatherForecast(lat, lon) {
             let weekDay;
             const timezoneOffset = data.timezone_offset;
 
+            // Wetteralarm
             if(data.alerts) {
-                console.log('Alaaarm, Alaaaaarm');
-                const alertBody = data.alerts[0].description;
-                const alertEvent = data.alerts[0].event;
-                const alertStart = intTimeConvert(data.alerts[0].start);
-                const alertEnd = intTimeConvert(data.alerts[0].end);
-                const alertSender = data.alerts[0].sender_name;
+                showAlert = 0;
+                let alertBody = data.alerts[showAlert].description;
+                let alertEvent = data.alerts[showAlert].event;
+                let alertStart = intTimeConvert(data.alerts[showAlert].start);
+                let alertEnd = intTimeConvert(data.alerts[showAlert].end);
+                let alertSender = data.alerts[showAlert].sender_name;
+                
+                const alertAmount = data.alerts.length;
+                if(alertAmount > 1) {
+                    btnShowMoreAlerts.classList.add("active");
+                    outpAlertHeadline.innerHTML = "Wetteralarm " + "1/" + alertAmount;
+                    createNotification( alertAmount + " Wetteralarm Meldungen sind vorhanden", "alert", 7000)
+                }else {
+                    btnShowMoreAlerts.classList.remove("active");
+                    outpAlertHeadline.innerHTML = "Wetteralarm " + "1/" + alertAmount;
+                    createNotification( alertAmount + " Wetteralarm ist vorhanden", "alert", 7000)
+                }
+
+                // Weiter Button
+                btnShowMoreAlerts.addEventListener("click", ()=> {
+                    if(showAlert < alertAmount -1) {
+                        showAlert++;
+                    }else {
+                        showAlert = 0;
+                    }
+                    alertBody = data.alerts[showAlert].description;
+                    alertEvent = data.alerts[showAlert].event;
+                    alertStart = intTimeConvert(data.alerts[showAlert].start);
+                    alertEnd = intTimeConvert(data.alerts[showAlert].end);
+                    alertSender = data.alerts[showAlert].sender_name;
+
+                    outpAlertHeadline.innerHTML = "Wetteralarm " + (showAlert + 1) + "/" + alertAmount;
+                    document.getElementById("outpAlertTitle").innerHTML = alertEvent;
+                    document.getElementById("outpAlertMessage").innerHTML = alertBody;
+                    document.getElementById("outpAlertStart").innerHTML = 'Start: ' + alertStart;
+                    document.getElementById("outpAlertEnd").innerHTML = 'Ende: ' + alertEnd;
+                    document.getElementById("outpAlertSource").innerHTML = 'Quelle: ' + alertSender;
+                })
+                
+               
 
                 alertContainer.classList.add("active");
                 alertDetailContainer.classList.remove("active");
                 alertInfoboxIsVisible = false;
 
 
-                document.getElementById("outpAlertTitle").innerHTML = alertEvent;
+                document.getElementById("outpAlertTitle").innerHTML = alertEvent
                 document.getElementById("outpAlertMessage").innerHTML = alertBody;
                 document.getElementById("outpAlertStart").innerHTML = 'Start: ' + alertStart;
                 document.getElementById("outpAlertEnd").innerHTML = 'Ende: ' + alertEnd;
                 document.getElementById("outpAlertSource").innerHTML = 'Quelle: ' + alertSender;
-                createNotification(`Wetteralarm: ${alertEvent}`, "alert", 7000)
             }else {
                 alertContainer.classList.remove("active");
             }
 
-
+            // UV Index
             let uvIndex = data.current.uvi;
             let nextUVIndex = 0;
 
