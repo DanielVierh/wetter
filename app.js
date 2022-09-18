@@ -779,6 +779,16 @@ function getWeathertype(selectObject) {
         nextUVIndex =savedData.hourly[i].uvi;
         const nextHumidity = savedData.hourly[i].humidity;
         const nextWind = savedData.hourly[i].wind_speed;
+        let nextRain = 0;
+        if(savedData.hourly[i].rain) {
+            nextRain = savedData.hourly[i].rain;
+            nextRain = JSON.stringify(nextRain);
+            nextRain = splitVal(nextRain + ' ' ,':', 1)
+            nextRain = splitVal(nextRain + ' ' ,'}', 0)
+
+        }
+
+        console.log(nextRain);
         const windgesch = nextWind * 3.6;
 
                 // ? Sommerzeit wird rausgerechnet
@@ -812,6 +822,10 @@ function getWeathertype(selectObject) {
         }
         if(type === 'opt_wind') {
             document.getElementById(index).innerHTML = `${windgesch.toFixed(0)} Km/h`;
+            document.getElementById(index).classList.add("active");
+        }
+        if(type === 'opt_rain') {
+            document.getElementById(index).innerHTML = `${nextRain}`;
             document.getElementById(index).classList.add("active");
         }
         imgSrc = `https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/widgets/${weatherIcon}.png`;
