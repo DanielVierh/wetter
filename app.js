@@ -16,6 +16,11 @@ let meineKarte = L.map('karte').setView([51.162290, 6.462739], 2);
 let airQualityInfoboxIsVisible = false;
 let alertInfoboxIsVisible = false;
 let showAlert = 0;
+let settingsAreVisible = false;
+
+let weatherSettings = {
+    appeareanceMode: ''
+}
 
 // Button etc.
 const currentLocationButton = document.getElementById('btnCurrLoc');
@@ -37,6 +42,12 @@ const alertDetailContainer = document.getElementById("alertDetailContainer");
 const btnAlert = document.getElementById("btnAlert")
 const btnShowMoreAlerts = document.getElementById("btnShowMoreAlerts");
 const outpAlertHeadline = document.getElementById("outpAlertHeadline");
+const btnSettings = document.getElementById("btnSettings");
+const settingWindow = document.getElementById("settingWindow");
+const theBody = document.getElementById("theBody");
+const settingsAppearance = document.getElementById("settingsAppearance");
+const btnSaveSettings = document.getElementById("btnSaveSettings");
+
 // Load
 ky = dcrK(ak);
 window.onload = loadData();
@@ -209,7 +220,7 @@ function requestWeatherForecast(lat, lon) {
                 let alertStart = intTimeConvert(data.alerts[showAlert].start);
                 let alertEnd = intTimeConvert(data.alerts[showAlert].end);
                 let alertSender = data.alerts[showAlert].sender_name;
-                
+
                 const alertAmount = data.alerts.length;
                 if(alertAmount > 1) {
                     btnShowMoreAlerts.classList.add("active");
@@ -241,8 +252,8 @@ function requestWeatherForecast(lat, lon) {
                     document.getElementById("outpAlertEnd").innerHTML = 'Ende: ' + alertEnd;
                     document.getElementById("outpAlertSource").innerHTML = 'Quelle: ' + alertSender;
                 })
-                
-               
+
+
 
                 alertContainer.classList.add("active");
                 alertDetailContainer.classList.remove("active");
@@ -606,6 +617,7 @@ function ausw() {
 
 // Lädt die zuerst abgespeicherte Stadt
 function loadData() {
+    setAppearance('opt_normalmode')
     if (localStorage.getItem('stored_CityList') != null) {
         cityList = JSON.parse(localStorage.getItem('stored_CityList'));
         adress = cityList[0];
@@ -617,6 +629,17 @@ function loadData() {
         weatherContainer.style.display = 'none';
         cityContainer.style.display = 'none';
         loadMap(51.162290, 6.462739);
+    }
+
+    if (localStorage.getItem('stored_WeatherSettings') != null) {
+        weatherSettings = JSON.parse(localStorage.getItem('stored_WeatherSettings'));
+        try {
+            setAppearance(`${weatherSettings.appeareanceMode}`);
+        } catch (error) {
+            setAppearance('opt_normalmode');
+        }
+    } else {
+        setAppearance('opt_normalmode');
     }
 }
 
@@ -636,6 +659,10 @@ function showSavedCitys() {
 // Speichert eine Stadt in den localStorage
 function saveCity() {
     localStorage.setItem('stored_CityList', JSON.stringify(cityList));
+}
+
+function saveSettings() {
+    localStorage.setItem('stored_WeatherSettings', JSON.stringify(weatherSettings));
 }
 
 // Fügt die Stadt in die Liste der Städte hinzu, nach Überprüfung, ob diese bereits vorhanden ist
@@ -813,6 +840,7 @@ function getWeathertype(selectObject) {
         nextUVIndex =savedData.hourly[i].uvi;
         const nextHumidity = savedData.hourly[i].humidity;
         const nextWind = savedData.hourly[i].wind_speed;
+        const nextClouds = savedData.hourly[i].clouds;
         let nextRain = 0;
         if(savedData.hourly[i].rain) {
             nextRain = savedData.hourly[i].rain;
@@ -822,7 +850,6 @@ function getWeathertype(selectObject) {
 
         }
 
-        console.log(nextRain);
         const windgesch = nextWind * 3.6;
 
                 // ? Sommerzeit wird rausgerechnet
@@ -860,6 +887,10 @@ function getWeathertype(selectObject) {
         }
         if(type === 'opt_rain') {
             document.getElementById(index).innerHTML = `${nextRain}`;
+            document.getElementById(index).classList.add("active");
+        }
+        if(type === 'opt_clouds') {
+            document.getElementById(index).innerHTML = `${nextClouds}%`;
             document.getElementById(index).classList.add("active");
         }
         imgSrc = `https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/widgets/${weatherIcon}.png`;
@@ -976,3 +1007,52 @@ function toggleAlertBox() {
         btnAlert.innerHTML = 'Mehr Infos';
     }
 }
+
+
+// Settings
+btnSettings.addEventListener("click", ()=> {
+    if (settingsAreVisible === false) {
+        settingsAreVisible = true;
+        settingWindow.classList.add("active");
+    }else {
+        settingsAreVisible = false;
+        settingWindow.classList.remove("active");
+    }
+})
+
+
+btnSaveSettings.addEventListener("click", ()=> {
+    weatherSettings.appeareanceMode = settingsAppearance.value;
+    saveSettings();
+    settingsAreVisible = false;
+    settingWindow.classList.remove("active");
+    createNotification("Einstellungen wurden gespeichert", "success",3000)
+})
+
+function changeAppearance(selectObject) {
+    const value = selectObject.value;
+    setAppearance(value);
+    console.log(value);
+  }
+
+
+  function setAppearance(value) {
+    if(value === 'opt_darkmode') {
+        theBody.classList.remove("lightMode");
+        theBody.classList.remove("normalMode");
+        theBody.classList.add("darkMode");
+    }
+
+    if(value === 'opt_normal') {
+        theBody.classList.remove("darkMode");
+        theBody.classList.remove("lightMode");
+        theBody.classList.add("normalMode");
+    }
+
+    if(value === 'opt_lightmode') {
+        theBody.classList.remove("darkMode");
+        theBody.classList.remove("normalMode");
+        theBody.classList.add("lightMode");
+    }
+
+  }

@@ -1,5 +1,5 @@
 body {
-    background: linear-gradient(to right, #1e828f, #315896);
+    background: linear-gradient(to right, #2da6b6, #4472bc);
     color: white;
     margin: 0;
     padding: 0;
@@ -42,6 +42,7 @@ body {
 #outpOrt {
     font-size: 2rem;
     margin: 0;
+    z-index: 10000;
 }
 
 #outpWeather {
@@ -167,7 +168,7 @@ button {
     font-size: 0.8em;
 }
 .forecastText.active {
-    font-size: .6em;
+    font-size: 0.6em;
     margin-top: -8px;
 }
 
@@ -231,6 +232,7 @@ button {
     max-height: 200px;
     overflow-y: auto;
     transition: transform 0.4s ease;
+    z-index: 100005;
 }
 
 /* Nachrichtenbox (Toast) Styling */
@@ -239,6 +241,7 @@ button {
     padding: 1rem 2rem;
     margin: 0.5rem;
     font-weight: bold;
+
 }
 .toast.alert {
     background-color: rgb(105, 6, 6);
@@ -281,7 +284,6 @@ button {
     margin: 5px;
     text-align: center;
     box-shadow: 0 5px 5px black;
-
 }
 
 .small {
@@ -302,7 +304,7 @@ button {
 }
 
 #detainTextAirQuality {
-    font-size: .8em;
+    font-size: 0.8em;
     text-align: center;
 }
 
@@ -324,21 +326,19 @@ button {
 
 .moreAirQualityInfo.active {
     display: block;
-    animation: openSmooth .7s ease-in-out;
+    animation: openSmooth 0.7s ease-in-out;
 }
-
 
 @keyframes openSmooth {
     0% {
         height: 0px;
         color: transparent;
     }
-    100%{
+    100% {
         height: 150px;
         color: white;
     }
 }
-
 
 .outputVal {
     font-size: 1em;
@@ -348,7 +348,6 @@ button {
     width: 80%;
     margin: 0 auto;
 }
-
 
 #progress_Temp {
     width: 80%;
@@ -366,7 +365,6 @@ button {
     margin-bottom: -5px;
     letter-spacing: 2px;
 }
-
 
 .tempContainer {
     width: 100%;
@@ -387,7 +385,7 @@ button {
     background-color: orange;
 }
 
-.wind{
+.wind {
     width: 2px;
     height: 40px;
     background-color: white;
@@ -404,13 +402,12 @@ button {
     margin: 38px -3px;
 }
 
-
 .sticky-top {
     position: fixed;
     /* width: 180px; */
     top: 0;
     margin: 0 auto;
-    z-index: 50;
+    z-index: 100;
     font-size: 1.5em;
     background-color: #315896c9;
     border-radius: 40px;
@@ -447,78 +444,66 @@ button {
     margin-bottom: 15px;
 }
 
-
 .karte {
     height: 300px;
     width: 90vw;
     margin: 0 auto;
     border-radius: 10px;
-  }
+}
 
-
-  .outpCurrTime {
+.outpCurrTime {
     margin: 0 0 30px 0;
     letter-spacing: 1.5px;
-    font-size: .8em;
+    font-size: 0.8em;
     text-shadow: 3px 3px 15px black;
-  }
+}
 
+.sunstand {
+    width: 100px;
+    height: 1px;
+    border: 1px solid white;
+    border-radius: 5px;
+    margin: 0 15px 30px 15px;
+    position: relative;
+    transition: all 1s ease-in-out;
+}
 
-  .sunstand {
-      width: 100px;
-      height: 1px;
-      border: 1px solid white;
-      border-radius: 5px;
-      margin: 0 15px 30px 15px;
-      position: relative;
-      transition: all 1s ease-in-out;
-  }
+.sunstand::after {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: 0;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    border: 2px solid yellow;
+    background-color: white;
+    box-shadow: 0 0 15px yellow;
+}
 
-  .sunstand::after{
-      content: '';
-      position: absolute;
-      top: -8px;
-      left:0;
-      width: 15px;
-      height: 15px;
-      border-radius: 50%;
-      border: 2px solid yellow;
-      background-color: white;
-      box-shadow: 0 0 15px yellow;
-  }
+.tomorrowCont {
+    height: auto;
+    width: 100%;
+    max-width: 600px;
+    border: 1px solid gray;
+    border-radius: 30px;
+    margin: 30px auto;
+    box-shadow: 0 15px 10px black;
+}
 
-
-  .tomorrowCont {
-      height: auto;
-      width: 100%;
-      max-width: 600px;
-      border: 1px solid gray;
-      border-radius: 30px;
-      margin: 30px auto;
-      box-shadow: 0 15px 10px black;
-  }
-
-  .alertContainer {
+.alertContainer {
     display: none;
-  }
+}
 
-  .moreAlertsButton {
-      
-  }
-
-  .moreAlertInfo {
+.moreAlertInfo {
     display: none;
-
 }
 
 .moreAlertInfo.active {
     display: block;
 }
 
-
-
-
-  .alertContainer.active{
+.alertContainer.active {
     display: block;
     background-color: rgba(255, 0, 0, 0.685);
     color: white;
@@ -531,9 +516,63 @@ button {
     margin: 30px auto;
     box-shadow: 0 15px 10px black;
     padding-bottom: 25px;
-  }
+}
 
-  .alertContainer.active p{
+.alertContainer.active p {
     padding: 10px;
-    font-size: .8em;
-  }
+    font-size: 0.8em;
+}
+
+.settingsbutton {
+    position: absolute;
+    left: 0;
+    top: 0;
+    padding: 10px;
+    margin: 5px;
+    border-radius: 50%;
+    background-color: black;
+    border: 1px solid rgba(255, 255, 255, 0.486);
+    z-index: 10002;
+}
+
+
+.settingArea {
+    display: none;
+}
+
+.settingArea.active {
+    display: block;
+    width: 90%;
+    height: 400px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    background-color: rgba(0, 0, 0, 0.9);
+    z-index: 10001;
+    border-radius: 0 15px 15px 15px;
+    box-shadow: 0 0 30px black;
+    border: 1px solid darkslategray;
+}
+
+.saveButton {
+    background-color: green;
+    width: 40%;
+    margin: 30px auto;
+    padding: 10px 3px;
+    border-radius: 15px;
+    box-shadow: inset 0 0 8px white;
+
+}
+
+
+
+
+    .darkMode {
+        background: linear-gradient(to right, #102123, #020508);
+    }
+    .normalMode {
+        background: linear-gradient(to right, #2da6b6, #4472bc);
+    }
+    .lightMode {
+        background: linear-gradient(to right, #f5f5f5, #5a5e65);
+    }

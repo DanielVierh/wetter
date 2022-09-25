@@ -16,7 +16,20 @@
     <link rel="stylesheet" href="style.css">
 </head>
 
-<body>
+<body id="theBody">
+    <!-- Settings -->
+    <div class="settingsbutton" id="btnSettings"><i class="fa-solid fa-sliders"></i></div>
+    <div class="settingArea" id="settingWindow">
+        <h2>Einstellungen</h2>
+        <h4>Erscheinungsbild</h4>
+        <select id="settingsAppearance" onchange="changeAppearance(this)" class="optionfield">
+            <option value="opt_none">Auswählen</option>
+            <option value="opt_darkmode">Darkmode</option>
+            <option value="opt_normal">Normal</option>
+            <option value="opt_lightmode">Lightmode</option>
+        </select>
+        <div class="saveButton" id="btnSaveSettings">Speichern</div>
+    </div>
     <!-- <div id="coverLayer"></div> -->
     <!-- <div class="backgroundLayer" id="backgrLayer" hidden></div> -->
     <div class="inputField">
@@ -117,6 +130,7 @@
             <option value="opt_wind">Wind</option>
             <option value="opt_humidity">Feuchtigkeit</option>
             <option value="opt_rain">Regenmenge</option>
+            <option value="opt_clouds">Wolkendichte</option>
         </select>
 
         <div class="hourForecastContainer">
@@ -307,7 +321,7 @@
         <div id="toasts"></div>
     </footer>
 
-    <p>v 7.9.0 | 13.09.22</p>
+    <p>v 8.0.0 | 25.09.22</p>
 
     <p id="errorlog"></p>
 
