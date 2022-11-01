@@ -360,7 +360,7 @@ function requestWeatherForecast(lat, lon) {
                 moonPhaseTrend = 'abnehmend';
             }
 
-            //document.getElementById("outpMoonPhase").innerHTML = `${moonphaseToday}% ${moonPhaseTrend}. Morgen ${moonphaseTomorrow}%`
+            document.getElementById("outpMoonPhase").innerHTML = `${moonPhaseTrend}`
             document.getElementById("outpMoonRise").innerHTML = `${rawDatetime_in_Time(data.daily[0].moonrise)}`;
             document.getElementById("outpMoonSet").innerHTML = `${rawDatetime_in_Time(data.daily[0].moonset)}`;
 
