@@ -271,6 +271,7 @@ function requestWeatherForecast(lat, lon) {
             // UV Index
             let uvIndex = data.current.uvi;
             let nextUVIndex = 0;
+            let maxUvIndex = data.daily[0].uvi;
 
             // Windgeschwidigkeit und Richtung
             let windDeg = data.current.wind_deg;
@@ -313,6 +314,7 @@ function requestWeatherForecast(lat, lon) {
             let isAfterSunrise = false;
             let isBeforeSunrise = false;
             let isBeforeSunset = false; // Wird noch nicht benutzt. Mal gucken...
+
 
             if(dateTimeNowRaw > sunsetRaw ) {
                 isAfterSunset = true;
@@ -408,7 +410,7 @@ function requestWeatherForecast(lat, lon) {
 
             // Current UV Index
             document.getElementById("outUvIndx").innerHTML = `${uvIndex} - ${inerpreteUvIndex(uvIndex)}`;
-            console.log(data);
+            document.getElementById("outpMaxUvIndex").innerHTML = `Heute Max: ${maxUvIndex}`;
 
             timeMinusSummertime = 0;
             // Forecast Stunden Felder einblenden
@@ -433,6 +435,7 @@ function requestWeatherForecast(lat, lon) {
                 hour = splitVal(hour, ':', 0);
 
                 nextUVIndex =data.hourly[i].uvi;
+                
                 if(uvIndexisCritical === true && nextUVIndex < 3) {
                     uvIndexisCritical = false;
                     uvIndexIsCriticalUntil = `${hour} Uhr`;
@@ -520,7 +523,6 @@ function requestWeatherForecast(lat, lon) {
                 document.getElementById('outpTemp').innerHTML = `${temp}°C`;
                 iconVal = data.current.weather[0].icon;
                 iconVal = iconVal.slice(-1);
-                // console.log(`Datum:${intTimeConvert(data.daily[0].dt)}`);
                 const imgSrc = `https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/widgets/${data.current.weather[0].icon}.png`;
                 document.getElementById('weatherimg').src = imgSrc;
                 document.getElementById('outpWeather').innerHTML =
