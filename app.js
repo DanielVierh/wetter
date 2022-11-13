@@ -9,7 +9,7 @@ let timezone;
 let iconVal;
 let isCurrentLocation = false;
 let uvIndexisCritical = false;
-let uvIndexIsCriticalUntil= '';
+let uvIndexIsCriticalUntil = '';
 let weatherType = 'opt_weather';
 let mainData = [];
 let meineKarte = L.map('karte').setView([51.162290, 6.462739], 2);
@@ -103,7 +103,7 @@ function weatherRequest() {
                 const imgSrc = `https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/widgets/${data.weather[0].icon}.png`;
                 document.getElementById('weatherimg').src = imgSrc;
                 document.getElementById('outpWeather').innerHTML =
-                data.weather[0].description;
+                    data.weather[0].description;
                 const windgesch = data.wind.speed * 3.6;
                 document.getElementById('outpWind').innerHTML = `${windgesch.toFixed(0)} Km/h`;
                 const lat = data.coord.lat;
@@ -161,7 +161,8 @@ function loadMap(lat, lon) {
     meineKarte = L.map('karte').setView(mapOverViewCoord, 3);
 
     L.tileLayer('https://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png', {
-    maxZoom: 900, attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'}).addTo(meineKarte);
+        maxZoom: 900, attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(meineKarte);
 
     L.geoJSON(mapPlace).addTo(meineKarte);
 }
@@ -212,7 +213,7 @@ function requestWeatherForecast(lat, lon) {
             const timezoneOffset = data.timezone_offset;
 
             // Wetteralarm
-            if(data.alerts) {
+            if (data.alerts) {
                 showAlert = 0;
                 let alertBody = data.alerts[showAlert].description;
                 let alertEvent = data.alerts[showAlert].event;
@@ -221,21 +222,21 @@ function requestWeatherForecast(lat, lon) {
                 let alertSender = data.alerts[showAlert].sender_name;
 
                 const alertAmount = data.alerts.length;
-                if(alertAmount > 1) {
+                if (alertAmount > 1) {
                     btnShowMoreAlerts.classList.add("active");
                     outpAlertHeadline.innerHTML = "Wetteralarm " + "1/" + alertAmount;
-                    createNotification( alertAmount + " Wetteralarm Meldungen sind vorhanden", "alert", 7000)
-                }else {
+                    createNotification(alertAmount + " Wetteralarm Meldungen sind vorhanden", "alert", 7000)
+                } else {
                     btnShowMoreAlerts.classList.remove("active");
                     outpAlertHeadline.innerHTML = "Wetteralarm " + "1/" + alertAmount;
-                    createNotification( alertAmount + " Wetteralarm ist vorhanden", "alert", 7000)
+                    createNotification(alertAmount + " Wetteralarm ist vorhanden", "alert", 7000)
                 }
 
                 // Weiter Button
-                btnShowMoreAlerts.addEventListener("click", ()=> {
-                    if(showAlert < alertAmount -1) {
+                btnShowMoreAlerts.addEventListener("click", () => {
+                    if (showAlert < alertAmount - 1) {
                         showAlert++;
-                    }else {
+                    } else {
                         showAlert = 0;
                     }
                     alertBody = data.alerts[showAlert].description;
@@ -264,7 +265,7 @@ function requestWeatherForecast(lat, lon) {
                 document.getElementById("outpAlertStart").innerHTML = 'Start: ' + alertStart;
                 document.getElementById("outpAlertEnd").innerHTML = 'Ende: ' + alertEnd;
                 document.getElementById("outpAlertSource").innerHTML = 'Quelle: ' + alertSender;
-            }else {
+            } else {
                 alertContainer.classList.remove("active");
             }
 
@@ -302,11 +303,11 @@ function requestWeatherForecast(lat, lon) {
 
             // Akt. Ortsdatum & Zeit
             const dateTimeNowRaw = intTimeConvert(data.current.dt + timezone - 3800);
-            const dateTimeNow_Day = splitVal(dateTimeNowRaw  + '', " ", 2);
-            const dateTimeNow_Month = splitVal(dateTimeNowRaw  + '', " ", 1);
-            const dateTimeNow_TIME = splitVal(dateTimeNowRaw  + '', " ", 4);
-            const dateTimeNow_Hour = splitVal(dateTimeNow_TIME  + '', ":", 0)
-            const dateTimeNow_Minute = splitVal(dateTimeNow_TIME  + '', ":", 1)
+            const dateTimeNow_Day = splitVal(dateTimeNowRaw + '', " ", 2);
+            const dateTimeNow_Month = splitVal(dateTimeNowRaw + '', " ", 1);
+            const dateTimeNow_TIME = splitVal(dateTimeNowRaw + '', " ", 4);
+            const dateTimeNow_Hour = splitVal(dateTimeNow_TIME + '', ":", 0)
+            const dateTimeNow_Minute = splitVal(dateTimeNow_TIME + '', ":", 1)
             document.getElementById("outCurrDatetime").innerHTML = `${dateTimeNow_Day}.${dateTimeNow_Month} | ${dateTimeNow_Hour}:${dateTimeNow_Minute}`;
 
             // Sonnenstand ermitteln
@@ -316,29 +317,29 @@ function requestWeatherForecast(lat, lon) {
             let isBeforeSunset = false; // Wird noch nicht benutzt. Mal gucken...
 
 
-            if(dateTimeNowRaw > sunsetRaw ) {
+            if (dateTimeNowRaw > sunsetRaw) {
                 isAfterSunset = true;
             }
-            if(dateTimeNowRaw > sunriseRaw) {
+            if (dateTimeNowRaw > sunriseRaw) {
                 isAfterSunrise = true;
             }
-            if(dateTimeNowRaw < sunriseRaw) {
+            if (dateTimeNowRaw < sunriseRaw) {
                 isBeforeSunrise = true;
             }
-            if(dateTimeNowRaw < sunsetRaw) {
+            if (dateTimeNowRaw < sunsetRaw) {
                 isBeforeSunset = true;
             }
 
-            if(isAfterSunrise === true && isAfterSunset === true && isBeforeSunrise == false ) {
+            if (isAfterSunrise === true && isAfterSunset === true && isBeforeSunrise == false) {
                 // ? Abends vor Mitternacht
                 var styleElem = document.head.appendChild(document.createElement("style"));
                 styleElem.innerHTML = "#sunstand:after {left: 95px; top: 0px; background-Color: transparent;}";
 
-            }else if(isAfterSunrise === false && isAfterSunset === false && isBeforeSunrise == true) {
+            } else if (isAfterSunrise === false && isAfterSunset === false && isBeforeSunrise == true) {
                 // ? Nachts nach Mitternacht
                 var styleElem = document.head.appendChild(document.createElement("style"));
                 styleElem.innerHTML = "#sunstand:after {left: -15px; top: -3px; background-Color: transparent;}";
-            }else {
+            } else {
                 // ? Tagsüber
                 const todayTimeDiff = sunsetRaw - sunriseRaw;
                 const currentTimeDiff = sunsetRaw - dateTimeNowRaw;
@@ -349,44 +350,10 @@ function requestWeatherForecast(lat, lon) {
             }
 
 
+            get_MoonData(data);
 
-            // Mondphase
-            const moonphaseToday = data.daily[0].moon_phase;
-            const moonphaseTomorrow = data.daily[1].moon_phase;
-            let moonPhaseTrend = '';
-            if(moonphaseToday < moonphaseTomorrow) {
-                moonPhaseTrend = 'zunehmend';
-            }else {
-                moonPhaseTrend = 'abnehmend';
-            }
+            get_RainData(data);
 
-            document.getElementById("outpMoonPhase").innerHTML = `${moonPhaseTrend}`
-            document.getElementById("outpMoonRise").innerHTML = `${rawDatetime_in_Time(data.daily[0].moonrise)}`;
-            document.getElementById("outpMoonSet").innerHTML = `${rawDatetime_in_Time(data.daily[0].moonset)}`;
-
-            //###################################
-            // Regen
-            let rain = 0;
-            let tomorrowRain = 0;
-            try {
-                rain = data.daily[0].rain;
-                tomorrowRain = data.daily[1].rain;
-                if(rain === undefined) {
-                    rain = 0;
-                }
-                if(tomorrowRain === undefined) {
-                    tomorrowRain = 0;
-                }
-            } catch (error) {
-                console.log(error);
-            }
-            document.getElementById("outpRain").innerHTML = `${rain} mm`;
-
-            if(tomorrowRain === 0) {
-                document.getElementById("outputRainTomorrow").innerHTML = `Es bleibt morgen trocken.`;
-            }else {
-                document.getElementById("outputRainTomorrow").innerHTML = `Im laufe des Tages werden ${tomorrowRain} mm Regen erwartet.`;
-            }
             // Von heute Min und Max Temp eintragen
 
             tempMin = parseInt(data.daily[0].temp.min);
@@ -420,11 +387,11 @@ function requestWeatherForecast(lat, lon) {
                 temp = parseInt(data.hourly[i].temp);
                 weatherIcon = data.hourly[i].weather[0].icon;
                 // ? Sommerzeit wird rausgerechnet
-                const gmt = splitVal(intTimeConvert(data.hourly[i].dt) + '',' ', 5);
+                const gmt = splitVal(intTimeConvert(data.hourly[i].dt) + '', ' ', 5);
 
-                if(gmt === 'GMT+0200') {
+                if (gmt === 'GMT+0200') {
                     timeMinusSummertime = 3600;
-                }else {
+                } else {
                     timeMinusSummertime = 0;
                 }
                 hour = splitVal(
@@ -434,9 +401,9 @@ function requestWeatherForecast(lat, lon) {
                 );
                 hour = splitVal(hour, ':', 0);
 
-                nextUVIndex =data.hourly[i].uvi;
-                
-                if(uvIndexisCritical === true && nextUVIndex < 3) {
+                nextUVIndex = data.hourly[i].uvi;
+
+                if (uvIndexisCritical === true && nextUVIndex < 3) {
                     uvIndexisCritical = false;
                     uvIndexIsCriticalUntil = `${hour} Uhr`;
                     document.getElementById("outUvIndx").innerHTML = document.getElementById("outUvIndx").innerHTML + ` bis ${uvIndexIsCriticalUntil}`;
@@ -454,13 +421,13 @@ function requestWeatherForecast(lat, lon) {
             // Vorausgestellte For Schleife um die absolute tiefst und höchst temp der kommenden 5 Tage zu ermitteln
             let deepestTemp = 100;
             let highestTemp = -50;
-            for(let i = 0; i <=4; i++) {
+            for (let i = 0; i <= 4; i++) {
                 const compareDeepestTemp = parseInt(data.daily[i + 1].temp.min);
                 const compareHighestTemp = parseInt(data.daily[i + 1].temp.max);
-                if(compareDeepestTemp < deepestTemp) {
+                if (compareDeepestTemp < deepestTemp) {
                     deepestTemp = compareDeepestTemp;
                 }
-                if(compareHighestTemp > highestTemp) {
+                if (compareHighestTemp > highestTemp) {
                     highestTemp = compareHighestTemp;
                 }
             }
@@ -469,14 +436,14 @@ function requestWeatherForecast(lat, lon) {
             for (let i = 0; i <= 4; i++) {
                 index = `forecastBlock${i}`;
                 // Checkt, ob es morgen wärmer oder kühler wird
-                if(i === 0) {
+                if (i === 0) {
                     const tempDiffToday_Tomorrow = (data.daily[i + 1].temp.max - data.daily[i].temp.max).toFixed(1);
                     const lblTempDiff = document.getElementById("outpTempDiff");
                     if (tempDiffToday_Tomorrow >= 1) {
                         lblTempDiff.innerHTML = `Morgen wird es ${tempDiffToday_Tomorrow}°C wärmer.`;
-                    }else if(tempDiffToday_Tomorrow <= -1){
+                    } else if (tempDiffToday_Tomorrow <= -1) {
                         lblTempDiff.innerHTML = `Morgen kühlt es um ${tempDiffToday_Tomorrow}°C ab.`;
-                    }else {
+                    } else {
                         lblTempDiff.innerHTML = 'Die Temperatur bleibt morgen stabil.';
                     }
                 }
@@ -486,14 +453,14 @@ function requestWeatherForecast(lat, lon) {
                 tempMin = parseInt(data.daily[i + 1].temp.min);
                 tempMax = parseInt(data.daily[i + 1].temp.max);
 
-                 const margin_Bottom = deepestTemp + tempMin;
-                 const margin_Top = highestTemp - tempMax;
+                const margin_Bottom = deepestTemp + tempMin;
+                const margin_Top = highestTemp - tempMax;
 
 
                 // erzeugt Balken für Temperatur
                 const balken = document.getElementById(`tempDay${i}`);
                 balken.style.height = `${tempMax + 20}px`;
-                balken.style.marginBottom = `${margin_Bottom}px` ;
+                balken.style.marginBottom = `${margin_Bottom}px`;
                 balken.style.marginTop = `${margin_Top}px`;
 
 
@@ -514,6 +481,7 @@ function requestWeatherForecast(lat, lon) {
                 index = `foreCastImg${i}`;
                 document.getElementById(index).src = imgSrc;
             }
+            
             index = `forecastBlock${5}`;
             document.getElementById(index).hidden = false;
 
@@ -554,6 +522,52 @@ function requestWeatherForecast(lat, lon) {
         });
 }
 
+///////////////////////////////////////////
+// Weather Data functions
+//////////////////////////////////////////
+// Mondphase
+function get_MoonData(data) {
+    const moonphaseToday = data.daily[0].moon_phase;
+    const moonphaseTomorrow = data.daily[1].moon_phase;
+    let moonPhaseTrend = '';
+    if (moonphaseToday < moonphaseTomorrow) {
+        moonPhaseTrend = 'zunehmend';
+    } else {
+        moonPhaseTrend = 'abnehmend';
+    }
+
+    // document.getElementById("outpMoonPhase").innerHTML = `${moonPhaseTrend}`
+    document.getElementById("outpMoonRise").innerHTML = `${rawDatetime_in_Time(data.daily[0].moonrise)}`;
+    document.getElementById("outpMoonSet").innerHTML = `${rawDatetime_in_Time(data.daily[0].moonset)}`;
+}
+
+// Rain
+function get_RainData(data) {
+                //###################################
+            // Regen
+            let rain = 0;
+            let tomorrowRain = 0;
+            try {
+                rain = data.daily[0].rain;
+                tomorrowRain = data.daily[1].rain;
+                if (rain === undefined) {
+                    rain = 0;
+                }
+                if (tomorrowRain === undefined) {
+                    tomorrowRain = 0;
+                }
+            } catch (error) {
+                console.log(error);
+            }
+            document.getElementById("outpRain").innerHTML = `${rain} mm`;
+
+            if (tomorrowRain === 0) {
+                document.getElementById("outputRainTomorrow").innerHTML = `Es bleibt morgen trocken.`;
+            } else {
+                document.getElementById("outputRainTomorrow").innerHTML = `Im laufe des Tages werden ${tomorrowRain} mm Regen erwartet.`;
+            }
+}
+
 
 // UV Index Interpretation
 function inerpreteUvIndex(uvindex) {
@@ -562,23 +576,23 @@ function inerpreteUvIndex(uvindex) {
     const progressValue_UV = document.getElementById("progress_UV");
     progressValue_UV.value = uvindex;
 
-    if(uvindex > 11) {
+    if (uvindex > 11) {
         instruction = 'EXTREM - Sonne meiden';
         uvIndexisCritical = true;
         lbl_UvIndex.style.color = 'red';
-    }else if(uvindex >= 8 && uvindex < 11) {
+    } else if (uvindex >= 8 && uvindex < 11) {
         instruction = 'SEHR HOCH - Schutz absolut notwendig';
         uvIndexisCritical = true;
         lbl_UvIndex.style.color = 'red';
-    }else if(uvindex >= 6 && uvindex < 8) {
+    } else if (uvindex >= 6 && uvindex < 8) {
         instruction = 'HOCH - Schutz erforderlich';
         uvIndexisCritical = true;
         lbl_UvIndex.style.color = 'orange';
-    }else if(uvindex >= 3 && uvindex < 6) {
+    } else if (uvindex >= 3 && uvindex < 6) {
         instruction = 'MITTEL - Schutz erforderlich';
         uvIndexisCritical = true;
         lbl_UvIndex.style.color = 'yellow';
-    }else if(uvindex >= 0 && uvindex < 3) {
+    } else if (uvindex >= 0 && uvindex < 3) {
         instruction = 'NIEDRIG - Kein Schutz erforderlich';
         lbl_UvIndex.style.color = 'white';
     }
@@ -597,9 +611,9 @@ function ausw() {
     // Temperatur
     if (temp >= 32) {
         document.getElementById('outpTemp').style.textShadow = '0px 0px 15px red';
-    }else if (temp >= 30) {
+    } else if (temp >= 30) {
         document.getElementById('outpTemp').style.textShadow = '0px 0px 15px orange';
-    }else if (temp >= 25) {
+    } else if (temp >= 25) {
         document.getElementById('outpTemp').style.textShadow = '0px 0px 15px yellow';
     } else if (temp > 10) {
         document.getElementById('outpTemp').style.textShadow = '0px 0px 4px white';
@@ -749,8 +763,8 @@ function getDate(weekDay) {
 // Funktion, welche ein Uhrzeit extrahiert. In Berücksichtigung der Zeitzohne
 function rawDatetime_in_Time(rawDatetime) {
     const raw = intTimeConvert(rawDatetime + timezone - 3800);
-    const time = splitVal(raw  + '', " ", 4);
-    const pureTime = `${splitVal(time + '' , ":", 0)}:${splitVal(time + '' , ":", 1)}`;
+    const time = splitVal(raw + '', " ", 4);
+    const pureTime = `${splitVal(time + '', ":", 0)}:${splitVal(time + '', ":", 1)}`;
     return pureTime;
 }
 
@@ -800,9 +814,9 @@ function createNotification(message, messageType, showTime) {
 function startCity() {
     const cityName = adress;
     const arrIndex = cityList.indexOf(adress);
-    if(arrIndex === -1) {
+    if (arrIndex === -1) {
         cityList.splice(0, 0, cityName);
-    }else{
+    } else {
         cityList.splice(arrIndex, 1);
         cityList.splice(0, 0, cityName);
     }
@@ -813,11 +827,11 @@ function startCity() {
 
 
 // sticky-top
-window.addEventListener("scroll", ()=>{
+window.addEventListener("scroll", () => {
     let scrollHeigth = Math.floor(window.pageYOffset)
-    if(scrollHeigth > 100) {
+    if (scrollHeigth > 100) {
         ortLabel.classList.add("sticky-top");
-    }else{
+    } else {
         ortLabel.classList.remove("sticky-top");
     }
 })
@@ -826,10 +840,10 @@ window.addEventListener("scroll", ()=>{
 function getWeathertype(selectObject) {
     const value = selectObject.value;
     changeWeatherType(value)
-  }
+}
 
 
-  function changeWeatherType(type) {
+function changeWeatherType(type) {
 
     const savedData = JSON.parse(mainData)
     let timeMinusSummertime = 0;
@@ -838,28 +852,28 @@ function getWeathertype(selectObject) {
         document.getElementById(index).hidden = false;
         temp = parseInt(savedData.hourly[i].temp);
         weatherIcon = savedData.hourly[i].weather[0].icon;
-        nextUVIndex =savedData.hourly[i].uvi;
+        nextUVIndex = savedData.hourly[i].uvi;
         const nextHumidity = savedData.hourly[i].humidity;
         const nextWind = savedData.hourly[i].wind_speed;
         const nextClouds = savedData.hourly[i].clouds;
         let nextRain = 0;
-        if(savedData.hourly[i].rain) {
+        if (savedData.hourly[i].rain) {
             nextRain = savedData.hourly[i].rain;
             nextRain = JSON.stringify(nextRain);
-            nextRain = splitVal(nextRain + ' ' ,':', 1)
-            nextRain = splitVal(nextRain + ' ' ,'}', 0)
+            nextRain = splitVal(nextRain + ' ', ':', 1)
+            nextRain = splitVal(nextRain + ' ', '}', 0)
 
         }
 
         const windgesch = nextWind * 3.6;
 
-                // ? Sommerzeit wird rausgerechnet
-                const gmt = splitVal(intTimeConvert(savedData.hourly[i].dt) + '',' ', 5);
-                if(gmt === 'GMT+0200') {
-                    timeMinusSummertime = 3600;
-                }else {
-                    timeMinusSummertime = 0;
-                }
+        // ? Sommerzeit wird rausgerechnet
+        const gmt = splitVal(intTimeConvert(savedData.hourly[i].dt) + '', ' ', 5);
+        if (gmt === 'GMT+0200') {
+            timeMinusSummertime = 3600;
+        } else {
+            timeMinusSummertime = 0;
+        }
         hour = splitVal(
             intTimeConvert(savedData.hourly[i].dt + timezone - timeMinusSummertime) + '',
             ' ',
@@ -870,27 +884,27 @@ function getWeathertype(selectObject) {
         index = `hourOutp${i}`;
         document.getElementById(index).innerHTML = `${hour} Uhr`;
         index = `hourOutpPlus${i}`;
-        if(type === 'opt_uvindex') {
+        if (type === 'opt_uvindex') {
             document.getElementById(index).innerHTML = `${nextUVIndex}`;
             document.getElementById(index).classList.remove("active");
         }
-        if(type === 'opt_temp') {
+        if (type === 'opt_temp') {
             document.getElementById(index).innerHTML = `${temp}°C`;
             document.getElementById(index).classList.remove("active");
         }
-        if(type === 'opt_humidity') {
+        if (type === 'opt_humidity') {
             document.getElementById(index).innerHTML = `${nextHumidity} %`;
             document.getElementById(index).classList.remove("active");
         }
-        if(type === 'opt_wind') {
+        if (type === 'opt_wind') {
             document.getElementById(index).innerHTML = `${windgesch.toFixed(0)} Km/h`;
             document.getElementById(index).classList.add("active");
         }
-        if(type === 'opt_rain') {
+        if (type === 'opt_rain') {
             document.getElementById(index).innerHTML = `${nextRain}`;
             document.getElementById(index).classList.add("active");
         }
-        if(type === 'opt_clouds') {
+        if (type === 'opt_clouds') {
             document.getElementById(index).innerHTML = `${nextClouds}%`;
             document.getElementById(index).classList.add("active");
         }
@@ -899,15 +913,15 @@ function getWeathertype(selectObject) {
         index = `hourForecastImg${i}`;
 
     }
-  }
+}
 
 //?   Animation von Temp
 let load = -50;
-let intv =  undefined;
+let intv = undefined;
 
 function initUpcountingTemp(temperature) {
     load = -50;
-    intv =  setInterval( function() { countingUp(temperature); }, 17 );
+    intv = setInterval(function () { countingUp(temperature); }, 17);
 }
 
 function countingUp(temperature) {
@@ -924,7 +938,7 @@ function countingUp(temperature) {
 function getAirPollutionInfo(latitude, longitude) {
     const pollutionLink = `https://api.openweathermap.org/data/2.5/air_pollution?lat=${latitude}&lon=${longitude}&appid=${ky}`;
     fetch(pollutionLink)
-        .then((response)=> response.json())
+        .then((response) => response.json())
         .then((data) => {
             console.log(data);
             const airQualiBox = document.getElementById("airQualiBox");
@@ -944,35 +958,35 @@ function getAirPollutionInfo(latitude, longitude) {
 
 
 
-            if(airQuality >= 3) {
+            if (airQuality >= 3) {
 
                 let pollutionArray = [];
                 let infostring = '';
 
-                if(no2 >= 100 ) {
+                if (no2 >= 100) {
                     pollutionArray.push(`Stickstoffdioxid: ${no2} (moderat ab 100) <br>`);
                     console.log('true');
                 }
-                if(o3 >= 120 ) {
+                if (o3 >= 120) {
                     pollutionArray.push(`Ozon: ${o3} (moderat ab 120) <br>`);
                     console.log('true');
                 }
-                if(pm2_5 >= 30 ) {
+                if (pm2_5 >= 30) {
                     pollutionArray.push(`Feinstaub(pm2_5): ${pm2_5} (moderat ab 30) <br>`);
                     console.log('true');
                 }
-                if(pm10 >= 50 ) {
+                if (pm10 >= 50) {
                     pollutionArray.push(`Feinstaub(pm10): ${pm10} (moderat ab 50) <br>`);
                     console.log('true');
                 }
 
-                for(let i = 0; i < pollutionArray.length; i++) {
+                for (let i = 0; i < pollutionArray.length; i++) {
                     infostring = infostring + pollutionArray[i];
                 }
 
 
-                    infoBtn.classList.add("active");
-                    document.getElementById("detainTextAirQuality").innerHTML = infostring;
+                infoBtn.classList.add("active");
+                document.getElementById("detainTextAirQuality").innerHTML = infostring;
             }
             // Debugging
             //document.getElementById("errorlog").innerHTML = 'getAirPollutionInfo = ok';
@@ -984,11 +998,11 @@ function getAirPollutionInfo(latitude, longitude) {
 
 function toggleInfoBox() {
 
-    if(airQualityInfoboxIsVisible === false) {
+    if (airQualityInfoboxIsVisible === false) {
         detailContainer.classList.add("active");
         airQualityInfoboxIsVisible = true;
         infoBtn.innerHTML = 'Infos ausblenden';
-    }else {
+    } else {
         detailContainer.classList.remove("active");
         airQualityInfoboxIsVisible = false;
         infoBtn.innerHTML = 'Mehr Infos';
@@ -998,11 +1012,11 @@ function toggleInfoBox() {
 
 function toggleAlertBox() {
 
-    if(alertInfoboxIsVisible === false) {
+    if (alertInfoboxIsVisible === false) {
         alertDetailContainer.classList.add("active");
         alertInfoboxIsVisible = true;
         btnAlert.innerHTML = 'Infos ausblenden';
-    }else {
+    } else {
         alertDetailContainer.classList.remove("active");
         alertInfoboxIsVisible = false;
         btnAlert.innerHTML = 'Mehr Infos';
@@ -1011,49 +1025,49 @@ function toggleAlertBox() {
 
 
 // Settings
-btnSettings.addEventListener("click", ()=> {
+btnSettings.addEventListener("click", () => {
     if (settingsAreVisible === false) {
         settingsAreVisible = true;
         settingWindow.classList.add("active");
-    }else {
+    } else {
         settingsAreVisible = false;
         settingWindow.classList.remove("active");
     }
 })
 
 
-btnSaveSettings.addEventListener("click", ()=> {
+btnSaveSettings.addEventListener("click", () => {
     weatherSettings.appeareanceMode = settingsAppearance.value;
     saveSettings();
     settingsAreVisible = false;
     settingWindow.classList.remove("active");
-    createNotification("Einstellungen wurden gespeichert", "success",3000)
+    createNotification("Einstellungen wurden gespeichert", "success", 3000)
 })
 
 function changeAppearance(selectObject) {
     const value = selectObject.value;
     setAppearance(value);
     console.log(value);
-  }
+}
 
 
-  function setAppearance(value) {
-    if(value === 'opt_darkmode') {
+function setAppearance(value) {
+    if (value === 'opt_darkmode') {
         theBody.classList.remove("lightMode");
         theBody.classList.remove("normalMode");
         theBody.classList.add("darkMode");
     }
 
-    if(value === 'opt_normal') {
+    if (value === 'opt_normal') {
         theBody.classList.remove("darkMode");
         theBody.classList.remove("lightMode");
         theBody.classList.add("normalMode");
     }
 
-    if(value === 'opt_lightmode') {
+    if (value === 'opt_lightmode') {
         theBody.classList.remove("darkMode");
         theBody.classList.remove("normalMode");
         theBody.classList.add("lightMode");
     }
 
-  }
+}
