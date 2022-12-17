@@ -264,7 +264,6 @@ button {
     width: 100%;
     height: auto;
     background-color: transparent;
-    border: 2px solid rgba(255, 255, 255, 0.356);
     border-radius: 30px;
     display: flex;
     justify-content: center;
@@ -273,7 +272,7 @@ button {
 }
 
 .miniContainer {
-    width: 35%;
+    width: 37%;
     max-width: 270px;
     height: 200px;
     font-size: 16px;
@@ -587,5 +586,5 @@ button {
     }
 
     #outUvIndx {
-       font-size: .8em; 
+       font-size: .8em;
     }
