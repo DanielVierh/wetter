@@ -293,8 +293,8 @@ function requestWeatherForecast(lat, lon) {
             //     timeMinusSummertime = 0;
             // }
             // Sonnenaufgang roh für Sonnenstand
-            const sunriseRaw = intTimeConvert(data.current.sunrise + timezone - 3800);
-            const sunsetRaw = intTimeConvert(data.current.sunset + timezone - 3800);
+            const sunriseRaw = intTimeConvert(data.current.sunrise + timezone - 3600);
+            const sunsetRaw = intTimeConvert(data.current.sunset + timezone - 3600);
             // Für Anzeige Auf-Untergang
             const sunrise = rawDatetime_in_Time(data.current.sunrise);
             const sunset = rawDatetime_in_Time(data.current.sunset);
@@ -302,7 +302,7 @@ function requestWeatherForecast(lat, lon) {
 
 
             // Akt. Ortsdatum & Zeit
-            const dateTimeNowRaw = intTimeConvert(data.current.dt + timezone - 3800);
+            const dateTimeNowRaw = intTimeConvert(data.current.dt + timezone - 3600);
             const dateTimeNow_Day = splitVal(dateTimeNowRaw + '', " ", 2);
             const dateTimeNow_Month = splitVal(dateTimeNowRaw + '', " ", 1);
             const dateTimeNow_TIME = splitVal(dateTimeNowRaw + '', " ", 4);
@@ -762,7 +762,7 @@ function getDate(weekDay) {
 
 // Funktion, welche ein Uhrzeit extrahiert. In Berücksichtigung der Zeitzohne
 function rawDatetime_in_Time(rawDatetime) {
-    const raw = intTimeConvert(rawDatetime + timezone - 3800);
+    const raw = intTimeConvert(rawDatetime + timezone - 3600);
     const time = splitVal(raw + '', " ", 4);
     const pureTime = `${splitVal(time + '', ":", 0)}:${splitVal(time + '', ":", 1)}`;
     return pureTime;
