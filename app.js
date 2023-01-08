@@ -47,7 +47,6 @@ const settingWindow = document.getElementById("settingWindow");
 const theBody = document.getElementById("theBody");
 const settingsAppearance = document.getElementById("settingsAppearance");
 const btnSaveSettings = document.getElementById("btnSaveSettings");
-const outputWindDiff = document.getElementById("outputWindDiff")
 // Load
 ky = dcrK(ak);
 window.onload = loadData();
@@ -211,17 +210,6 @@ function requestWeatherForecast(lat, lon) {
             let hour;
             let weekDay;
             const timezoneOffset = data.timezone_offset;
-
-
-            const wind_Tomorrow = (data.daily[1].wind_speed * 3.6).toFixed(0);
-            const windDiffToday_Tomorrow = ((data.daily[0].wind_speed * 3.6) - (data.daily[1].wind_speed * 3.6)).toFixed(0);
-            if(windDiffToday_Tomorrow < 0) {
-                outputWindDiff.innerHTML = `Morgen ${windDiffToday_Tomorrow} Km/h weniger windig (${wind_Tomorrow} Km/h)`
-            }else if(windDiffToday_Tomorrow === 0 || windDiffToday_Tomorrow < 1) {
-                outputWindDiff.innerHTML = `Die Windgeschwindigkeit bleibt morgen mit <br> ${wind_Tomorrow} Km/h stabil.`
-            }else if(windDiffToday_Tomorrow >= 1){
-                outputWindDiff.innerHTML = `Es wird morgen ${windDiffToday_Tomorrow} Km/h windiger. (${wind_Tomorrow} Km/h)`
-            }
 
             // Wetteralarm
             if (data.alerts) {
