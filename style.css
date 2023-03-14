@@ -33,6 +33,9 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.308);
   -webkit-transition: 1.5s all;
   transition: 1.5s all;
+  background-image: url("img/Clouds.jpeg");
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 @supports ((-webkit-backdrop-filter: blur(30px)) or (backdrop-filter: blur(30px))) {
@@ -185,6 +188,8 @@ button {
   -webkit-box-shadow: 5px 5px 15px black;
           box-shadow: 5px 5px 15px black;
   border: 2px solid rgba(255, 255, 255, 0.356);
+  -webkit-backdrop-filter: blur(20px);
+          backdrop-filter: blur(20px);
 }
 
 .forecastImg {
@@ -221,6 +226,8 @@ button {
   -webkit-box-shadow: 5px 5px 5px black, inset 10px 8px 15px black;
           box-shadow: 5px 5px 5px black, inset 10px 8px 15px black;
   margin: auto;
+  -webkit-backdrop-filter: blur(20px);
+          backdrop-filter: blur(20px);
 }
 
 .std {
@@ -346,6 +353,8 @@ button {
   text-align: center;
   -webkit-box-shadow: 0 5px 5px black;
           box-shadow: 0 5px 5px black;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
 .small {
@@ -458,6 +467,8 @@ button {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+  -webkit-backdrop-filter: blur(20px);
+          backdrop-filter: blur(20px);
 }
 
 .col {
@@ -597,6 +608,8 @@ button {
   margin: 30px auto;
   -webkit-box-shadow: 0 15px 10px black;
           box-shadow: 0 15px 10px black;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
 .alertContainer {
