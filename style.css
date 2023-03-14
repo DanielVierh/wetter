@@ -33,9 +33,7 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.308);
   -webkit-transition: 1.5s all;
   transition: 1.5s all;
-  background-image: url("img/Clouds.jpeg");
-  background-repeat: no-repeat;
-  background-size: cover;
+
 }
 
 @supports ((-webkit-backdrop-filter: blur(30px)) or (backdrop-filter: blur(30px))) {
@@ -44,6 +42,12 @@ body {
     -webkit-backdrop-filter: blur(20px);
     backdrop-filter: blur(20px);
   }
+}
+
+#weatherCard {
+  background-image: url("img/Sun.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 #outpTemp {

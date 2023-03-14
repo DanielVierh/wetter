@@ -316,15 +316,20 @@ function requestWeatherForecast(lat, lon) {
 
             if (dateTimeNowRaw > sunsetRaw) {
                 isAfterSunset = true;
+                weatherContainer.style.backgroundImage = "url('img/SunRiseSet.jpeg')";
             }
             if (dateTimeNowRaw > sunriseRaw) {
                 isAfterSunrise = true;
+                weatherContainer.style.backgroundImage = "url('img/night.jpeg')";
+
             }
             if (dateTimeNowRaw < sunriseRaw) {
                 isBeforeSunrise = true;
+                weatherContainer.style.backgroundImage = "url('img/night.jpeg')";
             }
             if (dateTimeNowRaw < sunsetRaw) {
                 isBeforeSunset = true;
+                weatherContainer.style.backgroundImage = "url('img/Sun.jpg')";
             }
 
             if (isAfterSunrise === true && isAfterSunset === true && isBeforeSunrise == false) {
