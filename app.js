@@ -7,6 +7,7 @@ let ky = '';
 let adress = '';
 let timezone;
 let iconVal;
+let iconValRaw;
 let isCurrentLocation = false;
 let uvIndexisCritical = false;
 let uvIndexIsCriticalUntil = '';
@@ -97,8 +98,8 @@ function weatherRequest() {
                 setTimeout(() => {
                     initUpcountingTemp(temp);
                 }, 1000);
-                iconVal = data.weather[0].icon;
-                iconVal = iconVal.slice(-1);
+                iconValRaw = data.weather[0].icon;
+                iconVal = iconValRaw.slice(-1);
                 const imgSrc = `https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/widgets/${data.weather[0].icon}.png`;
                 document.getElementById('weatherimg').src = imgSrc;
                 document.getElementById('outpWeather').innerHTML =
@@ -491,8 +492,8 @@ function requestWeatherForecast(lat, lon) {
             if (isCurrentLocation === true) {
                 temp = parseInt(data.current.temp);
                 document.getElementById('outpTemp').innerHTML = `${temp}°C`;
-                iconVal = data.current.weather[0].icon;
-                iconVal = iconVal.slice(-1);
+                iconValRaw = data.current.weather[0].icon;
+                iconVal = iconValRaw.slice(-1);
                 const imgSrc = `https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/widgets/${data.current.weather[0].icon}.png`;
                 document.getElementById('weatherimg').src = imgSrc;
                 document.getElementById('outpWeather').innerHTML =
@@ -626,10 +627,54 @@ function ausw() {
     if (iconVal === 'n') {
         document.getElementById('weatherCard').style.backgroundColor = 'rgba(0,0,100,0.600';
         document.getElementById("weatherimg").style.boxShadow = '0px 0px 10px rgba(255,255,255,0.4)';
+        weatherContainer.style.backgroundImage = "url('img/night.jpeg')";
     } else {
         document.getElementById('weatherCard').style.backgroundColor = 'rgba(29, 28, 28, 0.247)';
         document.getElementById("weatherimg").style.boxShadow = '0px 0px 20px rgba(255,255,255,1), inset 0 0 15px white';
+        weatherContainer.style.backgroundImage = "url('img/Sun.jpg')";
     }
+
+    //? Wetter Hintergrundbild
+    //? Klarer Himmel
+    if (iconValRaw === '01d') {
+        weatherContainer.style.backgroundImage = "url('img/Sun.jpg')";
+    }
+    if (iconValRaw === '01n') {
+        weatherContainer.style.backgroundImage = "url('img/night.jpeg')";
+    }
+
+    //? Regen
+    if (iconValRaw === '10d') {
+        weatherContainer.style.backgroundImage = "url('img/Rain.jpeg')";
+    }
+    if (iconValRaw === '10n') {
+        weatherContainer.style.backgroundImage = "url('img/Rain.jpeg')";
+    }
+
+    //? Schnee
+    if (iconValRaw === '13d') {
+        weatherContainer.style.backgroundImage = "url('img/Snow.jpeg')";
+    }
+    if (iconValRaw === '13n') {
+        weatherContainer.style.backgroundImage = "url('img/Snow.jpeg')";
+    }
+
+        //? Gewitter
+    if (iconValRaw === '11d') {
+        weatherContainer.style.backgroundImage = "url('img/Lightning.jpeg')";
+    }
+    if (iconValRaw === '11n') {
+        weatherContainer.style.backgroundImage = "url('img/Lightning.jpeg')";
+    }
+
+    //? Bewölkt
+    if (iconValRaw === '04d' || iconValRaw === '03d') {
+        weatherContainer.style.backgroundImage = "url('img/Clouds.jpeg')";
+    }
+    if (iconValRaw === '04n' || iconValRaw === '03n') {
+        weatherContainer.style.backgroundImage = "url('img/Clouds.jpeg')";
+    }
+
 }
 
 // Lädt die zuerst abgespeicherte Stadt
