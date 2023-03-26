@@ -6,6 +6,8 @@ let cityList = [];
 let ky = '';
 let adress = '';
 let timezone;
+const winterTime = 3600;
+const summerTime = 7200;
 let iconVal;
 let iconValRaw;
 let isCurrentLocation = false;
@@ -23,6 +25,7 @@ let weatherSettings = {
     appeareanceMode: ''
 }
 
+//?####################################################################################################
 // Button etc.
 const currentLocationButton = document.getElementById('btnCurrLoc');
 const weatherContainer = document.getElementById('weatherCard');
@@ -48,10 +51,13 @@ const settingWindow = document.getElementById("settingWindow");
 const theBody = document.getElementById("theBody");
 const settingsAppearance = document.getElementById("settingsAppearance");
 const btnSaveSettings = document.getElementById("btnSaveSettings");
+
+//?####################################################################################################
 // Load
 ky = dcrK(ak);
 window.onload = loadData();
 
+//?####################################################################################################
 // Eingegebene Stadt suchen
 function showWeather() {
     adress = searchField.value;
@@ -62,6 +68,7 @@ function showWeather() {
     searchField.value = '';
 }
 
+//?####################################################################################################
 // Wenn mit Enter gesucht wird
 window.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
@@ -71,7 +78,7 @@ window.addEventListener('keydown', (e) => {
 
 // Interessant wenn die Map location marker funtioniert
 // https://openweathermap.org/api/geocoding-api   -- Reverse geocoding
-
+//?####################################################################################################
 // Wetter Request
 function weatherRequest() {
     if (adress != '') {
@@ -144,6 +151,8 @@ function weatherRequest() {
 
 
 
+//?####################################################################################################
+// Open Streetmap
 
 function loadMap(lat, lon) {
 
@@ -291,17 +300,15 @@ function requestWeatherForecast(lat, lon) {
             //?####################################################################################################
             // Sonnen auf - untergang
 
+            if(splitVal(intTimeConvert(data.current.sunrise) + '', " ", 5) === 'GMT+0200') {
+                timeSubstract = summerTime;
+            }else {
+                timeSubstract = winterTime;
+            }
 
-            // let timeMinusSummertime = 0;
-
-            // if(splitVal(intTimeConvert(data.current.sunrise) + '', " ", 5) === 'GMT+0200') {
-            //     timeMinusSummertime = 3600;
-            // }else {
-            //     timeMinusSummertime = 0;
-            // }
             // Sonnenaufgang roh für Sonnenstand
-            const sunriseRaw = intTimeConvert(data.current.sunrise + timezone - 3600);
-            const sunsetRaw = intTimeConvert(data.current.sunset + timezone - 3600);
+            const sunriseRaw = intTimeConvert(data.current.sunrise + timezone - timeSubstract);
+            const sunsetRaw = intTimeConvert(data.current.sunset + timezone - timeSubstract);
             // Für Anzeige Auf-Untergang
             const sunrise = rawDatetime_in_Time(data.current.sunrise);
             const sunset = rawDatetime_in_Time(data.current.sunset);
@@ -309,7 +316,7 @@ function requestWeatherForecast(lat, lon) {
 
 
             // Akt. Ortsdatum & Zeit
-            const dateTimeNowRaw = intTimeConvert(data.current.dt + timezone - 3600);
+            const dateTimeNowRaw = intTimeConvert(data.current.dt + timezone - timeSubstract);
             const dateTimeNow_Day = splitVal(dateTimeNowRaw + '', " ", 2);
             const dateTimeNow_Month = splitVal(dateTimeNowRaw + '', " ", 1);
             const dateTimeNow_TIME = splitVal(dateTimeNowRaw + '', " ", 4);
@@ -402,7 +409,7 @@ function requestWeatherForecast(lat, lon) {
                 const gmt = splitVal(intTimeConvert(data.hourly[i].dt) + '', ' ', 5);
 
                 if (gmt === 'GMT+0200') {
-                    timeMinusSummertime = 3600;
+                    timeMinusSummertime = timeSubstract;
                 } else {
                     timeMinusSummertime = 0;
                 }
@@ -430,6 +437,7 @@ function requestWeatherForecast(lat, lon) {
                 document.getElementById(index).src = imgSrc;
             }
 
+            //?####################################################################################################
             // Vorausgestellte For Schleife um die absolute tiefst und höchst temp der kommenden 5 Tage zu ermitteln
             let deepestTemp = 100;
             let highestTemp = -50;
@@ -616,6 +624,7 @@ function inerpreteUvIndex(uvindex) {
 }
 
 //?####################################################################################################
+
 // Wandelt die Zeit um
 function intTimeConvert(num) {
     let dte = new Date(num * 1000);
@@ -834,7 +843,7 @@ function getDate(weekDay) {
 //?####################################################################################################
 // Funktion, welche ein Uhrzeit extrahiert. In Berücksichtigung der Zeitzohne
 function rawDatetime_in_Time(rawDatetime) {
-    const raw = intTimeConvert(rawDatetime + timezone - 3600);
+    const raw = intTimeConvert(rawDatetime + timezone - timeSubstract);
     const time = splitVal(raw + '', " ", 4);
     const pureTime = `${splitVal(time + '', ":", 0)}:${splitVal(time + '', ":", 1)}`;
     return pureTime;
@@ -946,7 +955,7 @@ function changeWeatherType(type) {
         // ? Sommerzeit wird rausgerechnet
         const gmt = splitVal(intTimeConvert(savedData.hourly[i].dt) + '', ' ', 5);
         if (gmt === 'GMT+0200') {
-            timeMinusSummertime = 3600;
+            timeMinusSummertime = timeSubstract;
         } else {
             timeMinusSummertime = 0;
         }
