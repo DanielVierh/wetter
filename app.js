@@ -188,7 +188,9 @@ function dcrK(val) {
     return newVal
 }
 
+//?####################################################################################################
 // Forecast
+//?####################################################################################################
 function requestWeatherForecast(lat, lon) {
     apiLink = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=minutely&appid=${ky}&lang=de&units=metric`;
     fetch(apiLink)
@@ -212,6 +214,7 @@ function requestWeatherForecast(lat, lon) {
             let weekDay;
             const timezoneOffset = data.timezone_offset;
 
+            //?####################################################################################################
             // Wetteralarm
             if (data.alerts) {
                 showAlert = 0;
@@ -267,22 +270,28 @@ function requestWeatherForecast(lat, lon) {
                 alertContainer.classList.remove("active");
             }
 
+            //?####################################################################################################
             // UV Index
             let uvIndex = data.current.uvi;
             let nextUVIndex = 0;
             let maxUvIndex = data.daily[0].uvi;
 
+            //?####################################################################################################
             // Windgeschwidigkeit und Richtung
             let windDeg = data.current.wind_deg;
             document.getElementById("windDirect").style.transform = `rotate(${windDeg}deg)`
 
+            //?####################################################################################################
             // Taupunkt und Feuchtigkeit
             const dewPoint = data.current.dew_point;
             const humidity = data.current.humidity;
             document.getElementById("outpHumidity").innerHTML = `${humidity}% <br/><br/> <hr> <strong>Taupunkt</strong> <br/> <br/>${dewPoint}°C`
 
 
+            //?####################################################################################################
             // Sonnen auf - untergang
+
+
             // let timeMinusSummertime = 0;
 
             // if(splitVal(intTimeConvert(data.current.sunrise) + '', " ", 5) === 'GMT+0200') {
@@ -309,6 +318,7 @@ function requestWeatherForecast(lat, lon) {
             document.getElementById("outCurrDatetime").innerHTML = `${dateTimeNow_Day}.${dateTimeNow_Month} | ${dateTimeNow_Hour}:${dateTimeNow_Minute}`;
 
 
+            //?####################################################################################################
             // Sonnenstand ermitteln
             let isAfterSunset = false;
             let isAfterSunrise = false;
@@ -353,6 +363,7 @@ function requestWeatherForecast(lat, lon) {
 
             get_RainData(data);
 
+            //?####################################################################################################
             // Von heute Min und Max Temp eintragen
 
             tempMin = parseInt(data.daily[0].temp.min);
@@ -374,11 +385,13 @@ function requestWeatherForecast(lat, lon) {
             document.getElementById("outp_feltTemp").innerHTML = `Gefühlt: ${tempFeelsLike}°C`;
             outpSmallCurrentTemp.innerHTML = `${currentTemp}°C`;
 
+            //?####################################################################################################
             // Current UV Index
             document.getElementById("outUvIndx").innerHTML = `${uvIndex} - ${inerpreteUvIndex(uvIndex)}`;
             document.getElementById("outpMaxUvIndex").innerHTML = `Heute Max: ${maxUvIndex}`;
 
             timeMinusSummertime = 0;
+            //?####################################################################################################
             // Forecast Stunden Felder einblenden
             for (let i = 0; i <= 23; i++) {
                 index = `hourForecastBlock${i}`;
@@ -431,6 +444,7 @@ function requestWeatherForecast(lat, lon) {
                 }
             }
 
+            //?####################################################################################################
             // Forecast Tage Felder mit Inhalt befüllen
             for (let i = 0; i <= 4; i++) {
                 index = `forecastBlock${i}`;
@@ -456,6 +470,7 @@ function requestWeatherForecast(lat, lon) {
                 const margin_Top = highestTemp - tempMax;
 
 
+                //?####################################################################################################
                 // erzeugt Balken für Temperatur
                 const balken = document.getElementById(`tempDay${i}`);
                 balken.style.height = `${tempMax + 20}px`;
@@ -484,6 +499,7 @@ function requestWeatherForecast(lat, lon) {
             index = `forecastBlock${5}`;
             document.getElementById(index).hidden = false;
 
+            //?####################################################################################################
             // Bei Geolocation
             if (isCurrentLocation === true) {
                 temp = parseInt(data.current.temp);
@@ -521,9 +537,9 @@ function requestWeatherForecast(lat, lon) {
         });
 }
 
-///////////////////////////////////////////
+//?####################################################################################################
 // Weather Data functions
-//////////////////////////////////////////
+//?####################################################################################################
 // Mondphase
 function get_MoonData(data) {
     const moonphaseToday = data.daily[0].moon_phase;
@@ -540,6 +556,7 @@ function get_MoonData(data) {
     document.getElementById("outpMoonSet").innerHTML = `${rawDatetime_in_Time(data.daily[0].moonset)}`;
 }
 
+//?####################################################################################################
 // Rain
 function get_RainData(data) {
                 //###################################
@@ -567,7 +584,7 @@ function get_RainData(data) {
             }
 }
 
-
+//?####################################################################################################
 // UV Index Interpretation
 function inerpreteUvIndex(uvindex) {
     let instruction = '';
@@ -598,15 +615,18 @@ function inerpreteUvIndex(uvindex) {
     return instruction;
 }
 
+//?####################################################################################################
 // Wandelt die Zeit um
 function intTimeConvert(num) {
     let dte = new Date(num * 1000);
     return dte;
 }
 
+//?####################################################################################################
 // Auswertung z.B farbliche Änderung bei Temperaturen und Tag / Nacht anzeige
 function ausw() {
 
+    //?####################################################################################################
     // Temperatur
     if (temp >= 32) {
         document.getElementById('outpTemp').style.textShadow = '0px 0px 15px red';
@@ -619,6 +639,7 @@ function ausw() {
     } else {
         document.getElementById('outpTemp').style.textShadow = '0px 0px 15px aqua';
     }
+    //?####################################################################################################
     // Tag / Nacht
     if (iconVal === 'n') {
         document.getElementById('weatherCard').style.backgroundColor = 'rgba(0,0,100,0.600';
@@ -630,6 +651,7 @@ function ausw() {
         weatherContainer.style.backgroundImage = "url('img/Sun.jpg')";
     }
 
+    //?####################################################################################################
     //? Wetter Hintergrundbild
     //? Klarer Himmel
     if (iconValRaw === '01d') {
@@ -673,6 +695,7 @@ function ausw() {
 
 }
 
+//?####################################################################################################
 // Lädt die zuerst abgespeicherte Stadt
 function loadData() {
     setAppearance('opt_normalmode')
@@ -701,6 +724,7 @@ function loadData() {
     }
 }
 
+//?####################################################################################################
 // Zeigt abgespeicherte Städte an
 function showSavedCitys() {
     document.getElementById('outCitys').innerHTML = '';
@@ -714,6 +738,7 @@ function showSavedCitys() {
     }
 }
 
+//?####################################################################################################
 // Speichert eine Stadt in den localStorage
 function saveCity() {
     localStorage.setItem('stored_CityList', JSON.stringify(cityList));
@@ -723,6 +748,7 @@ function saveSettings() {
     localStorage.setItem('stored_WeatherSettings', JSON.stringify(weatherSettings));
 }
 
+//?####################################################################################################
 // Fügt die Stadt in die Liste der Städte hinzu, nach Überprüfung, ob diese bereits vorhanden ist
 function addCity() {
     if (adress != '') {
@@ -743,6 +769,7 @@ function addCity() {
     }
 }
 
+//?####################################################################################################
 // Ausgewählte Stadt anzeigen
 function getCity() {
     weatherContainer.style.display = 'flex';
@@ -752,6 +779,7 @@ function getCity() {
     weatherRequest();
 }
 
+//?####################################################################################################
 // Lösche die Stadt, falls in der Liste vorhanden
 function delCity() {
     if (adress != '') {
@@ -803,6 +831,7 @@ function getDate(weekDay) {
     return day;
 }
 
+//?####################################################################################################
 // Funktion, welche ein Uhrzeit extrahiert. In Berücksichtigung der Zeitzohne
 function rawDatetime_in_Time(rawDatetime) {
     const raw = intTimeConvert(rawDatetime + timezone - 3600);
@@ -817,6 +846,7 @@ function splitVal(val, marker, pos) {
     return retVal;
 }
 
+//?####################################################################################################
 // Geolocation
 function getCurrentLocation() {
     if (navigator.geolocation) {
@@ -835,6 +865,7 @@ function showPosition(position) {
     requestWeatherForecast(lat, lon);
 }
 
+//?####################################################################################################
 // Toast Notification
 function createNotification(message, messageType, showTime) {
     // Erstelle Div
@@ -853,6 +884,7 @@ function createNotification(message, messageType, showTime) {
     }, showTime);
 }
 
+//?####################################################################################################
 // Stadt markieren, diese wird bei Neustart zuerst geladen
 function startCity() {
     const cityName = adress;
@@ -868,7 +900,7 @@ function startCity() {
     showSavedCitys();
 }
 
-
+//?####################################################################################################
 // sticky-top
 window.addEventListener("scroll", () => {
     let scrollHeigth = Math.floor(window.pageYOffset)
@@ -879,6 +911,7 @@ window.addEventListener("scroll", () => {
     }
 })
 
+//?####################################################################################################
 // Bei 24 Stunden Anzeige die Werte auf UV, Wind, Wetter etc ändern
 function getWeathertype(selectObject) {
     const value = selectObject.value;
@@ -958,6 +991,7 @@ function changeWeatherType(type) {
     }
 }
 
+//?####################################################################################################
 //?   Animation von Temp
 let load = -50;
 let intv = undefined;
@@ -977,7 +1011,8 @@ function countingUp(temperature) {
 }
 
 
-
+//?####################################################################################################
+// Air Pollution
 function getAirPollutionInfo(latitude, longitude) {
     const pollutionLink = `https://api.openweathermap.org/data/2.5/air_pollution?lat=${latitude}&lon=${longitude}&appid=${ky}`;
     fetch(pollutionLink)
@@ -1038,7 +1073,8 @@ function getAirPollutionInfo(latitude, longitude) {
         });
 }
 
-
+//?####################################################################################################
+// Toggle Infobox & Alert
 function toggleInfoBox() {
 
     if (airQualityInfoboxIsVisible === false) {
@@ -1066,8 +1102,9 @@ function toggleAlertBox() {
     }
 }
 
-
+//?####################################################################################################
 // Settings
+
 btnSettings.addEventListener("click", () => {
     if (settingsAreVisible === false) {
         settingsAreVisible = true;
