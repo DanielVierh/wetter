@@ -653,54 +653,54 @@ function ausw() {
     if (iconVal === 'n') {
         document.getElementById('weatherCard').style.backgroundColor = 'rgba(0,0,100,0.600';
         document.getElementById("weatherimg").style.boxShadow = '0px 0px 10px rgba(255,255,255,0.4)';
-        weatherContainer.style.backgroundImage = "url('img/night.jpeg')";
+        // weatherContainer.style.backgroundImage = "url('img/night.jpeg')";
     } else {
         document.getElementById('weatherCard').style.backgroundColor = 'rgba(29, 28, 28, 0.247)';
         document.getElementById("weatherimg").style.boxShadow = '0px 0px 20px rgba(255,255,255,1), inset 0 0 15px white';
-        weatherContainer.style.backgroundImage = "url('img/Sun.jpg')";
+        // weatherContainer.style.backgroundImage = "url('img/Sun.jpg')";
     }
 
     //?####################################################################################################
     //? Wetter Hintergrundbild
     //? Klarer Himmel
-    if (iconValRaw === '01d') {
-        weatherContainer.style.backgroundImage = "url('img/Sun.jpg')";
-    }
-    if (iconValRaw === '01n') {
-        weatherContainer.style.backgroundImage = "url('img/night.jpeg')";
-    }
+    // if (iconValRaw === '01d') {
+    //     weatherContainer.style.backgroundImage = "url('img/Sun.jpg')";
+    // }
+    // if (iconValRaw === '01n') {
+    //     weatherContainer.style.backgroundImage = "url('img/night.jpeg')";
+    // }
 
-    //? Regen
-    if (iconValRaw === '10d' || iconValRaw === '09d') {
-        weatherContainer.style.backgroundImage = "url('img/Rain.jpeg')";
-    }
-    if (iconValRaw === '10n' || iconValRaw === '09n') {
-        weatherContainer.style.backgroundImage = "url('img/Rain.jpeg')";
-    }
+    // //? Regen
+    // if (iconValRaw === '10d' || iconValRaw === '09d') {
+    //     weatherContainer.style.backgroundImage = "url('img/Rain.jpeg')";
+    // }
+    // if (iconValRaw === '10n' || iconValRaw === '09n') {
+    //     weatherContainer.style.backgroundImage = "url('img/Rain.jpeg')";
+    // }
 
-    //? Schnee
-    if (iconValRaw === '13d') {
-        weatherContainer.style.backgroundImage = "url('img/Snow.jpeg')";
-    }
-    if (iconValRaw === '13n') {
-        weatherContainer.style.backgroundImage = "url('img/Snow.jpeg')";
-    }
+    // //? Schnee
+    // if (iconValRaw === '13d') {
+    //     weatherContainer.style.backgroundImage = "url('img/Snow.jpeg')";
+    // }
+    // if (iconValRaw === '13n') {
+    //     weatherContainer.style.backgroundImage = "url('img/Snow.jpeg')";
+    // }
 
-        //? Gewitter
-    if (iconValRaw === '11d') {
-        weatherContainer.style.backgroundImage = "url('img/Lightning.jpeg')";
-    }
-    if (iconValRaw === '11n') {
-        weatherContainer.style.backgroundImage = "url('img/Lightning.jpeg')";
-    }
+    //     //? Gewitter
+    // if (iconValRaw === '11d') {
+    //     weatherContainer.style.backgroundImage = "url('img/Lightning.jpeg')";
+    // }
+    // if (iconValRaw === '11n') {
+    //     weatherContainer.style.backgroundImage = "url('img/Lightning.jpeg')";
+    // }
 
-    //? Bewölkt
-    if (iconValRaw === '04d' || iconValRaw === '03d') {
-        weatherContainer.style.backgroundImage = "url('img/Clouds.jpeg')";
-    }
-    if (iconValRaw === '04n' || iconValRaw === '03n') {
-        weatherContainer.style.backgroundImage = "url('img/Clouds.jpeg')";
-    }
+    // //? Bewölkt
+    // if (iconValRaw === '04d' || iconValRaw === '03d') {
+    //     weatherContainer.style.backgroundImage = "url('img/Clouds.jpeg')";
+    // }
+    // if (iconValRaw === '04n' || iconValRaw === '03n') {
+    //     weatherContainer.style.backgroundImage = "url('img/Clouds.jpeg')";
+    // }
 
 }
 
