@@ -321,6 +321,7 @@ button {
 
 .containerWrapper {
   width: 100%;
+  max-width: 1000px;
   height: auto;
   background-color: transparent;
   border-radius: 30px;
@@ -560,6 +561,7 @@ button {
 .karte {
   height: 300px;
   width: 90vw;
+  max-width: 600px;
   margin: 0 auto;
   border-radius: 10px;
 }
