@@ -21,10 +21,6 @@ body {
     box-shadow: 3px 3px 15px black;
     border: 1px solid rgba(255, 255, 255, 0.308);
     transition: 1.5s all;
-    // background-image: url('img/Clouds.jpeg');
-    // background-repeat: no-repeat;
-    // background-size: cover;
-
 }
 
 @supports (
@@ -145,17 +141,16 @@ button {
     justify-content: space-evenly;
     align-items: center;
     text-align: center;
-    margin-bottom: 15px;
-    /* margin: auto; */
+    // margin-bottom: 15px;
     width: 90%;
     max-width: 600px;
     padding: 0.8rem;
     height: 80px;
-    border-radius: 20px;
+    border-radius: 20px 20px 0 0;
     background-color: rgba(0, 0, 0, 0.5);
-    box-shadow: 5px 5px 15px black;
-    border: 2px solid rgba(255, 255, 255, 0.356);
-    backdrop-filter: blur(20px);
+    // box-shadow: 5px 5px 15px black;
+    // border: 2px solid rgba(255, 255, 255, 0.356);
+    // backdrop-filter: blur(20px);
 }
 
 .forecastImg {
@@ -292,6 +287,10 @@ button {
     box-shadow: 0 5px 5px black;
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
+
+    @media (max-width:292px) {
+        width: 75%;
+    }
 }
 
 .small {
@@ -375,16 +374,16 @@ button {
 }
 
 .tempContainer {
-    width: 100%;
+    width: 90%;
     max-width: 600px;
     height: 130px;
-    background-color: transparent;
-    border: 2px solid rgba(255, 255, 255, 0.356);
-    border-radius: 30px;
+    background-color: rgba(0, 0, 0, 0.5);
+    margin-top: 0;
+    padding: 0.8rem;
+    border-radius: 0 0 20px 20px;
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    backdrop-filter: blur(20px);
 }
 
 .col {
@@ -493,13 +492,17 @@ button {
 }
 
 .tomorrowCont {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     height: auto;
     width: 100%;
     max-width: 600px;
     border: 1px solid gray;
-    border-radius: 30px;
+    border-radius: 13px;
     margin: 30px auto;
-    box-shadow: 0 15px 10px black;
+    box-shadow: 0 0 19px rgba(0, 0, 0, 0.281);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
 }
@@ -551,8 +554,17 @@ button {
     justify-content: center;
     align-items: center;
     cursor: pointer;
+
+    @media (max-width:399px) {
+        top: 180px;
+    }
 }
 
+h1{
+    @media (max-width:399px) {
+        font-size: 1.2em;
+    }
+}
 
 .settingArea {
     display: none;

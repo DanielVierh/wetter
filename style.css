@@ -174,19 +174,12 @@ button {
       -ms-flex-align: center;
           align-items: center;
   text-align: center;
-  margin-bottom: 15px;
-  /* margin: auto; */
   width: 90%;
   max-width: 600px;
   padding: 0.8rem;
   height: 80px;
-  border-radius: 20px;
+  border-radius: 20px 20px 0 0;
   background-color: rgba(0, 0, 0, 0.5);
-  -webkit-box-shadow: 5px 5px 15px black;
-          box-shadow: 5px 5px 15px black;
-  border: 2px solid rgba(255, 255, 255, 0.356);
-  -webkit-backdrop-filter: blur(20px);
-          backdrop-filter: blur(20px);
 }
 
 .forecastImg {
@@ -355,6 +348,12 @@ button {
   -webkit-backdrop-filter: blur(20px);
 }
 
+@media (max-width: 292px) {
+  .miniContainer {
+    width: 75%;
+  }
+}
+
 .small {
   width: 100%;
   max-width: 300px;
@@ -450,12 +449,13 @@ button {
 }
 
 .tempContainer {
-  width: 100%;
+  width: 90%;
   max-width: 600px;
   height: 130px;
-  background-color: transparent;
-  border: 2px solid rgba(255, 255, 255, 0.356);
-  border-radius: 30px;
+  background-color: rgba(0, 0, 0, 0.5);
+  margin-top: 0;
+  padding: 0.8rem;
+  border-radius: 0 0 20px 20px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -465,8 +465,6 @@ button {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  -webkit-backdrop-filter: blur(20px);
-          backdrop-filter: blur(20px);
 }
 
 .col {
@@ -599,14 +597,27 @@ button {
 }
 
 .tomorrowCont {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
   height: auto;
   width: 100%;
   max-width: 600px;
   border: 1px solid gray;
-  border-radius: 30px;
+  border-radius: 13px;
   margin: 30px auto;
-  -webkit-box-shadow: 0 15px 10px black;
-          box-shadow: 0 15px 10px black;
+  -webkit-box-shadow: 0 0 19px rgba(0, 0, 0, 0.281);
+          box-shadow: 0 0 19px rgba(0, 0, 0, 0.281);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
 }
@@ -665,6 +676,18 @@ button {
       -ms-flex-align: center;
           align-items: center;
   cursor: pointer;
+}
+
+@media (max-width: 399px) {
+  .settingsbutton {
+    top: 180px;
+  }
+}
+
+@media (max-width: 399px) {
+  h1 {
+    font-size: 1.2em;
+  }
 }
 
 .settingArea {
