@@ -597,8 +597,12 @@ function get_RainData(data) {
 function inerpreteUvIndex(uvindex) {
     let instruction = '';
     const lbl_UvIndex = document.getElementById("outUvIndx");
+    const max_UV = 12;
+    const uv_in_percent = uvindex * 100 / max_UV;
     const progressValue_UV = document.getElementById("progress_UV");
-    progressValue_UV.value = uvindex;
+
+    //progressValue_UV.value = uvindex;
+    progressValue_UV.value = uv_in_percent;
 
     if (uvindex > 11) {
         instruction = 'EXTREM - Sonne meiden';

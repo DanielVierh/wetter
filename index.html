@@ -77,6 +77,7 @@
                 <p id="outp_MaxTemp"></p>
                 <p class="smallTemp" id="outpSmallTemp"></p>
                 <progress id="progress_Temp" value="11" max="12"></progress>
+                <!-- <meter min="0" max="100" low="30" high="80" value="0" id="progress_Temp"></meter> -->
                 <p class="descr">Akt. Temperatur</p>
                 <p id="outp_feltTemp"></p>
             </div>
@@ -84,7 +85,8 @@
             <div class="miniContainer">
                 <p style="text-decoration: underline;"><strong>UV</strong></p>
                 <p id="outUvIndx">Laden...</p>
-                <progress id="progress_UV" value="11" max="12"></progress>
+                <!-- <progress id="progress_UV" value="11" max="12"></progress> -->
+                <meter min="0" max="100" low="25" high="50" optimum="10" id="progress_UV"></meter>
                 <p class="descr">Akt. UV Index</p>
                 <p id="outpMaxUvIndex"></p>
             </div>
@@ -320,7 +322,7 @@
         <div id="toasts"></div>
     </footer>
 
-    <p>v 8.2.2 | 13.11.22</p>
+    <p>04.05.23</p>
 
     <p id="errorlog"></p>
 
