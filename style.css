@@ -428,6 +428,7 @@ button {
 
 #progress_UV {
   width: 80%;
+  height: 16px;
   margin: 0 auto;
 }
 
