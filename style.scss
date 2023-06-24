@@ -1,3 +1,7 @@
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     background: linear-gradient(to right, #2da6b6, #4472bc);
     color: white;
@@ -612,4 +616,30 @@ h1{
 
     #outUvIndx {
        font-size: .8em;
+    }
+
+
+    .scroll-up-button {
+        position: fixed;
+        right: 12px;
+        top: 90%;
+        width: 30px;
+        height: 0;
+        background: rgba(255, 255, 255, 0.343);
+        z-index: 10000;
+        border-radius: 13px;
+        box-shadow: 0 0 14px black;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 0em;
+        cursor: pointer;
+        -webkit-backdrop-filter: blur(20px);
+        backdrop-filter: blur(20px);
+        transition: all 1s ease-in-out;
+
+        &.active {
+            height: 50px;
+            font-size: 1.2em;
+        }
     }

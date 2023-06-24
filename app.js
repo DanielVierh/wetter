@@ -51,6 +51,7 @@ const settingWindow = document.getElementById("settingWindow");
 const theBody = document.getElementById("theBody");
 const settingsAppearance = document.getElementById("settingsAppearance");
 const btnSaveSettings = document.getElementById("btnSaveSettings");
+const btn_scroll_up = document.getElementById("btn_scroll_up");
 
 //?####################################################################################################
 // Load
@@ -1164,3 +1165,18 @@ function setAppearance(value) {
     }
 
 }
+
+
+if(btn_scroll_up) {
+    btn_scroll_up.addEventListener("click", ()=> {
+        window.scroll(0,0);
+    })
+}
+
+window.addEventListener("scroll", (e)=> {
+    if(window.pageYOffset > 400) {
+        btn_scroll_up.classList.add("active");
+    }else {
+        btn_scroll_up.classList.remove("active");
+    }
+})
