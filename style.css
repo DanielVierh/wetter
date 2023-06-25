@@ -620,7 +620,6 @@ button {
   top: 90%;
   width: 30px;
   height: 0;
-  background: rgba(255, 255, 255, 0.343);
   z-index: 10000;
   border-radius: 13px;
   box-shadow: 0 0 14px black;
@@ -629,13 +628,12 @@ button {
   align-items: center;
   font-size: 0em;
   cursor: pointer;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.3);
+  filter: blur(12px);
+  -webkit-filter: blur(12px);
   transition: all 1s ease-in-out;
 }
 .scroll-up-button.active {
   height: 50px;
   font-size: 1.2em;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
 }/*# sourceMappingURL=style.css.map */
