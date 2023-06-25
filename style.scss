@@ -634,12 +634,14 @@ h1{
         align-items: center;
         font-size: 0em;
         cursor: pointer;
-        -webkit-backdrop-filter: blur(20px);
         backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
         transition: all 1s ease-in-out;
 
         &.active {
             height: 50px;
             font-size: 1.2em;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
         }
     }
