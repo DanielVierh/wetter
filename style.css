@@ -629,8 +629,8 @@ button {
   font-size: 0em;
   cursor: pointer;
   background: rgba(255, 255, 255, 0.3);
-  filter: blur(12px);
-  -webkit-filter: blur(12px);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   transition: all 1s ease-in-out;
 }
 .scroll-up-button.active {
