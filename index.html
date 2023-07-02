@@ -72,7 +72,9 @@
         </div>
 
         <div class="containerWrapper">
+            
             <div class="miniContainer">
+                <div class="loading"><div class="spinner-loader"><i class="fa-solid fa-cloud"></i></div></div>
                 <p style="text-decoration: underline;"><strong>Temperatur</strong></p>
                 <p id="outp_MinTemp">Laden...</p>
                 <p id="outp_MaxTemp"></p>
@@ -84,6 +86,7 @@
             </div>
 
             <div class="miniContainer">
+                <div class="loading"><div class="spinner-loader"><i class="fa-solid fa-cloud"></i></div></div>
                 <p style="text-decoration: underline;"><strong>UV</strong></p>
                 <p id="outUvIndx">Laden...</p>
                 <!-- <progress id="progress_UV" value="11" max="12"></progress> -->
@@ -92,21 +95,25 @@
                 <p id="outpMaxUvIndex"></p>
             </div>
             <div class="miniContainer">
+                <div class="loading"><div class="spinner-loader"><i class="fa-solid fa-cloud"></i></div></div>
                 <p style="text-decoration: underline;"><strong>Wind</strong></p>
                 <p id="outpWind" class="outputVal">Laden...</p>
                 <div class="wind" id="windDirect"></div>
             </div>
             <div class="miniContainer">
+                <div class="loading"><div class="spinner-loader"><i class="fa-solid fa-cloud"></i></div></div>
                 <p style="text-decoration: underline;"><strong>Feuchtigkeit</strong></p>
                 <p id="outpHumidity" class="outputVal">Laden...</p>
             </div>
             <div class="miniContainer">
+                <div class="loading"><div class="spinner-loader"><i class="fa-solid fa-cloud"></i></div></div>
                 <p style="text-decoration: underline;"><strong>Mond</strong></p>
                 <p id="outpMoonPhase" class="outputVal"></p>
                 <p class="outputVal">⬆️ <span id="outpMoonRise" style="font-size: 1.3em;">19:05</span> <br> ⬇️ <span
                         id="outpMoonSet" style="font-size: 1.3em;">04:55</span></p>
             </div>
             <div class="miniContainer">
+                <div class="loading"><div class="spinner-loader"><i class="fa-solid fa-cloud"></i></div></div>
                 <p style="text-decoration: underline;"><strong>Regen</strong></p>
                 <p id="outpRain" class="outputVal" style="font-size: 1.3em;">0 mm erwartet</p>
             </div>
@@ -114,6 +121,7 @@
         </div>
 
         <div class="miniContainer small" id="airQualiBox">
+            <div class="loading"><div class="spinner-loader"><i class="fa-solid fa-cloud"></i></div></div>
             <p style="text-decoration: underline;"><strong>Luftqualität</strong></p>
             <p id="outpAirQuali" class="outputVal" style="font-weight: bold; font-size: 1em;">Lade Werte ...</p>
             <button onclick="toggleInfoBox()" class="infobutton" id="infoBtn">Mehr Infos</button>
@@ -136,6 +144,7 @@
         </select>
 
         <div class="hourForecastContainer">
+            <div class="loading"><div class="spinner-loader"><i class="fa-solid fa-cloud"></i></div></div>
             <div class="std" id="hourForecastBlock0" hidden>
                 <p class="forecastTextHour" id="hourOutp0">-</p>
                 <img src="" alt="img" class="forecastImg" id="hourForecastImg0">
@@ -259,6 +268,7 @@
         </div>
         <h4 style="text-decoration: underline;" id="forecastBlock5" hidden>5 Tage Vorhersage</h4>
         <div class="foreCastCont">
+            <div class="loading"><div class="spinner-loader"><i class="fa-solid fa-cloud"></i></div></div>
             <div class="day" id="forecastBlock0" hidden>
                 <p class="forecastText" id="outpDay0">-</p>
                 <img src="" alt="img" class="forecastImg" id="foreCastImg0">
@@ -296,8 +306,9 @@
         </div>
 
         <div class="tomorrowCont">
+            <div class="loading"><div class="spinner-loader"><i class="fa-solid fa-cloud"></i></div></div>
             <p id="outpTempDiff"></p>
-            <p id="outputRainTomorrow">0 mm Regen erwartet</p>
+            <p id="outputRainTomorrow">Lade Werte...</p>
         </div>
 
 

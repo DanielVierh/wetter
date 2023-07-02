@@ -82,6 +82,7 @@ window.addEventListener('keydown', (e) => {
 //?####################################################################################################
 // Wetter Request
 function weatherRequest() {
+    loadSpinner();
     if (adress != '') {
         if (isNaN(adress)) {
             apiLink = `https://api.openweathermap.org/data/2.5/weather?q=${adress}&appid=${ky}&lang=de&units=metric`;
@@ -93,7 +94,7 @@ function weatherRequest() {
             .then((response) => response.json())
             .then((data) => {
                 console.log(data);
-
+                deleteSpinner()
                 weatherContainer.style.display = 'flex';
                 cityContainer.style.display = 'flex';
                 isCurrentLocation = false;
@@ -202,10 +203,12 @@ function dcrK(val) {
 // Forecast
 //?####################################################################################################
 function requestWeatherForecast(lat, lon) {
+    loadSpinner();
     apiLink = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=minutely&appid=${ky}&lang=de&units=metric`;
     fetch(apiLink)
         .then((response) => response.json())
         .then((data) => {
+            deleteSpinner();
             console.log('ForecastData', data);
             try {
                 mainData = JSON.stringify(data);
@@ -712,19 +715,24 @@ function ausw() {
 //?####################################################################################################
 // Lädt die zuerst abgespeicherte Stadt
 function loadData() {
-    setAppearance('opt_normalmode')
-    if (localStorage.getItem('stored_CityList') != null) {
-        cityList = JSON.parse(localStorage.getItem('stored_CityList'));
-        adress = cityList[0];
-        weatherRequest();
-        showSavedCitys();
-        currentLocationButton.hidden = false;
-    } else {
-        // Keine Einträge vorhanden
-        weatherContainer.style.display = 'none';
-        cityContainer.style.display = 'none';
-        loadMap(51.162290, 6.462739);
-    }
+    setAppearance('opt_normalmode');
+    reset_Col();
+    loadSpinner()
+    setTimeout(() => {
+        if (localStorage.getItem('stored_CityList') != null) {
+            cityList = JSON.parse(localStorage.getItem('stored_CityList'));
+            adress = cityList[0];
+            weatherRequest();
+            showSavedCitys();
+            currentLocationButton.hidden = false;
+        } else {
+            // Keine Einträge vorhanden
+            weatherContainer.style.display = 'none';
+            cityContainer.style.display = 'none';
+            loadMap(51.162290, 6.462739);
+        }
+    }, 1500);
+
 
     if (localStorage.getItem('stored_WeatherSettings') != null) {
         weatherSettings = JSON.parse(localStorage.getItem('stored_WeatherSettings'));
@@ -1180,3 +1188,28 @@ window.addEventListener("scroll", (e)=> {
         btn_scroll_up.classList.remove("active");
     }
 })
+
+function reset_Col() {
+    for(let i = 0; i < 5; i++) {
+        const balken = document.getElementById(`tempDay${i}`);
+        balken.style.height = `0px`;
+        balken.style.marginBottom = `0px`;
+        balken.style.marginTop = `0px`;
+    }
+}
+
+function loadSpinner() {
+    console.log('Show Spinner');
+    const loadingDivs = document.querySelectorAll('.loading')
+    loadingDivs.forEach((loadingdiv) => {
+        loadingdiv.classList.add("active");
+        // loadingdiv.innerHTML = '<div class="spinner-loader"><i class="fa-solid fa-cloud"></i></div>'
+    })
+}
+
+function deleteSpinner() {
+    const loadingDivs = document.querySelectorAll('.loading')
+    loadingDivs.forEach((loadingdiv) => {
+        loadingdiv.classList.remove("active");
+    })
+}
