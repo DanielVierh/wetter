@@ -66,6 +66,7 @@ body {
   align-items: center;
   justify-content: center;
   margin: 3px;
+  z-index: 100;
 }
 
 input {
@@ -77,6 +78,7 @@ input {
   font-weight: bold;
   margin: 3px;
   color: black;
+  z-index: 100;
 }
 
 button {
@@ -210,6 +212,7 @@ button {
   input {
     width: 130px;
     font-size: 0.7rem;
+    z-index: 100;
   }
   #toasts {
     position: fixed;
