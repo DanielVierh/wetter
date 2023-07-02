@@ -648,7 +648,7 @@ button {
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 100000;
+  z-index: -1;
   background: linear-gradient(to right, #2da6b6, #4472bc);
   border-radius: 15px;
   transition: all 1s ease;
