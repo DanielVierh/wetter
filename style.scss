@@ -176,6 +176,7 @@ button {
     @media (max-width: 600px) {
         font-size: .8em;
     }
+
     @media (max-width: 375px) {
         font-size: .7em;
     }
@@ -345,27 +346,21 @@ button {
     width: 50%;
     margin: 0 auto;
     background-color: rgba(0, 0, 0, 0.886);
+    padding: 10px;
 }
 
 .moreAirQualityInfo {
-    display: none;
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows .9s ease-in-out;
+
+    .inner {
+        overflow: hidden;
+    }
 }
 
 .moreAirQualityInfo.active {
-    display: block;
-    animation: openSmooth 0.7s ease-in-out;
-}
-
-@keyframes openSmooth {
-    0% {
-        height: 0px;
-        color: transparent;
-    }
-
-    100% {
-        height: 150px;
-        color: white;
-    }
+    grid-template-rows: 1fr;
 }
 
 .outputVal {
@@ -538,7 +533,7 @@ button {
 .moreAlertInfo {
     display: grid;
     grid-template-rows: 0fr;
-    transition: grid-template-rows .9s ease-out;
+    transition: grid-template-rows .9s ease;
 
     .inner {
         overflow: hidden;

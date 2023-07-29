@@ -61,22 +61,24 @@
         <div class="alertContainer" id="alertContainer">
             <h2 id="outpAlertHeadline">Wetteralarm</h2>
             <h3 id="outpAlertTitle"></h3>
-                <button onclick="toggleAlertBox()" class="infobutton active" id="btnAlert">Mehr Infos</button>
+            <button onclick="toggleAlertBox()" class="infobutton active" id="btnAlert">Mehr Infos</button>
             <div class="moreAlertInfo" id="alertDetailContainer">
                 <div class="inner">
-                <p id="outpAlertMessage"></p>
-                <p id="outpAlertStart"></p>
-                <p id="outpAlertEnd"></p>
-                <p id="outpAlertSource"></p>
-                <button class="infobutton" id="btnShowMoreAlerts">Weiter</button>
-            </div>
+                    <p id="outpAlertMessage"></p>
+                    <p id="outpAlertStart"></p>
+                    <p id="outpAlertEnd"></p>
+                    <p id="outpAlertSource"></p>
+                    <button class="infobutton" id="btnShowMoreAlerts">Weiter</button>
+                </div>
             </div>
         </div>
 
         <div class="containerWrapper">
-            
+
             <div class="miniContainer">
-                <div class="loading"><div class="spinner-loader"><i class="fa-solid fa-cloud"></i></div></div>
+                <div class="loading">
+                    <div class="spinner-loader"><i class="fa-solid fa-cloud"></i></div>
+                </div>
                 <p style="text-decoration: underline;"><strong>Temperatur</strong></p>
                 <p id="outp_MinTemp">Laden...</p>
                 <p id="outp_MaxTemp"></p>
@@ -88,7 +90,9 @@
             </div>
 
             <div class="miniContainer">
-                <div class="loading"><div class="spinner-loader"><i class="fa-solid fa-cloud"></i></div></div>
+                <div class="loading">
+                    <div class="spinner-loader"><i class="fa-solid fa-cloud"></i></div>
+                </div>
                 <p style="text-decoration: underline;"><strong>UV</strong></p>
                 <p id="outUvIndx">Laden...</p>
                 <!-- <progress id="progress_UV" value="11" max="12"></progress> -->
@@ -97,25 +101,33 @@
                 <p id="outpMaxUvIndex"></p>
             </div>
             <div class="miniContainer">
-                <div class="loading"><div class="spinner-loader"><i class="fa-solid fa-cloud"></i></div></div>
+                <div class="loading">
+                    <div class="spinner-loader"><i class="fa-solid fa-cloud"></i></div>
+                </div>
                 <p style="text-decoration: underline;"><strong>Wind</strong></p>
                 <p id="outpWind" class="outputVal">Laden...</p>
                 <div class="wind" id="windDirect"></div>
             </div>
             <div class="miniContainer">
-                <div class="loading"><div class="spinner-loader"><i class="fa-solid fa-cloud"></i></div></div>
+                <div class="loading">
+                    <div class="spinner-loader"><i class="fa-solid fa-cloud"></i></div>
+                </div>
                 <p style="text-decoration: underline;"><strong>Feuchtigkeit</strong></p>
                 <p id="outpHumidity" class="outputVal">Laden...</p>
             </div>
             <div class="miniContainer">
-                <div class="loading"><div class="spinner-loader"><i class="fa-solid fa-cloud"></i></div></div>
+                <div class="loading">
+                    <div class="spinner-loader"><i class="fa-solid fa-cloud"></i></div>
+                </div>
                 <p style="text-decoration: underline;"><strong>Mond</strong></p>
                 <p id="outpMoonPhase" class="outputVal"></p>
                 <p class="outputVal">⬆️ <span id="outpMoonRise" style="font-size: 1.3em;">19:05</span> <br> ⬇️ <span
                         id="outpMoonSet" style="font-size: 1.3em;">04:55</span></p>
             </div>
             <div class="miniContainer">
-                <div class="loading"><div class="spinner-loader"><i class="fa-solid fa-cloud"></i></div></div>
+                <div class="loading">
+                    <div class="spinner-loader"><i class="fa-solid fa-cloud"></i></div>
+                </div>
                 <p style="text-decoration: underline;"><strong>Regen</strong></p>
                 <p id="outpRain" class="outputVal" style="font-size: 1.3em;">0 mm erwartet</p>
             </div>
@@ -127,8 +139,10 @@
             <p id="outpAirQuali" class="outputVal" style="font-weight: bold; font-size: 1em;">Lade Werte ...</p>
             <button onclick="toggleInfoBox()" class="infobutton" id="infoBtn">Mehr Infos</button>
             <div class="moreAirQualityInfo" id="detailContainer">
-                <p id="detainTextAirQuality"></p>
-                <a href="https://en.wikipedia.org/wiki/Air_quality_index#CAQI">wikipedia - Air quality index</a>
+                <div class="inner">
+                    <p id="detainTextAirQuality"></p>
+                    <a href="https://en.wikipedia.org/wiki/Air_quality_index#CAQI">wikipedia - Air quality index</a>
+                </div>
             </div>
         </div>
 
