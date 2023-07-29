@@ -119,6 +119,8 @@ function weatherRequest() {
                 timezone = data.timezone;
                 requestWeatherForecast(lat, lon);
                 document.getElementById("outpAirQuali").innerHTML = 'Lade Werte ...';
+                ausw();
+                loadMap(lat, lon)
                 setTimeout(() => {
                     getAirPollutionInfo(lat, lon);
                 }, 1500);
@@ -504,7 +506,6 @@ function requestWeatherForecast(lat, lon) {
                 document.getElementById(index).innerHTML = weekDay;
                 index = `outpDayPlus${i}`;
                 const viewport_width = window.innerWidth;
-                console.log(viewport_width);
                 if(viewport_width > 340) {
                     document.getElementById(index).innerHTML = `${tempMin}°C / ${tempMax}°C`;
                 }else {
@@ -552,7 +553,7 @@ function requestWeatherForecast(lat, lon) {
             ausw();
         })
         .catch((error) => {
-            // console.log(`Forecast Err: ${error}`);
+             console.log(`Forecast Err: ${error}`);
         });
 }
 
