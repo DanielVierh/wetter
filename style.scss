@@ -536,11 +536,17 @@ button {
 }
 
 .moreAlertInfo {
-    display: none;
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows .9s ease-out;
+
+    .inner {
+        overflow: hidden;
+    }
 }
 
 .moreAlertInfo.active {
-    display: block;
+    grid-template-rows: 1fr;
 }
 
 .alertContainer.active {
