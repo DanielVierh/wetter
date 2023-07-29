@@ -27,9 +27,7 @@ body {
     transition: 1.5s all;
 }
 
-@supports (
-    (-webkit-backdrop-filter: blur(20px)) or (backdrop-filter: blur(30px))
-) {
+@supports ((-webkit-backdrop-filter: blur(20px)) or (backdrop-filter: blur(30px))) {
     container {
         background: rgba(236, 16, 16, 0.8);
         -webkit-backdrop-filter: blur(20px);
@@ -138,8 +136,9 @@ button {
     -moz-backdrop-filter: blur(30px);
     box-shadow: 5px 5px 15px black;
     border: 1px solid rgba(255, 255, 255, 0.308);
-    box-shadow: 0 0 15px white, inset 0 0 20px white;
+    box-shadow: 0 0 15px white, inset 0 0 40px lightblue;
     border: 1px solid rgba(221, 215, 215, 0.336);
+    width: 200px;
 }
 
 .foreCastCont {
@@ -147,16 +146,12 @@ button {
     justify-content: space-evenly;
     align-items: center;
     text-align: center;
-    // margin-bottom: 15px;
     width: 90%;
     max-width: 600px;
     padding: 0.8rem;
     height: 80px;
     border-radius: 20px 20px 0 0;
     background-color: rgba(0, 0, 0, 0.5);
-    // box-shadow: 5px 5px 15px black;
-    // border: 2px solid rgba(255, 255, 255, 0.356);
-    // backdrop-filter: blur(20px);
 }
 
 .forecastImg {
@@ -172,10 +167,23 @@ button {
     height: 10px;
     margin: 0;
     font-size: 0.8em;
+
+    &.activt {
+        font-size: 0.6em;
+        margin-top: -8px;
+    }
+
+    @media (max-width: 600px) {
+        font-size: .8em;
+    }
+    @media (max-width: 375px) {
+        font-size: .7em;
+    }
 }
-.forecastText.active {
-    font-size: 0.6em;
-    margin-top: -8px;
+
+.block-headline {
+    font-size: 1.5em;
+    margin-bottom: 5px;
 }
 
 .hourForecastContainer {
@@ -251,18 +259,22 @@ button {
     font-weight: bold;
 
 }
+
 .toast.alert {
     background-color: rgb(105, 6, 6);
     color: white;
 }
+
 .toast.success {
     background-color: lightgreen;
     color: black;
 }
+
 .toast.info {
     background-color: lightblue;
     color: black;
 }
+
 .toast.warning {
     background-color: yellow;
     color: black;
@@ -349,6 +361,7 @@ button {
         height: 0px;
         color: transparent;
     }
+
     100% {
         height: 150px;
         color: white;
@@ -409,6 +422,7 @@ button {
     margin: 50px auto;
     transform: rotate(90deg);
 }
+
 .wind::before {
     content: '';
     position: absolute;
@@ -507,6 +521,7 @@ button {
     align-items: center;
     height: auto;
     width: 100%;
+    padding: 7px;
     max-width: 600px;
     border: 1px solid gray;
     border-radius: 13px;
@@ -569,7 +584,7 @@ button {
     }
 }
 
-h1{
+h1 {
     @media (max-width:399px) {
         font-size: 1.2em;
     }
@@ -608,48 +623,65 @@ h1{
 
 
 
-    .darkMode {
-        background: linear-gradient(to right, #102123, #020508);
-    }
-    .normalMode {
-        background: linear-gradient(to right, #2da6b6, #4472bc);
-    }
-    .lightMode {
-        background: linear-gradient(to right, #f5f5f5, #5a5e65);
-    }
+.darkMode {
+    background: linear-gradient(to right, #102123, #020508);
+}
 
-    #outUvIndx {
-       font-size: .8em;
+.normalMode {
+    background: linear-gradient(to right, #2da6b6, #4472bc);
+}
+
+.lightMode {
+    background: linear-gradient(to right, #f5f5f5, #5a5e65);
+}
+
+#outUvIndx {
+    font-size: .8em;
+}
+
+
+.scroll-up-button {
+    position: fixed;
+    right: 12px;
+    top: 90%;
+    width: 30px;
+    z-index: 10000;
+    border-radius: 13px;
+    box-shadow: 0 0 14px black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(13px);
+    transition: all 1s ease-in-out;
+    height: 50px;
+    font-size: 1.2em;
+    opacity: 0;
+
+    &.active {
+        opacity: 1;
     }
+}
 
+.loading {
 
-    .scroll-up-button {
-        position: fixed;
-        right: 12px;
-        top: 90%;
-        width: 30px;
-        z-index: 10000;
-        border-radius: 13px;
-        box-shadow: 0 0 14px black;
+    opacity: 0;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    background: linear-gradient(to right, #2da6b6, #4472bc);
+    border-radius: 15px;
+    transition: all 1s ease;
+
+    &.active {
         display: flex;
-        justify-content: center;
-        align-items: center;
-        cursor: pointer;
-        background: rgba(255,255,255,0.3);
-        backdrop-filter: blur(13px);
-        transition: all 1s ease-in-out;
-        height: 50px;
-        font-size: 1.2em;
-        opacity: 0;
-
-        &.active {
-            opacity: 1;
-        }
-    }
-
-    .loading {
-    
-        opacity: 0;
+        opacity: 1;
         justify-content: center;
         align-items: center;
         position: absolute;
@@ -657,54 +689,43 @@ h1{
         left: 0;
         right: 0;
         bottom: 0;
-        z-index: -1;
+        z-index: 100000;
         background: linear-gradient(to right, #2da6b6, #4472bc);
         border-radius: 15px;
-        transition: all 1s ease;
+        transition: all .4s ease;
+    }
+}
 
-        &.active {
-            display: flex;
-            opacity: 1;
-            justify-content: center;
-            align-items: center;
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            z-index: 100000;
-            background: linear-gradient(to right, #2da6b6, #4472bc);
-            border-radius: 15px;
-            transition: all .4s ease;
-        }
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
     }
 
-    @keyframes spin {
-        0% {
-          transform: rotate(0deg);
-        }
-        100% {
-          transform: rotate(360deg);
-        }
-      }
-      @keyframes antispin {
-        0% {
-          transform: rotate(360deg);
-        }
-        100% {
-          transform: rotate(0deg);
-        }
-      }
-      .spinner-loader {
-        margin-top: 50% auto;
-        border-radius: 50%;
-        width: 50px;
-        height: 50px;
-        border: 10px solid rgba(255, 255, 255, 0.2);
-        border-top-color: lightblue;
-        animation: spin 1s infinite linear;
+    100% {
+        transform: rotate(360deg);
+    }
+}
 
-        i {
-            animation: antispin 1s infinite linear;
-        }
-      }
+@keyframes antispin {
+    0% {
+        transform: rotate(360deg);
+    }
+
+    100% {
+        transform: rotate(0deg);
+    }
+}
+
+.spinner-loader {
+    margin-top: 50% auto;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    border: 10px solid rgba(255, 255, 255, 0.2);
+    border-top-color: lightblue;
+    animation: spin 1s infinite linear;
+
+    i {
+        animation: antispin 1s infinite linear;
+    }
+}

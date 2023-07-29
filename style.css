@@ -135,8 +135,9 @@ button {
   -moz-backdrop-filter: blur(30px);
   box-shadow: 5px 5px 15px black;
   border: 1px solid rgba(255, 255, 255, 0.308);
-  box-shadow: 0 0 15px white, inset 0 0 20px white;
+  box-shadow: 0 0 15px white, inset 0 0 40px lightblue;
   border: 1px solid rgba(221, 215, 215, 0.336);
+  width: 200px;
 }
 
 .foreCastCont {
@@ -166,10 +167,24 @@ button {
   margin: 0;
   font-size: 0.8em;
 }
-
-.forecastText.active {
+.forecastText.activt {
   font-size: 0.6em;
   margin-top: -8px;
+}
+@media (max-width: 600px) {
+  .forecastText {
+    font-size: 0.8em;
+  }
+}
+@media (max-width: 375px) {
+  .forecastText {
+    font-size: 0.7em;
+  }
+}
+
+.block-headline {
+  font-size: 1.5em;
+  margin-bottom: 5px;
 }
 
 .hourForecastContainer {
@@ -502,6 +517,7 @@ button {
   align-items: center;
   height: auto;
   width: 100%;
+  padding: 7px;
   max-width: 600px;
   border: 1px solid gray;
   border-radius: 13px;

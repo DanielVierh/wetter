@@ -131,7 +131,7 @@
         </div>
 
         <!-- Sunden Vorhersage -->
-        <h4 style="text-decoration: underline;">24 Stunden Vorhersage</h4>
+        <h4 class="block-headline">24 Stunden Vorhersage</h4>
 
         <select id="weatherForecastType" onchange="getWeathertype(this)" class="optionfield">
             <option value="opt_temp">Temperatur</option>
@@ -264,7 +264,7 @@
                 <p id="hourOutpPlus23" class="forecastText">-</p>
             </div>
         </div>
-        <h4 style="text-decoration: underline;" id="forecastBlock5" hidden>5 Tage Vorhersage</h4>
+        <h4 id="forecastBlock5" class="block-headline" hidden>7 Tage Vorhersage</h4>
         <div class="foreCastCont">
             <div class="day" id="forecastBlock0" hidden>
                 <p class="forecastText" id="outpDay0">-</p>
@@ -291,6 +291,16 @@
                 <img src="" alt="img" class="forecastImg" id="foreCastImg4">
                 <p id="outpDayPlus4" class="forecastText">-</p>
             </div>
+            <div class="day" id="forecastBlock5" hidden>
+                <p class="forecastText" id="outpDay5">-</p>
+                <img src="" alt="img" class="forecastImg" id="foreCastImg5">
+                <p id="outpDayPlus5" class="forecastText">-</p>
+            </div>
+            <div class="day" id="forecastBlock6" hidden>
+                <p class="forecastText" id="outpDay6">-</p>
+                <img src="" alt="img" class="forecastImg" id="foreCastImg6">
+                <p id="outpDayPlus6" class="forecastText">-</p>
+            </div>
         </div>
 
 
@@ -300,8 +310,11 @@
             <div class="col" id="tempDay2"></div>
             <div class="col" id="tempDay3"></div>
             <div class="col" id="tempDay4"></div>
+            <div class="col" id="tempDay5"></div>
+            <div class="col" id="tempDay6"></div>
         </div>
 
+        <h4 class="block-headline">So wird es morgen</h4>
         <div class="tomorrowCont">
             <p id="outpTempDiff"></p>
             <p id="outputRainTomorrow">Lade Werte...</p>
@@ -321,7 +334,7 @@
 
 
     <div class="container" id="cityContainer">
-        <h1 style="margin: 0px;">Meine gespeicherten Orte</h1>
+        <h1 class="block-headline">Meine gespeicherten Orte</h1>
         <ul id="outCitys"></ul>
     </div>
 
@@ -330,7 +343,7 @@
         <div id="toasts"></div>
     </footer>
 
-    <p>04.05.23</p>
+    <p>29.07.23</p>
 
     <p id="errorlog"></p>
 

@@ -137,7 +137,7 @@ function weatherRequest() {
                 console.log('In nicht gefunden');
                 adress = '';
                 let index;
-                for (let i = 0; i <= 5; i++) {
+                for (let i = 0; i <= 7; i++) {
                     index = `forecastBlock${i}`;
                     document.getElementById(index).hidden = true;
                 }
@@ -459,7 +459,7 @@ function requestWeatherForecast(lat, lon) {
 
             //?####################################################################################################
             // Forecast Tage Felder mit Inhalt befüllen
-            for (let i = 0; i <= 4; i++) {
+            for (let i = 0; i <= 6; i++) {
                 index = `forecastBlock${i}`;
                 // Checkt, ob es morgen wärmer oder kühler wird
                 if (i === 0) {
@@ -498,18 +498,24 @@ function requestWeatherForecast(lat, lon) {
                     ' ',
                     0,
                 );
-
+                
                 weekDay = getDate(weekDay);
                 index = `outpDay${i}`;
                 document.getElementById(index).innerHTML = weekDay;
                 index = `outpDayPlus${i}`;
-                document.getElementById(index).innerHTML = `${tempMin}°C / ${tempMax}°C`;
+                const viewport_width = window.innerWidth;
+                console.log(viewport_width);
+                if(viewport_width > 340) {
+                    document.getElementById(index).innerHTML = `${tempMin}°C / ${tempMax}°C`;
+                }else {
+                    document.getElementById(index).innerHTML = `${tempMin}°C - ${tempMax}°C`;
+                }
                 imgSrc = `https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/widgets/${weatherIcon}.png`;
                 index = `foreCastImg${i}`;
                 document.getElementById(index).src = imgSrc;
             }
 
-            index = `forecastBlock${5}`;
+            index = `forecastBlock${7}`;
             document.getElementById(index).hidden = false;
 
             //?####################################################################################################
@@ -1066,19 +1072,15 @@ function getAirPollutionInfo(latitude, longitude) {
 
                 if (no2 >= 100) {
                     pollutionArray.push(`Stickstoffdioxid: ${no2} (moderat ab 100) <br>`);
-                    console.log('true');
                 }
                 if (o3 >= 120) {
                     pollutionArray.push(`Ozon: ${o3} (moderat ab 120) <br>`);
-                    console.log('true');
                 }
                 if (pm2_5 >= 30) {
                     pollutionArray.push(`Feinstaub(pm2_5): ${pm2_5} (moderat ab 30) <br>`);
-                    console.log('true');
                 }
                 if (pm10 >= 50) {
                     pollutionArray.push(`Feinstaub(pm10): ${pm10} (moderat ab 50) <br>`);
-                    console.log('true');
                 }
 
                 for (let i = 0; i < pollutionArray.length; i++) {
@@ -1191,7 +1193,7 @@ window.addEventListener("scroll", (e)=> {
 })
 
 function reset_Col() {
-    for(let i = 0; i < 5; i++) {
+    for(let i = 0; i < 7; i++) {
         const balken = document.getElementById(`tempDay${i}`);
         balken.style.height = `0px`;
         balken.style.marginBottom = `0px`;
