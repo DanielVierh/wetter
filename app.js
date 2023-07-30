@@ -510,7 +510,7 @@ function requestWeatherForecast(lat, lon) {
                 if(viewport_width > 600) {
                     document.getElementById(index).innerHTML = `${tempMin}°C / ${tempMax}°C`;
                 }else {
-                    document.getElementById(index).innerHTML = `${tempMin}°C - ${tempMax}°C`;
+                    document.getElementById(index).innerHTML = `${tempMin}°C-${tempMax}°C`;
                 }
                 imgSrc = `https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/widgets/${weatherIcon}.png`;
                 index = `foreCastImg${i}`;

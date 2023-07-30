@@ -12,7 +12,8 @@ body {
 }
 
 .container {
-    margin: 10px;
+    width: 88%;
+    margin: 10px 0;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-evenly;
@@ -108,7 +109,7 @@ button {
 }
 
 .outputLabel {
-    margin: 0px;
+    margin: 0 50px 0 0 ;
     padding: 0px;
     font-size: 1.2rem;
     text-shadow: 3px 3px 15px black;
@@ -148,7 +149,8 @@ button {
     text-align: center;
     width: 90%;
     max-width: 600px;
-    padding: 0.8rem;
+    padding: 1.4rem;
+    margin-left: -30px;
     height: 80px;
     border-radius: 20px 20px 0 0;
     background-color: rgba(0, 0, 0, 0.5);
@@ -185,6 +187,7 @@ button {
 .block-headline {
     font-size: 1.5em;
     margin-bottom: 5px;
+    margin-left: -30px;
 }
 
 .hourForecastContainer {
@@ -197,7 +200,7 @@ button {
     border-radius: 15px;
     background-color: rgba(158, 156, 156, 0.308);
     box-shadow: 5px 5px 5px black, inset 10px 8px 15px black;
-    margin: auto;
+    margin-left: -30px;
     backdrop-filter: blur(20px);
 }
 
@@ -292,6 +295,7 @@ button {
     align-items: center;
     flex-wrap: wrap;
     position: relative;
+    margin-right: 20px;
 }
 
 .miniContainer {
@@ -322,7 +326,7 @@ button {
     color: white;
     border: 1px solid gray;
     border-radius: 15px;
-    margin: 20px auto;
+    margin: 20px 0 20px -30px;
     box-shadow: 0 15px 10px black;
     transition: all 1s ease-in-out;
 }
@@ -396,7 +400,8 @@ button {
     height: 130px;
     background-color: rgba(0, 0, 0, 0.5);
     margin-top: 0;
-    padding: 0.8rem;
+    margin-left: -30px;
+    padding: 1.4rem;
     border-radius: 0 0 20px 20px;
     display: flex;
     justify-content: space-evenly;
@@ -471,6 +476,7 @@ button {
     letter-spacing: 1.5px;
     box-shadow: 0 0 5px white;
     margin-bottom: 15px;
+    margin-left: -20px;
 }
 
 .karte {
@@ -517,12 +523,12 @@ button {
     justify-content: center;
     align-items: center;
     height: auto;
-    width: 100%;
+    width: 98%;
     padding: 7px;
     max-width: 600px;
     border: 1px solid gray;
     border-radius: 13px;
-    margin: 30px auto;
+    margin: 30px 0 30px -30px;
     box-shadow: 0 0 19px rgba(0, 0, 0, 0.281);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
@@ -556,7 +562,7 @@ button {
     max-width: 600px;
     border: 1px solid gray;
     border-radius: 15px;
-    margin: 30px auto;
+    margin: 30px 20px 30px 0;
     box-shadow: 0 15px 10px black;
     padding-bottom: 25px;
 }
