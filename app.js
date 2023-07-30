@@ -143,7 +143,7 @@ function weatherRequest() {
                     index = `forecastBlock${i}`;
                     document.getElementById(index).hidden = true;
                 }
-                for (let i = 0; i <= 23; i++) {
+                for (let i = 0; i <= 24; i++) {
                     index = `hourForecastBlock${i}`;
                     document.getElementById(index).hidden = true;
                 }
@@ -407,7 +407,7 @@ function requestWeatherForecast(lat, lon) {
             timeMinusSummertime = 0;
             //?####################################################################################################
             // Forecast Stunden Felder einblenden
-            for (let i = 0; i <= 23; i++) {
+            for (let i = 0; i <= 24; i++) {
                 index = `hourForecastBlock${i}`;
                 document.getElementById(index).hidden = false;
                 temp = parseInt(data.hourly[i].temp);
@@ -448,7 +448,7 @@ function requestWeatherForecast(lat, lon) {
             // Vorausgestellte For Schleife um die absolute tiefst und höchst temp der kommenden 5 Tage zu ermitteln
             let deepestTemp = 100;
             let highestTemp = -50;
-            for (let i = 0; i <= 4; i++) {
+            for (let i = 0; i <= 6; i++) {
                 const compareDeepestTemp = parseInt(data.daily[i + 1].temp.min);
                 const compareHighestTemp = parseInt(data.daily[i + 1].temp.max);
                 if (compareDeepestTemp < deepestTemp) {
@@ -462,6 +462,7 @@ function requestWeatherForecast(lat, lon) {
             //?####################################################################################################
             // Forecast Tage Felder mit Inhalt befüllen
             for (let i = 0; i <= 6; i++) {
+                console.log('i', i);
                 index = `forecastBlock${i}`;
                 // Checkt, ob es morgen wärmer oder kühler wird
                 if (i === 0) {
@@ -506,7 +507,7 @@ function requestWeatherForecast(lat, lon) {
                 document.getElementById(index).innerHTML = weekDay;
                 index = `outpDayPlus${i}`;
                 const viewport_width = window.innerWidth;
-                if(viewport_width > 340) {
+                if(viewport_width > 600) {
                     document.getElementById(index).innerHTML = `${tempMin}°C / ${tempMax}°C`;
                 }else {
                     document.getElementById(index).innerHTML = `${tempMin}°C - ${tempMax}°C`;
@@ -514,10 +515,13 @@ function requestWeatherForecast(lat, lon) {
                 imgSrc = `https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/widgets/${weatherIcon}.png`;
                 index = `foreCastImg${i}`;
                 document.getElementById(index).src = imgSrc;
+
+                // index = `forecastBlock${i}`;
+                // console.log('index', index);
+                // document.getElementById(index).hidden = false;
             }
 
-            index = `forecastBlock${7}`;
-            document.getElementById(index).hidden = false;
+
 
             //?####################################################################################################
             // Bei Geolocation

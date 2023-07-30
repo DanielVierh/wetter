@@ -174,7 +174,7 @@ button {
     }
 
     @media (max-width: 600px) {
-        font-size: .8em;
+        font-size: .7em;
     }
 
     @media (max-width: 375px) {
@@ -408,6 +408,8 @@ button {
     height: 80px;
     border-radius: 4px;
     background-color: orange;
+    margin-right: 11px;
+    margin-left: 11px;
 }
 
 .wind {
