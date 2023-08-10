@@ -467,13 +467,17 @@ function requestWeatherForecast(lat, lon) {
                 if (i === 0) {
                     const tempDiffToday_Tomorrow = (data.daily[i + 1].temp.max - data.daily[i].temp.max).toFixed(1);
                     const lblTempDiff = document.getElementById("outpTempDiff");
+                    const maxTomorrow = data.daily[i + 1].temp.max;
+                    const tomorrowWeatherTrend = data.daily[i + 1].weather[0].description;
                     if (tempDiffToday_Tomorrow >= 1) {
-                        lblTempDiff.innerHTML = `Morgen wird es ${tempDiffToday_Tomorrow}°C wärmer.`;
+                        lblTempDiff.innerHTML = `Morgen wird es ca. ${parseInt(tempDiffToday_Tomorrow)}°C wärmer, mit einer maximalen Temperatur von ${parseInt(maxTomorrow)}°C`;
                     } else if (tempDiffToday_Tomorrow <= -1) {
-                        lblTempDiff.innerHTML = `Morgen kühlt es um ${tempDiffToday_Tomorrow}°C ab.`;
+                        lblTempDiff.innerHTML = `Morgen kühlt es um ${parseInt(tempDiffToday_Tomorrow)}°C, auf eine maximale Temperatur von ${parseInt(maxTomorrow)}°C ab.`;
                     } else {
-                        lblTempDiff.innerHTML = 'Die Temperatur bleibt morgen stabil.';
+                        lblTempDiff.innerHTML = `Die Temperatur bleibt morgen stabil. Die maximale Temperatur wird in etwa ${parseInt(maxTomorrow)}°C betragen.`;
                     }
+                    document.getElementById("outputWeatherTrend").innerHTML = `Das Wetter morgen: ${tomorrowWeatherTrend}.`;
+
                 }
 
                 document.getElementById(index).hidden = false;
