@@ -462,7 +462,6 @@ function requestWeatherForecast(lat, lon) {
             //?####################################################################################################
             // Forecast Tage Felder mit Inhalt befüllen
             for (let i = 0; i <= 6; i++) {
-                console.log('i', i);
                 index = `forecastBlock${i}`;
                 // Checkt, ob es morgen wärmer oder kühler wird
                 if (i === 0) {
@@ -957,7 +956,7 @@ function changeWeatherType(type) {
 
     const savedData = JSON.parse(mainData)
     let timeMinusSummertime = 0;
-    for (let i = 0; i <= 23; i++) {
+    for (let i = 0; i <= 24; i++) {
         index = `hourForecastBlock${i}`;
         document.getElementById(index).hidden = false;
         temp = parseInt(savedData.hourly[i].temp);
