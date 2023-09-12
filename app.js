@@ -675,11 +675,11 @@ function ausw() {
     // Tag / Nacht
     if (iconVal === 'n') {
         document.getElementById('weatherCard').style.backgroundColor = 'rgba(0,0,100,0.600';
-        document.getElementById("weatherimg").style.boxShadow = '0px 0px 10px rgba(255,255,255,0.4)';
+        // document.getElementById("weatherimg").style.boxShadow = '0px 0px 10px rgba(255,255,255,0.4)';
         // weatherContainer.style.backgroundImage = "url('img/night.jpeg')";
     } else {
         document.getElementById('weatherCard').style.backgroundColor = 'rgba(29, 28, 28, 0.247)';
-        document.getElementById("weatherimg").style.boxShadow = '0px 0px 20px rgba(255,255,255,1), inset 0 0 15px white';
+        // document.getElementById("weatherimg").style.boxShadow = '0px 0px 20px rgba(255,255,255,1), inset 0 0 15px white';
         // weatherContainer.style.backgroundImage = "url('img/Sun.jpg')";
     }
 

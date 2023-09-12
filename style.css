@@ -35,12 +35,6 @@ body {
     backdrop-filter: blur(20px);
   }
 }
-#outpTemp {
-  font-size: 4rem;
-  font-weight: bolder;
-  margin: 0;
-}
-
 #outpOrt {
   font-size: 2rem;
   margin: 0;
@@ -128,17 +122,40 @@ button {
   letter-spacing: 1.5px;
 }
 
-.imag {
-  background: rgba(39, 203, 224, 0.185);
+.img-temp-wrapper {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 200px;
+  margin: 0 auto;
+}
+.img-temp-wrapper .imag {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   border-radius: 50%;
-  backdrop-filter: blur(30%);
-  -webkit-backdrop-filter: blur(30%);
-  -moz-backdrop-filter: blur(30px);
-  box-shadow: 5px 5px 15px black;
-  border: 1px solid rgba(255, 255, 255, 0.308);
-  box-shadow: 0 0 15px white, inset 0 0 40px lightblue;
-  border: 1px solid rgba(221, 215, 215, 0.336);
+  box-shadow: 0px 30px 15px rgba(0, 0, 0, 0.5) !important;
+  box-shadow: none;
   width: 180px;
+  z-index: 10;
+  opacity: 0.85;
+}
+.img-temp-wrapper #outpTemp {
+  position: absolute;
+  font-size: 25vw;
+  font-weight: bolder;
+  margin: 0;
+  z-index: 9;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-shadow: 0 0 10px white;
+}
+@media (min-width: 500px) {
+  .img-temp-wrapper #outpTemp {
+    font-size: 7em;
+    top: -20px;
+  }
 }
 
 .foreCastCont {
