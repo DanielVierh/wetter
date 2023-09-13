@@ -686,16 +686,14 @@ function ausw() {
     //?####################################################################################################
     //? Wetter Hintergrundbild
     //? Klarer Himmel
-    if (iconValRaw === '01d') {
+    if (iconValRaw === '01d' || iconValRaw === '01n') {
         // weatherContainer.style.backgroundImage = "url('img/Sun.jpg')";
         document.getElementById("weatherimg").style.width = '270px';
         document.getElementById("weatherimg").style.top = '-25px';
     }
-    if (iconValRaw === '01n') {
-        document.getElementById("weatherimg").style.width = '270px';
-        document.getElementById("weatherimg").style.top = '-25px';
-        // weatherContainer.style.backgroundImage = "url('img/night.jpeg')";
-    }
+    // if (iconValRaw === '01n') {
+    //     // weatherContainer.style.backgroundImage = "url('img/night.jpeg')";
+    // }
 
     // //? Regen
     // if (iconValRaw === '10d' || iconValRaw === '09d') {

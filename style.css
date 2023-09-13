@@ -135,10 +135,10 @@ button {
   top: 0;
   transform: translateX(-50%);
   border-radius: 50%;
-  width: 180px;
+  width: 200px;
   z-index: 10;
   opacity: 0.85;
-  animation: hover_weather 20s ease-in-out infinite;
+  animation: hover_weather 25s ease-in-out infinite;
 }
 .img-temp-wrapper #outpTemp {
   position: absolute;
@@ -160,13 +160,13 @@ button {
 
 @keyframes hover_weather {
   0% {
-    top: 0px;
+    top: 15px;
   }
   50% {
-    top: -20px;
+    top: -5px;
   }
   100% {
-    top: 0px;
+    top: 15px;
   }
 }
 .foreCastCont {
