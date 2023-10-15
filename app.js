@@ -20,6 +20,7 @@ let airQualityInfoboxIsVisible = false;
 let alertInfoboxIsVisible = false;
 let showAlert = 0;
 let settingsAreVisible = false;
+let windDeg = 0;
 
 let weatherSettings = {
     appeareanceMode: ''
@@ -294,7 +295,7 @@ function requestWeatherForecast(lat, lon) {
 
             //?####################################################################################################
             // Windgeschwidigkeit und Richtung
-            let windDeg = data.current.wind_deg;
+            windDeg = data.current.wind_deg;
             document.getElementById("windDirect").style.transform = `rotate(${windDeg}deg)`
 
             //?####################################################################################################
@@ -1226,3 +1227,17 @@ function deleteSpinner() {
         loadingdiv.classList.remove("active");
     })
 }
+
+setInterval(() => {
+    const windDeg_minus_20 = windDeg - 20;
+    const winDeg_plus_20 = windDeg + 20;
+    const randomDirection = parseInt(Math.random() * 2 + 1);
+    if(randomDirection === 1) {
+        document.getElementById("windDirect").style.transform = `rotate(${windDeg_minus_20}deg)`
+    }else {
+        document.getElementById("windDirect").style.transform = `rotate(${winDeg_plus_20}deg)`
+    }
+    setTimeout(() => {
+        document.getElementById("windDirect").style.transform = `rotate(${windDeg}deg)`
+    }, 1300);
+}, 10000);

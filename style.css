@@ -449,7 +449,7 @@ button {
   background-color: white;
   margin: 50px auto;
   transform: rotate(90deg);
-  transition: all 0.4s ease;
+  transition: all 1.8s ease;
 }
 .wind::after {
   content: "";
