@@ -388,12 +388,15 @@ function requestWeatherForecast(lat, lon) {
             const todayTempDiff = parseInt(tempMax - tempMin);
             const currentTemp = parseInt(data.current.temp);
             const currentDiff = tempMax - currentTemp;
-            const currentTempProzentdiff = (currentDiff * 100) / todayTempDiff;
+            let currentTempProzentdiff = (currentDiff * 100) / todayTempDiff;
             const currentTempProcent = 100 - currentTempProzentdiff;
 
 
-
-            progressValue_Temp.value = currentTempProcent;
+            try {
+                progressValue_Temp.value = currentTempProcent;
+            } catch (error) {
+                error
+            }
             let tempFeelsLike = parseInt(data.current.feels_like);
             document.getElementById("outp_MinTemp").innerHTML = `Min: ${tempMin}°C`;
             document.getElementById("outp_MaxTemp").innerHTML = `Max: ${tempMax}°C`;
@@ -520,9 +523,6 @@ function requestWeatherForecast(lat, lon) {
                 index = `foreCastImg${i}`;
                 document.getElementById(index).src = imgSrc;
 
-                // index = `forecastBlock${i}`;
-                // console.log('index', index);
-                // document.getElementById(index).hidden = false;
             }
 
 
@@ -590,7 +590,9 @@ function get_RainData(data) {
                 //###################################
             // Regen
             let rain = 0;
+            let snow = 0;
             let tomorrowRain = 0;
+            let tomorrowSnow = 0;
             try {
                 rain = data.daily[0].rain;
                 tomorrowRain = data.daily[1].rain;
@@ -601,14 +603,34 @@ function get_RainData(data) {
                     tomorrowRain = 0;
                 }
             } catch (error) {
-                console.log(error);
+                console.log('RainError', error);
+            }
+            try {
+                snow = data.daily[0].snow;
+                tomorrowSnow = data.daily[1].snow;
+                if (snow === undefined) {
+                    snow = 0;
+                }
+                if (tomorrowSnow === undefined) {
+                    tomorrowSnow = 0;
+                }
+            } catch (error) {
+                console.log('SnowError', error);
             }
             document.getElementById("outpRain").innerHTML = `${rain} mm`;
+            document.getElementById('niedrschl').innerHTML = '<strong>Regen</strong>';
+            if(snow > 0) {
+                document.getElementById('niedrschl').innerHTML = '<strong>Schnee</strong>';
+                document.getElementById("outpRain").innerHTML = `${snow} mm`;
+            }
 
-            if (tomorrowRain === 0) {
+            if (tomorrowRain === 0 && tomorrowSnow === 0) {
                 document.getElementById("outputRainTomorrow").innerHTML = `Es bleibt morgen trocken.`;
-            } else {
+            } else if(tomorrowRain > 0) {
                 document.getElementById("outputRainTomorrow").innerHTML = `Im laufe des Tages werden ${tomorrowRain} mm Regen erwartet.`;
+            }else if(tomorrowSnow > 0) {
+                document.getElementById("outputRainTomorrow").innerHTML = `Im laufe des Tages werden ${tomorrowSnow} mm Schnee erwartet.`;
+               
             }
 }
 
