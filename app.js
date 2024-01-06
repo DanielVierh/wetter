@@ -395,7 +395,7 @@ function requestWeatherForecast(lat, lon) {
             try {
                 progressValue_Temp.value = currentTempProcent;
             } catch (error) {
-                error
+                console.log(error);
             }
             let tempFeelsLike = parseInt(data.current.feels_like);
             document.getElementById("outp_MinTemp").innerHTML = `Min: ${tempMin}°C`;
