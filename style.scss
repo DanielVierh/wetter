@@ -125,6 +125,29 @@ button {
     letter-spacing: 1.5px;
 }
 
+.sun-event {
+    margin: -10px auto 40px auto;
+    box-shadow: 0 0 10px gray;
+    color: white;
+    text-shadow: 0 0 5px black;
+    padding: 10px 5px;
+    border-radius: 8px;
+    opacity: 0;
+    width: 80%;
+    transition: all .7s ease-in-out;
+    border: 1px solid gray;
+
+    &.next-morning {
+        opacity: 1;
+        background: linear-gradient(to right,rgb(2, 2, 73), lightblue);
+    }
+
+    &.next-night {
+        opacity: 1;
+        background: linear-gradient(to right, lightblue,  rgb(2, 2, 73));
+    }
+}
+
 .img-temp-wrapper {
     display: block;
     position: relative;

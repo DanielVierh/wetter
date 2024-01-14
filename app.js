@@ -21,6 +21,13 @@ let alertInfoboxIsVisible = false;
 let showAlert = 0;
 let settingsAreVisible = false;
 let windDeg = 0;
+let sunrise;
+let next_sunrise;
+let sunset;
+let sunEvent = '';
+let sunriseRaw;
+let sunsetRaw;
+
 
 let weatherSettings = {
     appeareanceMode: ''
@@ -53,6 +60,7 @@ const theBody = document.getElementById("theBody");
 const settingsAppearance = document.getElementById("settingsAppearance");
 const btnSaveSettings = document.getElementById("btnSaveSettings");
 const btn_scroll_up = document.getElementById("btn_scroll_up");
+const sun_event = document.getElementById('sun_event');
 
 //?####################################################################################################
 // Load
@@ -232,7 +240,7 @@ function requestWeatherForecast(lat, lon) {
             const timezoneOffset = data.timezone_offset;
 
             //?####################################################################################################
-            // Wetteralarm
+            //* Wetteralarm
             if (data.alerts) {
                 showAlert = 0;
                 let alertBody = data.alerts[showAlert].description;
@@ -250,7 +258,7 @@ function requestWeatherForecast(lat, lon) {
                     outpAlertHeadline.innerHTML = "Wetteralarm " + "1/" + alertAmount;
                 }
 
-                // Weiter Button
+                //* Weiter Button
                 btnShowMoreAlerts.addEventListener("click", () => {
                     if (showAlert < alertAmount - 1) {
                         showAlert++;
@@ -314,12 +322,13 @@ function requestWeatherForecast(lat, lon) {
                 timeSubstract = winterTime;
             }
 
-            // Sonnenaufgang roh für Sonnenstand
-            const sunriseRaw = intTimeConvert(data.current.sunrise + timezone - timeSubstract);
-            const sunsetRaw = intTimeConvert(data.current.sunset + timezone - timeSubstract);
+            //* Sonnenaufgang roh für Sonnenstand
+            sunriseRaw = intTimeConvert(data.current.sunrise + timezone - timeSubstract);
+            next_sunrise = intTimeConvert(data.daily[1].sunrise + timezone - timeSubstract);
+            sunsetRaw = intTimeConvert(data.current.sunset + timezone - timeSubstract);
             // Für Anzeige Auf-Untergang
-            const sunrise = rawDatetime_in_Time(data.current.sunrise);
-            const sunset = rawDatetime_in_Time(data.current.sunset);
+            sunrise = rawDatetime_in_Time(data.current.sunrise);
+            sunset = rawDatetime_in_Time(data.current.sunset);
             outSun.innerHTML = "⬆️ " + sunrise + " |  ⬇️ " + sunset;
 
 
@@ -352,24 +361,28 @@ function requestWeatherForecast(lat, lon) {
             }
             if (dateTimeNowRaw < sunsetRaw) {
                 isBeforeSunset = true;
+                console.warn('isBeforeSunset');
             }
-
+            console.warn('set sunEvent');
             if (isAfterSunrise === true && isAfterSunset === true && isBeforeSunrise == false) {
                 // ? Abends vor Mitternacht
-                var styleElem = document.head.appendChild(document.createElement("style"));
+                sunEvent = 'evening'; //* For func calc_time_to_next_sunevent
+                const styleElem = document.head.appendChild(document.createElement("style"));
                 styleElem.innerHTML = "#sunstand:after {left: 95px; top: 0px; background-Color: transparent;}";
 
             } else if (isAfterSunrise === false && isAfterSunset === false && isBeforeSunrise == true) {
                 // ? Nachts nach Mitternacht
-                var styleElem = document.head.appendChild(document.createElement("style"));
+                sunEvent = 'night'; //* For func calc_time_to_next_sunevent
+                const styleElem = document.head.appendChild(document.createElement("style"));
                 styleElem.innerHTML = "#sunstand:after {left: -15px; top: -3px; background-Color: transparent;}";
             } else {
                 // ? Tagsüber
+                sunEvent = 'day'; //* For func calc_time_to_next_sunevent
                 const todayTimeDiff = sunsetRaw - sunriseRaw;
                 const currentTimeDiff = sunsetRaw - dateTimeNowRaw;
                 const currentTimeProzentDiff = (currentTimeDiff * 100) / todayTimeDiff;
                 const currentTimeProzent = parseInt(100 - currentTimeProzentDiff);
-                var styleElem = document.head.appendChild(document.createElement("style"));
+                const styleElem = document.head.appendChild(document.createElement("style"));
                 styleElem.innerHTML = `#sunstand:after {left: ${currentTimeProzent - 5}px; top: -8px; background-Color: yellow;}`;
             }
 
@@ -1263,3 +1276,62 @@ setInterval(() => {
         document.getElementById("windDirect").style.transform = `rotate(${windDeg}deg)`
     }, 1300);
 }, 10000);
+
+
+setInterval(() => {
+    calc_time_to_next_sunevent();
+}, 1000);
+
+//* LINK - calc_time_to_next_sunevent wird sekündlich aufgerufen
+function calc_time_to_next_sunevent() {
+    if(sunEvent === 'night') {
+        console.log('night');
+        const current_timestamp = new Date();
+        let current_unix_timestamp = parseInt((new Date(current_timestamp).getTime() / 1000).toFixed(0));
+        current_unix_timestamp = current_unix_timestamp + timezone - timeSubstract;
+        const correct_timestamp = intTimeConvert(current_unix_timestamp);
+        const duration = minutesDiff(correct_timestamp, sunriseRaw );
+        sun_event.innerHTML = `Sonne geht in ${duration} auf`;
+        sun_event.classList.add('next-morning');
+        sun_event.classList.remove('next-night');
+    }
+
+    if(sunEvent === 'evening') {
+        console.log('evening');
+        const current_timestamp = new Date();
+        let current_unix_timestamp = parseInt((new Date(current_timestamp).getTime() / 1000).toFixed(0));
+        current_unix_timestamp = current_unix_timestamp + timezone - timeSubstract;
+        const correct_timestamp = intTimeConvert(current_unix_timestamp);
+        const duration = minutesDiff(correct_timestamp, next_sunrise);
+        sun_event.innerHTML = `Sonne geht in ${duration} auf`;
+        sun_event.classList.add('next-morning');
+        sun_event.classList.remove('next-night');
+    }
+
+    if(sunEvent === 'day') {
+        console.log('day');
+        const current_timestamp = new Date();
+        const duration = minutesDiff(current_timestamp, sunsetRaw);
+        sun_event.innerHTML = `Sonne geht in ${duration} unter`;
+        sun_event.classList.remove('next-morning');
+        sun_event.classList.add('next-night');
+       
+    }
+}
+
+function minutesDiff(dateTimeValue2, dateTimeValue1) {
+    var differenceValue = (dateTimeValue2.getTime() - dateTimeValue1.getTime()) / 1000;
+    differenceValue /= 60;
+    const rawMinuteTime = Math.abs(Math.round(differenceValue))
+    const hour = Math.floor(rawMinuteTime / 60);
+    const minutes = Math.floor(rawMinuteTime % 60);
+    const time = `${add_zero(hour)}:${add_zero(minutes)}`;
+    return time;
+}
+
+function add_zero(val) {
+    if (val < 10) {
+        val = `0${val}`;
+    }
+    return val;
+}
