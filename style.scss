@@ -126,7 +126,7 @@ button {
 }
 
 .sun-event {
-    margin: -10px auto 40px auto;
+    margin: 5px auto 40px auto;
     box-shadow: 0 0 10px gray;
     color: white;
     text-shadow: 0 0 5px black;
@@ -134,16 +134,17 @@ button {
     border-radius: 8px;
     opacity: 0;
     width: 80%;
+    max-width: 550px;
     transition: all .7s ease-in-out;
     border: 1px solid gray;
 
     &.next-morning {
-        opacity: 1;
+        opacity: .7;
         background: linear-gradient(to right,rgb(2, 2, 73), lightblue);
     }
 
     &.next-night {
-        opacity: 1;
+        opacity: .7;
         background: linear-gradient(to right, lightblue,  rgb(2, 2, 73));
     }
 }
