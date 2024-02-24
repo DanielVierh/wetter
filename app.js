@@ -123,6 +123,7 @@ function weatherRequest() {
                     data.weather[0].description;
                 const windgesch = data.wind.speed * 3.6;
                 document.getElementById('outpWind').innerHTML = `${windgesch.toFixed(0)} Km/h`;
+                set_wind_definition(windgesch.toFixed(0));
                 const lat = data.coord.lat;
                 const lon = data.coord.lon;
                 timezone = data.timezone;
@@ -162,7 +163,62 @@ function weatherRequest() {
 
 
 
+function set_wind_definition(windspeed) {
 
+    if(windspeed <= 5) {
+        document.getElementById('wind_title').innerHTML = '1 - leichter Luftzug';
+    }
+
+    if(windspeed >= 6 && windspeed <= 11) {
+        document.getElementById('wind_title').innerHTML = '2 - leichte Brise';
+    }
+
+    if(windspeed >= 12 && windspeed <= 19) {
+        document.getElementById('wind_title').innerHTML = '3 - schwacher Wind';
+    }
+
+    if(windspeed >= 20 && windspeed <= 28) {
+        document.getElementById('wind_title').innerHTML = '4 - mäßiger Wind';
+    }
+
+    if(windspeed >= 29 && windspeed <= 38) {
+        document.getElementById('wind_title').innerHTML = '5 - frischer Wind';
+    }
+
+    if(windspeed >= 39 && windspeed <= 49) {
+        document.getElementById('wind_title').innerHTML = '6 - starker Wind';
+    }
+
+    if(windspeed >= 50 && windspeed <= 61) {
+        document.getElementById('wind_title').innerHTML = '7 - steifer Wind';
+    }
+
+    if(windspeed >= 62 && windspeed <= 74) {
+        document.getElementById('wind_title').innerHTML = '8 - stürmischer Wind';
+        document.getElementById('wind_container').style.background = 'linear-gradient(to bottom, transparent,yellow)'
+    }
+
+    if(windspeed >= 75 && windspeed <= 88) {
+        document.getElementById('wind_title').innerHTML = '9 - Sturm';
+        document.getElementById('wind_container').style.background = 'linear-gradient(to top, transparent,orange)'
+    }
+
+    if(windspeed >= 89 && windspeed <= 102) {
+        document.getElementById('wind_title').innerHTML = '10 - schwerer Sturm';
+        document.getElementById('wind_container').style.background = 'linear-gradient(to top, transparent,orange)'
+    }
+
+    if(windspeed >= 103 && windspeed <= 117) {
+        document.getElementById('wind_title').innerHTML = '11 - orkanartiger Sturm';
+        document.getElementById('wind_container').style.background = 'linear-gradient(to top, transparent,red)'
+    }
+
+    if(windspeed >= 118) {
+        document.getElementById('wind_title').innerHTML = '12 - Orkan';
+        document.getElementById('wind_container').style.background = 'linear-gradient(to top, transparent,red)'
+    }
+
+}
 
 
 //?####################################################################################################
@@ -316,9 +372,9 @@ function requestWeatherForecast(lat, lon) {
             //?####################################################################################################
             // Sonnen auf - untergang
 
-            if(splitVal(intTimeConvert(data.current.sunrise) + '', " ", 5) === 'GMT+0200') {
+            if (splitVal(intTimeConvert(data.current.sunrise) + '', " ", 5) === 'GMT+0200') {
                 timeSubstract = summerTime;
-            }else {
+            } else {
                 timeSubstract = winterTime;
             }
 
@@ -521,15 +577,15 @@ function requestWeatherForecast(lat, lon) {
                     ' ',
                     0,
                 );
-                
+
                 weekDay = getDate(weekDay);
                 index = `outpDay${i}`;
                 document.getElementById(index).innerHTML = weekDay;
                 index = `outpDayPlus${i}`;
                 const viewport_width = window.innerWidth;
-                if(viewport_width > 600) {
+                if (viewport_width > 600) {
                     document.getElementById(index).innerHTML = `${tempMin}°C / ${tempMax}°C`;
-                }else {
+                } else {
                     document.getElementById(index).innerHTML = `${tempMin}°C-${tempMax}°C`;
                 }
                 imgSrc = `https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/widgets/${weatherIcon}.png`;
@@ -574,7 +630,7 @@ function requestWeatherForecast(lat, lon) {
             ausw();
         })
         .catch((error) => {
-             console.log(`Forecast Err: ${error}`);
+            console.log(`Forecast Err: ${error}`);
         });
 }
 
@@ -600,51 +656,51 @@ function get_MoonData(data) {
 //?####################################################################################################
 // Rain
 function get_RainData(data) {
-                //###################################
-            // Regen
-            let rain = 0;
-            let snow = 0;
-            let tomorrowRain = 0;
-            let tomorrowSnow = 0;
-            try {
-                rain = data.daily[0].rain;
-                tomorrowRain = data.daily[1].rain;
-                if (rain === undefined) {
-                    rain = 0;
-                }
-                if (tomorrowRain === undefined) {
-                    tomorrowRain = 0;
-                }
-            } catch (error) {
-                console.log('RainError', error);
-            }
-            try {
-                snow = data.daily[0].snow;
-                tomorrowSnow = data.daily[1].snow;
-                if (snow === undefined) {
-                    snow = 0;
-                }
-                if (tomorrowSnow === undefined) {
-                    tomorrowSnow = 0;
-                }
-            } catch (error) {
-                console.log('SnowError', error);
-            }
-            document.getElementById("outpRain").innerHTML = `${rain} mm`;
-            document.getElementById('niedrschl').innerHTML = '<strong>Regen</strong>';
-            if(snow > 0) {
-                document.getElementById('niedrschl').innerHTML = '<strong>Schnee</strong>';
-                document.getElementById("outpRain").innerHTML = `${snow} mm`;
-            }
+    //###################################
+    // Regen
+    let rain = 0;
+    let snow = 0;
+    let tomorrowRain = 0;
+    let tomorrowSnow = 0;
+    try {
+        rain = data.daily[0].rain;
+        tomorrowRain = data.daily[1].rain;
+        if (rain === undefined) {
+            rain = 0;
+        }
+        if (tomorrowRain === undefined) {
+            tomorrowRain = 0;
+        }
+    } catch (error) {
+        console.log('RainError', error);
+    }
+    try {
+        snow = data.daily[0].snow;
+        tomorrowSnow = data.daily[1].snow;
+        if (snow === undefined) {
+            snow = 0;
+        }
+        if (tomorrowSnow === undefined) {
+            tomorrowSnow = 0;
+        }
+    } catch (error) {
+        console.log('SnowError', error);
+    }
+    document.getElementById("outpRain").innerHTML = `${rain} mm`;
+    document.getElementById('niedrschl').innerHTML = '<strong>Regen</strong>';
+    if (snow > 0) {
+        document.getElementById('niedrschl').innerHTML = '<strong>Schnee</strong>';
+        document.getElementById("outpRain").innerHTML = `${snow} mm`;
+    }
 
-            if (tomorrowRain === 0 && tomorrowSnow === 0) {
-                document.getElementById("outputRainTomorrow").innerHTML = `Es bleibt morgen trocken.`;
-            } else if(tomorrowRain > 0) {
-                document.getElementById("outputRainTomorrow").innerHTML = `Im laufe des Tages werden ${tomorrowRain} mm Regen erwartet.`;
-            }else if(tomorrowSnow > 0) {
-                document.getElementById("outputRainTomorrow").innerHTML = `Im laufe des Tages werden ${tomorrowSnow} mm Schnee erwartet.`;
-               
-            }
+    if (tomorrowRain === 0 && tomorrowSnow === 0) {
+        document.getElementById("outputRainTomorrow").innerHTML = `Es bleibt morgen trocken.`;
+    } else if (tomorrowRain > 0) {
+        document.getElementById("outputRainTomorrow").innerHTML = `Im laufe des Tages werden ${tomorrowRain} mm Regen erwartet.`;
+    } else if (tomorrowSnow > 0) {
+        document.getElementById("outputRainTomorrow").innerHTML = `Im laufe des Tages werden ${tomorrowSnow} mm Schnee erwartet.`;
+
+    }
 }
 
 //?####################################################################################################
@@ -1224,22 +1280,22 @@ function setAppearance(value) {
 }
 
 
-if(btn_scroll_up) {
-    btn_scroll_up.addEventListener("click", ()=> {
-        window.scroll(0,0);
+if (btn_scroll_up) {
+    btn_scroll_up.addEventListener("click", () => {
+        window.scroll(0, 0);
     })
 }
 
-window.addEventListener("scroll", (e)=> {
-    if(window.pageYOffset > 400) {
+window.addEventListener("scroll", (e) => {
+    if (window.pageYOffset > 400) {
         btn_scroll_up.classList.add("active");
-    }else {
+    } else {
         btn_scroll_up.classList.remove("active");
     }
 })
 
 function reset_Col() {
-    for(let i = 0; i < 7; i++) {
+    for (let i = 0; i < 7; i++) {
         const balken = document.getElementById(`tempDay${i}`);
         balken.style.height = `0px`;
         balken.style.marginBottom = `0px`;
@@ -1267,9 +1323,9 @@ setInterval(() => {
     const windDeg_minus_20 = windDeg - 20;
     const winDeg_plus_20 = windDeg + 20;
     const randomDirection = parseInt(Math.random() * 2 + 1);
-    if(randomDirection === 1) {
+    if (randomDirection === 1) {
         document.getElementById("windDirect").style.transform = `rotate(${windDeg_minus_20}deg)`
-    }else {
+    } else {
         document.getElementById("windDirect").style.transform = `rotate(${winDeg_plus_20}deg)`
     }
     setTimeout(() => {
@@ -1284,19 +1340,19 @@ setInterval(() => {
 
 //* LINK - calc_time_to_next_sunevent wird sekündlich aufgerufen
 function calc_time_to_next_sunevent() {
-    if(sunEvent === 'night') {
+    if (sunEvent === 'night') {
         console.log('night');
         const current_timestamp = new Date();
         let current_unix_timestamp = parseInt((new Date(current_timestamp).getTime() / 1000).toFixed(0));
         current_unix_timestamp = current_unix_timestamp + timezone - timeSubstract;
         const correct_timestamp = intTimeConvert(current_unix_timestamp);
-        const duration = minutesDiff(correct_timestamp, sunriseRaw );
+        const duration = minutesDiff(correct_timestamp, sunriseRaw);
         sun_event.innerHTML = `Sonne geht in ${duration} auf`;
         sun_event.classList.add('next-morning');
         sun_event.classList.remove('next-night');
     }
 
-    if(sunEvent === 'evening') {
+    if (sunEvent === 'evening') {
         console.log('evening');
         const current_timestamp = new Date();
         let current_unix_timestamp = parseInt((new Date(current_timestamp).getTime() / 1000).toFixed(0));
@@ -1308,14 +1364,14 @@ function calc_time_to_next_sunevent() {
         sun_event.classList.remove('next-night');
     }
 
-    if(sunEvent === 'day') {
+    if (sunEvent === 'day') {
         console.log('day');
         const current_timestamp = new Date();
         const duration = minutesDiff(current_timestamp, sunsetRaw);
         sun_event.innerHTML = `Sonne geht in ${duration} unter`;
         sun_event.classList.remove('next-morning');
         sun_event.classList.add('next-night');
-       
+
     }
 }
 
