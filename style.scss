@@ -751,10 +751,10 @@ h1 {
     transition: all 1s ease-in-out;
     height: 50px;
     font-size: 1.2em;
-    opacity: 0;
+    transform: translateX(200%);
 
     &.active {
-        opacity: 1;
+        transform: translateX(0%);
     }
 }
 

@@ -731,10 +731,10 @@ button {
   transition: all 1s ease-in-out;
   height: 50px;
   font-size: 1.2em;
-  opacity: 0;
+  transform: translateX(200%);
 }
 .scroll-up-button.active {
-  opacity: 1;
+  transform: translateX(0%);
 }
 
 .loading {
