@@ -9,6 +9,7 @@ body {
     padding: 0;
     text-align: center;
     font-family: sans-serif;
+    overflow-x: hidden;
 }
 
 .container {
@@ -826,7 +827,7 @@ h1 {
 
 
 .city-modal {
-    transform: translateY(200%);
+    transform: translateX(200%);
     transition: all .8s ease-in-out;
 
     &.active {
@@ -835,7 +836,7 @@ h1 {
         left: 0;
         right: 0;
         bottom: 0;
-        transform: translateY(0%);
+        transform: translateX(0%);
         display: flex  !important;
         flex-direction: column;
         justify-content: flex-start;
