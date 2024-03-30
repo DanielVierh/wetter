@@ -799,6 +799,7 @@ button {
 }
 
 .city-modal {
+  display: none !important;
   transform: translateX(200%);
   transition: all 0.8s ease-in-out;
 }

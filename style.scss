@@ -829,6 +829,7 @@ h1 {
 
 
 .city-modal {
+    display: none !important;
     transform: translateX(200%);
     transition: all .8s ease-in-out;
 
