@@ -105,7 +105,7 @@ function weatherRequest() {
                 console.log(data);
                 deleteSpinner()
                 weatherContainer.style.display = 'flex';
-                cityContainer.style.display = 'flex';
+                //cityContainer.style.display = 'flex';
                 isCurrentLocation = false;
                 document.getElementById('errorLeiste').hidden = true;
                 document.getElementById('btnAddCity').hidden = false;
@@ -138,9 +138,9 @@ function weatherRequest() {
             })
             .catch((error) => {
                 weatherContainer.style.display = 'none';
-                if (localStorage.getItem('stored_CityList') === null) {
-                    cityContainer.style.display = 'none';
-                }
+                // if (localStorage.getItem('stored_CityList') === null) {
+                //     cityContainer.style.display = 'none';
+                // }
                 createNotification(
                     'Der Ort konnte nicht gefunden werden :(',
                     'alert',
