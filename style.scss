@@ -825,6 +825,57 @@ h1 {
 }
 
 
-// #wind_container {
-//     background: linear-gradient(to top, transparent,red)
-// }
+.city-modal {
+    transform: translateY(200%);
+    transition: all .8s ease-in-out;
+
+    &.active {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        transform: translateY(0%);
+        display: flex  !important;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        background: #1021237c;
+        backdrop-filter: blur(20px);
+        z-index: 999999999;
+        overflow-y: scroll;
+        padding-top: 80px;
+
+        .block-headline {
+            margin: 0;
+        }
+
+        .close-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgb(40, 113, 138);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.4rem;
+            text-align: center;
+            box-shadow: inset 0 0 15px white;
+            position: fixed;
+            top: 10px;
+            right: 10px;
+        }
+    }
+}
+
+.city-button {
+    position: fixed;
+    left: 15px;
+    bottom: 15px;
+    z-index: 9999;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(20px);
+    padding: 10px;
+    border-radius: 15px;
+}

@@ -61,6 +61,7 @@ const settingsAppearance = document.getElementById("settingsAppearance");
 const btnSaveSettings = document.getElementById("btnSaveSettings");
 const btn_scroll_up = document.getElementById("btn_scroll_up");
 const sun_event = document.getElementById('sun_event');
+const btn_show_cityModal = document.getElementById('btn_show_cityModal');
 
 //?####################################################################################################
 // Load
@@ -866,6 +867,7 @@ function showSavedCitys() {
         btn.onclick = getCity;
         let ul = document.getElementById('outCitys');
         ul.appendChild(btn);
+        cityContainer.classList.remove('acitve');
     }
 }
 
@@ -908,6 +910,7 @@ function getCity() {
     window.scrollTo(0, 0);
     adress = this.innerText;
     weatherRequest();
+    cityContainer.classList.remove('active');
 }
 
 //?####################################################################################################
@@ -1391,3 +1394,12 @@ function add_zero(val) {
     }
     return val;
 }
+
+
+btn_show_cityModal.addEventListener('click', ()=> {
+    cityContainer.classList.add('active');
+})
+
+document.getElementById('btn_close_cityModal').addEventListener('click', ()=> {
+    cityContainer.classList.remove('active');
+})
