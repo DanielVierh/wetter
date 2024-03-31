@@ -1265,21 +1265,24 @@ function setAppearance(value) {
     if (value === 'opt_darkmode') {
         theBody.classList.remove("lightMode");
         theBody.classList.remove("normalMode");
-        theBody.classList.re("darkBlue");
+        theBody.classList.remove("darkBlue");
+        theBody.classList.remove("darkBlue2");
         theBody.classList.add("darkMode");
     }
 
     if (value === 'opt_normal') {
         theBody.classList.remove("darkMode");
         theBody.classList.remove("lightMode");
-        theBody.classList.re("darkBlue");
+        theBody.classList.remove("darkBlue");
+        theBody.classList.remove("darkBlue2");
         theBody.classList.add("normalMode");
     }
 
     if (value === 'opt_lightmode') {
         theBody.classList.remove("darkMode");
         theBody.classList.remove("normalMode");
-        theBody.classList.re("darkBlue");
+        theBody.classList.remove("darkBlue");
+        theBody.classList.remove("darkBlue2");
         theBody.classList.add("lightMode");
 
     }
@@ -1288,7 +1291,16 @@ function setAppearance(value) {
         theBody.classList.remove("darkMode");
         theBody.classList.remove("normalMode");
         theBody.classList.remove("lightMode");
+        theBody.classList.remove("darkBlue2");
         theBody.classList.add("darkBlue");
+    }
+
+    if (value === 'opt_darkBlue2') {
+        theBody.classList.remove("darkMode");
+        theBody.classList.remove("normalMode");
+        theBody.classList.remove("lightMode");
+        theBody.classList.remove("darkBlue");
+        theBody.classList.add("darkBlue2");
     }
 
 }

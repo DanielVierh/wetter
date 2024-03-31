@@ -1,4 +1,3 @@
-
 html {
     scroll-behavior: smooth;
     overflow-x: hidden !important;
@@ -108,7 +107,7 @@ button {
 }
 
 .outputLabel {
-    margin: 0 50px 0 0 ;
+    margin: 0 50px 0 0;
     padding: 0px;
     font-size: 1.2rem;
     text-shadow: 3px 3px 15px black;
@@ -143,12 +142,12 @@ button {
 
     &.next-morning {
         opacity: .7;
-        background: linear-gradient(to right,rgb(2, 2, 73), lightblue);
+        background: linear-gradient(to right, rgb(2, 2, 73), lightblue);
     }
 
     &.next-night {
         opacity: .7;
-        background: linear-gradient(to right, lightblue,  rgb(2, 2, 73));
+        background: linear-gradient(to right, lightblue, rgb(2, 2, 73));
     }
 }
 
@@ -728,6 +727,10 @@ h1 {
     background: linear-gradient(to right, black, #4472bc)
 }
 
+.darkBlue {
+    background: linear-gradient(to right, rgb(43, 45, 47), #4472bc)
+}
+
 .normalMode {
     background: linear-gradient(to right, #2da6b6, #4472bc);
 }
@@ -844,7 +847,7 @@ h1 {
         right: 0;
         bottom: 0;
         transform: translateX(0%);
-        display: flex  !important;
+        display: flex !important;
         flex-direction: column;
         justify-content: flex-start;
         align-items: center;

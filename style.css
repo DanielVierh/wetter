@@ -707,6 +707,10 @@ button {
   background: linear-gradient(to right, black, #4472bc);
 }
 
+.darkBlue {
+  background: linear-gradient(to right, rgb(43, 45, 47), #4472bc);
+}
+
 .normalMode {
   background: linear-gradient(to right, #2da6b6, #4472bc);
 }
