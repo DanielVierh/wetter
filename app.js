@@ -1265,19 +1265,30 @@ function setAppearance(value) {
     if (value === 'opt_darkmode') {
         theBody.classList.remove("lightMode");
         theBody.classList.remove("normalMode");
+        theBody.classList.re("darkBlue");
         theBody.classList.add("darkMode");
     }
 
     if (value === 'opt_normal') {
         theBody.classList.remove("darkMode");
         theBody.classList.remove("lightMode");
+        theBody.classList.re("darkBlue");
         theBody.classList.add("normalMode");
     }
 
     if (value === 'opt_lightmode') {
         theBody.classList.remove("darkMode");
         theBody.classList.remove("normalMode");
+        theBody.classList.re("darkBlue");
         theBody.classList.add("lightMode");
+
+    }
+
+    if (value === 'opt_darkBlue') {
+        theBody.classList.remove("darkMode");
+        theBody.classList.remove("normalMode");
+        theBody.classList.remove("lightMode");
+        theBody.classList.add("darkBlue");
     }
 
 }
