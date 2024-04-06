@@ -62,6 +62,7 @@ const btnSaveSettings = document.getElementById("btnSaveSettings");
 const btn_scroll_up = document.getElementById("btn_scroll_up");
 const sun_event = document.getElementById('sun_event');
 const btn_show_cityModal = document.getElementById('btn_show_cityModal');
+const outputUVMaxIndex = document.getElementById('outputUVMaxIndex');
 
 //?####################################################################################################
 // Load
@@ -663,6 +664,21 @@ function get_RainData(data) {
     let snow = 0;
     let tomorrowRain = 0;
     let tomorrowSnow = 0;
+    let today_uv_index = 0.0;
+    let tomorrow_uv_index = 0.0;
+
+    try {
+        today_uv_index = data.daily[0].uvi;
+        tomorrow_uv_index = data.daily[1].uvi;
+
+        if(today_uv_index < tomorrow_uv_index) {
+            outputUVMaxIndex.innerHTML = `Der UV Index wird morgen stärker sein als heute. Maximalwert: ${tomorrow_uv_index}.`;
+        }else {
+            outputUVMaxIndex.innerHTML = `Morgen wird der UV Wert schwächer. Maximal: ${tomorrow_uv_index}.`;
+        }
+    } catch (error) {
+        console.log(error);
+    }
     try {
         rain = data.daily[0].rain;
         tomorrowRain = data.daily[1].rain;
@@ -700,8 +716,8 @@ function get_RainData(data) {
         document.getElementById("outputRainTomorrow").innerHTML = `Im laufe des Tages werden ${tomorrowRain} mm Regen erwartet.`;
     } else if (tomorrowSnow > 0) {
         document.getElementById("outputRainTomorrow").innerHTML = `Im laufe des Tages werden ${tomorrowSnow} mm Schnee erwartet.`;
-
     }
+  
 }
 
 //?####################################################################################################
