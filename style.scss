@@ -876,6 +876,7 @@ h1 {
             position: fixed;
             top: 10px;
             right: 10px;
+            cursor: pointer;
         }
     }
 }
@@ -883,9 +884,9 @@ h1 {
 .city-button {
     position: fixed;
     left: 15px;
-    bottom: 15px;
+    bottom: 12%;
     z-index: 9999;
-    background: rgba(0, 0, 0, 0.4);
+    background: rgba(20, 196, 226, 0.4);
     backdrop-filter: blur(20px);
     padding: 10px;
     border-radius: 15px;

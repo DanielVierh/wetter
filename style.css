@@ -847,14 +847,15 @@ button {
   position: fixed;
   top: 10px;
   right: 10px;
+  cursor: pointer;
 }
 
 .city-button {
   position: fixed;
   left: 15px;
-  bottom: 15px;
+  bottom: 12%;
   z-index: 9999;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(20, 196, 226, 0.4);
   -webkit-backdrop-filter: blur(20px);
           backdrop-filter: blur(20px);
   padding: 10px;
