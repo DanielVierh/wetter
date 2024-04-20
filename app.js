@@ -126,34 +126,17 @@ function weatherRequest() {
             .then((response) => response.json())
             .then((data) => {
                 console.log(data);
-                deleteSpinner() 
-                weatherContainer.style.display = 'flex'; 
-                isCurrentLocation = false;
-                document.getElementById('errorLeiste').hidden = true;
-                document.getElementById('btnAddCity').hidden = false;
-                adress = data.name;
-                ortLabel.innerHTML = adress;
-                temp = parseInt(data.main.temp);
-                document.getElementById('outpTemp').innerHTML = `🌡`;
-                setTimeout(() => {
-                    initUpcountingTemp(temp);
-                }, 1000);
-                iconValRaw = data.weather[0].icon;
-                iconVal = iconValRaw.slice(-1);
-                const imgSrc = `https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/widgets/${data.weather[0].icon}.png`;
-                document.getElementById('weatherimg').src = imgSrc;
-                document.getElementById('outpWeather').innerHTML =
-                    data.weather[0].description;
-                const windgesch = data.wind.speed * 3.6;
-                document.getElementById('outpWind').innerHTML = `${windgesch.toFixed(0)} Km/h`;
-                set_wind_definition(windgesch.toFixed(0));
-                const lat = data.coord.lat;
-                const lon = data.coord.lon;
-                timezone = data.timezone;
-                requestWeatherForecast(lat, lon);
-                document.getElementById("outpAirQuali").innerHTML = 'Lade Werte ...';
-                ausw();
-                loadMap(lat, lon)
+
+
+
+
+
+
+
+
+
+
+
                 setTimeout(() => {
                     getAirPollutionInfo(lat, lon);
                 }, 1500);
@@ -186,55 +169,55 @@ function weatherRequest() {
 
 function set_wind_definition(windspeed) {
 
-    if(windspeed <= 5) {
+    if (windspeed <= 5) {
         document.getElementById('wind_title').innerHTML = '1 - leichter Luftzug';
     }
 
-    if(windspeed >= 6 && windspeed <= 11) {
+    if (windspeed >= 6 && windspeed <= 11) {
         document.getElementById('wind_title').innerHTML = '2 - leichte Brise';
     }
 
-    if(windspeed >= 12 && windspeed <= 19) {
+    if (windspeed >= 12 && windspeed <= 19) {
         document.getElementById('wind_title').innerHTML = '3 - schwacher Wind';
     }
 
-    if(windspeed >= 20 && windspeed <= 28) {
+    if (windspeed >= 20 && windspeed <= 28) {
         document.getElementById('wind_title').innerHTML = '4 - mäßiger Wind';
     }
 
-    if(windspeed >= 29 && windspeed <= 38) {
+    if (windspeed >= 29 && windspeed <= 38) {
         document.getElementById('wind_title').innerHTML = '5 - frischer Wind';
     }
 
-    if(windspeed >= 39 && windspeed <= 49) {
+    if (windspeed >= 39 && windspeed <= 49) {
         document.getElementById('wind_title').innerHTML = '6 - starker Wind';
     }
 
-    if(windspeed >= 50 && windspeed <= 61) {
+    if (windspeed >= 50 && windspeed <= 61) {
         document.getElementById('wind_title').innerHTML = '7 - steifer Wind';
     }
 
-    if(windspeed >= 62 && windspeed <= 74) {
+    if (windspeed >= 62 && windspeed <= 74) {
         document.getElementById('wind_title').innerHTML = '8 - stürmischer Wind';
         document.getElementById('wind_container').style.background = 'linear-gradient(to bottom, transparent,yellow)'
     }
 
-    if(windspeed >= 75 && windspeed <= 88) {
+    if (windspeed >= 75 && windspeed <= 88) {
         document.getElementById('wind_title').innerHTML = '9 - Sturm';
         document.getElementById('wind_container').style.background = 'linear-gradient(to top, transparent,orange)'
     }
 
-    if(windspeed >= 89 && windspeed <= 102) {
+    if (windspeed >= 89 && windspeed <= 102) {
         document.getElementById('wind_title').innerHTML = '10 - schwerer Sturm';
         document.getElementById('wind_container').style.background = 'linear-gradient(to top, transparent,orange)'
     }
 
-    if(windspeed >= 103 && windspeed <= 117) {
+    if (windspeed >= 103 && windspeed <= 117) {
         document.getElementById('wind_title').innerHTML = '11 - orkanartiger Sturm';
         document.getElementById('wind_container').style.background = 'linear-gradient(to top, transparent,red)'
     }
 
-    if(windspeed >= 118) {
+    if (windspeed >= 118) {
         document.getElementById('wind_title').innerHTML = '12 - Orkan';
         document.getElementById('wind_container').style.background = 'linear-gradient(to top, transparent,red)'
     }
@@ -291,28 +274,64 @@ function requestWeatherForecast(lat, lon) {
     loadSpinner();
     //apiLink = `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&exclude=minutely&appid=${ky}&lang=de&units=metric`;
     apiLink = `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&appid=${ky}&lang=de&units=metric`;
-            
+
     fetch(apiLink)
         .then((response) => response.json())
         .then((data) => {
-            deleteSpinner();
             console.log('ForecastData', data);
+            let tempMin;
+            let tempMax;
+            let temp;
+            let weatherIcon;
+            let index;
+            let hour;
+            let weekDay;
+            const timezoneOffset = data.timezone_offset;
+            timezone = data.timezone;
+            const windgesch = data.current.wind_speed * 3.6;
+            let imgSrc = `https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/widgets/${data.current.weather[0].icon}.png`;
+
+            // * Stuff from weather request func
+            deleteSpinner();
+            temp = parseInt(data.current.temp);
+
+            weatherContainer.style.display = 'flex';
+            isCurrentLocation = false;
+            document.getElementById('errorLeiste').hidden = true;
+            document.getElementById('btnAddCity').hidden = false;
+            ortLabel.innerHTML = adress;
+            
+            document.getElementById('outpTemp').innerHTML = `🌡`;
+
+            iconValRaw = data.current.weather[0].icon;
+            iconVal = iconValRaw.slice(-1);
+           
+            document.getElementById('weatherimg').src = imgSrc;
+            document.getElementById('outpWeather').innerHTML =
+                data.current.weather[0].description;
+            
+            document.getElementById('outpWind').innerHTML = `${windgesch.toFixed(0)} Km/h`;
+            set_wind_definition(windgesch.toFixed(0));
+           
+            document.getElementById("outpAirQuali").innerHTML = 'Lade Werte ...';
+            ausw();
+            /////////////////////////////////////////
+            //* Normal Stuff
             try {
                 mainData = JSON.stringify(data);
             } catch (error) {
                 console.log(error);
             }
 
-            // console.log(data);
-            let tempMin;
-            let tempMax;
-            let temp;
-            let weatherIcon;
-            let imgSrc;
-            let index;
-            let hour;
-            let weekDay;
-            const timezoneOffset = data.timezone_offset;
+
+
+
+            //////////////!SECTION - forecast
+            setTimeout(() => {
+                initUpcountingTemp(temp);
+            }, 1000);
+            ///////////////////////
+
 
             //?####################################################################################################
             //* Wetteralarm
@@ -704,11 +723,11 @@ function get_RainData(data) {
         today_uv_index = data.daily[0].uvi;
         tomorrow_uv_index = data.daily[1].uvi;
 
-        if(today_uv_index < tomorrow_uv_index) {
+        if (today_uv_index < tomorrow_uv_index) {
             outputUVMaxIndex.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-brightness-high-fill" viewBox="0 0 16 16">
             <path d="M12 8a4 4 0 1 1-8 0 4 4 0 0 1 8 0M8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0m0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13m8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5M3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8m10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0m-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0m9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707M4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708"/>
           </svg> Der UV Index wird morgen stärker sein als heute. Maximalwert: ${tomorrow_uv_index}.`;
-        }else {
+        } else {
             outputUVMaxIndex.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-brightness-high-fill" viewBox="0 0 16 16">
             <path d="M12 8a4 4 0 1 1-8 0 4 4 0 0 1 8 0M8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0m0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13m8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5M3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8m10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0m-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0m9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707M4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708"/>
           </svg> Morgen wird der UV Wert schwächer. Maximal: ${tomorrow_uv_index}.`;
@@ -764,7 +783,7 @@ function get_RainData(data) {
         <path d="M8 16a.5.5 0 0 1-.5-.5v-1.293l-.646.647a.5.5 0 0 1-.707-.708L7.5 12.793V8.866l-3.4 1.963-.496 1.85a.5.5 0 1 1-.966-.26l.237-.882-1.12.646a.5.5 0 0 1-.5-.866l1.12-.646-.884-.237a.5.5 0 1 1 .26-.966l1.848.495L7 8 3.6 6.037l-1.85.495a.5.5 0 0 1-.258-.966l.883-.237-1.12-.646a.5.5 0 1 1 .5-.866l1.12.646-.237-.883a.5.5 0 1 1 .966-.258l.495 1.849L7.5 7.134V3.207L6.147 1.854a.5.5 0 1 1 .707-.708l.646.647V.5a.5.5 0 1 1 1 0v1.293l.647-.647a.5.5 0 1 1 .707.708L8.5 3.207v3.927l3.4-1.963.496-1.85a.5.5 0 1 1 .966.26l-.236.882 1.12-.646a.5.5 0 0 1 .5.866l-1.12.646.883.237a.5.5 0 1 1-.26.966l-1.848-.495L9 8l3.4 1.963 1.849-.495a.5.5 0 0 1 .259.966l-.883.237 1.12.646a.5.5 0 0 1-.5.866l-1.12-.646.236.883a.5.5 0 1 1-.966.258l-.495-1.849-3.4-1.963v3.927l1.353 1.353a.5.5 0 0 1-.707.708l-.647-.647V15.5a.5.5 0 0 1-.5.5z"/>
       </svg> Im laufe des Tages werden ${tomorrowSnow} mm Schnee erwartet.`;
     }
-  
+
 }
 
 //?####################################################################################################
@@ -1484,10 +1503,10 @@ function add_zero(val) {
 }
 
 
-btn_show_cityModal.addEventListener('click', ()=> {
+btn_show_cityModal.addEventListener('click', () => {
     cityContainer.classList.add('active');
 })
 
-document.getElementById('btn_close_cityModal').addEventListener('click', ()=> {
+document.getElementById('btn_close_cityModal').addEventListener('click', () => {
     cityContainer.classList.remove('active');
 })
