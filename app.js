@@ -34,6 +34,15 @@ let weatherSettings = {
     appeareanceMode: ''
 }
 
+class Adress {
+    constructor(name, display_name, lon, lat) {
+        this.name = name;
+        this.display_name = display_name;
+        this.lon = lon;
+        this.lat = lat;
+    }
+}
+
 //?####################################################################################################
 // Button etc.
 const currentLocationButton = document.getElementById('btnCurrLoc');
@@ -89,19 +98,30 @@ window.addEventListener('keydown', (e) => {
 });
 
 //* Func to decode address in lat and lon -- call load map and requestWeatherForecast
+//TODO - Suchvorschläge bei Suche anzeigen
+//TODO - Allgemein soll es zukünfrig ein Objekt geben, welches aus Name, Lat, Lon besteht
 
 async function getAddressCoordinates(address) {
     try {
         const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`);
         const data = await response.json();
         if (data.length > 0) {
+            console.log('openstreetmap Data', data);
             const lat = parseFloat(data[0].lat);
             const lon = parseFloat(data[0].lon);
-            loadMap(lat, lon)
+            const display_name = data[0].display_name
+            address = data[0].name;
+            ortLabel.innerHTML = address;
+
+            const new_address = new Adress(address, display_name, lon, lat);
+            console.log(new_address);
+
+            loadMap(lat, lon);
             requestWeatherForecast(lat, lon);
-            setTimeout(() => {
-                //getAirPollutionInfo(lat, lon);
-            }, 1500);
+            
+            // setTimeout(() => {
+            //     getAirPollutionInfo(lat, lon);
+            // }, 1500);
 
         } else {
             console.error('Keine Ergebnisse gefunden.');
@@ -289,7 +309,7 @@ function requestWeatherForecast(lat, lon) {
             isCurrentLocation = false;
             document.getElementById('errorLeiste').hidden = true;
             document.getElementById('btnAddCity').hidden = false;
-            ortLabel.innerHTML = adress;
+           
             
             document.getElementById('outpTemp').innerHTML = `🌡`;
 
@@ -679,9 +699,9 @@ function requestWeatherForecast(lat, lon) {
 
             ausw();
         })
-        // .catch((error) => {
-        //     console.log(`Forecast Err: ${error}`);
-        // });
+        .catch((error) => {
+            console.log(`Forecast Err: ${error}`);
+        });
 }
 
 //?####################################################################################################
