@@ -1,4 +1,4 @@
-const ak = '142ebb880ba304df7*8a8867b2774e6e'
+const ak = '253hee991ed415gi809d9978e3885h7h';
 let temp = 0;
 let cityCode = '';
 let apiLink = '';
@@ -66,17 +66,16 @@ const outputUVMaxIndex = document.getElementById('outputUVMaxIndex');
 
 //?####################################################################################################
 // Load
-ky = dcrK(ak);
 window.onload = loadData();
 
 //?####################################################################################################
 // Eingegebene Stadt suchen
 function showWeather() {
     adress = searchField.value;
+    getAddressCoordinates(adress);
     if (adress.slice(-1) === ' ') {
         adress = adress.trimEnd();
     }
-    weatherRequest();
     searchField.value = '';
 }
 
@@ -88,6 +87,30 @@ window.addEventListener('keydown', (e) => {
     }
 });
 
+//* Add function to decode address in lat and lon
+
+async function getAddressCoordinates(address) {
+    try {
+        const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`);
+        const data = await response.json();
+        if (data.length > 0) {
+            const latitude = parseFloat(data[0].lat);
+            const longitude = parseFloat(data[0].lon);
+            console.log('Längengrad:', longitude);
+            console.log('Breitengrad:', latitude);
+            requestWeatherForecast(latitude, longitude);
+
+        } else {
+            console.error('Keine Ergebnisse gefunden.');
+        }
+    } catch (error) {
+        console.error('Fehler beim Abrufen der Daten:', error);
+    }
+}
+
+
+
+
 // Interessant wenn die Map location marker funtioniert
 // https://openweathermap.org/api/geocoding-api   -- Reverse geocoding
 //?####################################################################################################
@@ -95,9 +118,9 @@ window.addEventListener('keydown', (e) => {
 function weatherRequest() {
     if (adress != '') {
         if (isNaN(adress)) {
-            apiLink = `https://api.openweathermap.org/data/2.5/weather?q=${adress}&appid=${ky}&lang=de&units=metric`;
+            apiLink = `https://api.openweathermap.org/data/3.0/weather?q=${adress}&appid=${ky}&lang=de&units=metric`;
         } else {
-            apiLink = `https://api.openweathermap.org/data/2.5/weather?zip=${adress},de&APPID=${ky}&lang=de&units=metric`;
+            apiLink = `https://api.openweathermap.org/data/3.0/weather?zip=${adress},de&APPID=${ky}&lang=de&units=metric`;
         }
 
         fetch(apiLink)
@@ -106,7 +129,6 @@ function weatherRequest() {
                 console.log(data);
                 deleteSpinner()
                 weatherContainer.style.display = 'flex';
-                //cityContainer.style.display = 'flex';
                 isCurrentLocation = false;
                 document.getElementById('errorLeiste').hidden = true;
                 document.getElementById('btnAddCity').hidden = false;
@@ -138,10 +160,8 @@ function weatherRequest() {
                 }, 1500);
             })
             .catch((error) => {
+                console.log(error);
                 weatherContainer.style.display = 'none';
-                // if (localStorage.getItem('stored_CityList') === null) {
-                //     cityContainer.style.display = 'none';
-                // }
                 createNotification(
                     'Der Ort konnte nicht gefunden werden :(',
                     'alert',
@@ -248,25 +268,21 @@ function loadMap(lat, lon) {
     L.geoJSON(mapPlace).addTo(meineKarte);
 }
 
-
-
-function dcrK(val) {
-    let newVal = '';
-    for (let i = 0; i < val.length; i++) {
-        if (parseInt(val.charAt(i)) !== undefined && val.charAt(i) <= 9) {
-            let newValEl = parseInt(val.charAt(i)) + 1;
-            newVal += newValEl;
-        } else {
-            let strVal = '';
-            if (val.charAt(i) === '*') {
-                strVal = 0;
+function dcrK(val, offs) {
+    let dcrStrng = "";
+    for (const char of val) {
+        if (char.match(/[a-zA-Z]/)) {
+            const shiftedChar = String.fromCharCode(((char.toLowerCase().charCodeAt(0) - 'a'.charCodeAt(0) - offs + 26) % 26) + 'a'.charCodeAt(0));
+            if (char === char.toUpperCase()) {
+                dcrStrng += shiftedChar.toUpperCase();
             } else {
-                strVal = val.charAt(i);
+                dcrStrng += shiftedChar;
             }
-            newVal += strVal;
+        } else {
+            dcrStrng += char;
         }
     }
-    return newVal
+    return dcrStrng;
 }
 
 //?####################################################################################################
@@ -274,7 +290,9 @@ function dcrK(val) {
 //?####################################################################################################
 function requestWeatherForecast(lat, lon) {
     loadSpinner();
-    apiLink = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=minutely&appid=${ky}&lang=de&units=metric`;
+    //apiLink = `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&exclude=minutely&appid=${ky}&lang=de&units=metric`;
+    apiLink = `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&appid=${ky}`;
+            
     fetch(apiLink)
         .then((response) => response.json())
         .then((data) => {
@@ -871,6 +889,7 @@ function ausw() {
 //?####################################################################################################
 // Lädt die zuerst abgespeicherte Stadt
 function loadData() {
+    ky = dcrK(ak, 3);
     setAppearance('opt_normalmode');
     reset_Col();
     loadSpinner()
@@ -878,7 +897,8 @@ function loadData() {
         if (localStorage.getItem('stored_CityList') != null) {
             cityList = JSON.parse(localStorage.getItem('stored_CityList'));
             adress = cityList[0];
-            weatherRequest();
+            getAddressCoordinates(adress);
+            //weatherRequest();
             showSavedCitys();
             currentLocationButton.hidden = false;
         } else {
@@ -1194,7 +1214,7 @@ function countingUp(temperature) {
 //?####################################################################################################
 // Air Pollution
 function getAirPollutionInfo(latitude, longitude) {
-    const pollutionLink = `https://api.openweathermap.org/data/2.5/air_pollution?lat=${latitude}&lon=${longitude}&appid=${ky}`;
+    const pollutionLink = `https://api.openweathermap.org/data/3.0/air_pollution?lat=${latitude}&lon=${longitude}&appid=${ky}`;
     fetch(pollutionLink)
         .then((response) => response.json())
         .then((data) => {
