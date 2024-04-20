@@ -95,10 +95,13 @@ async function getAddressCoordinates(address) {
         const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`);
         const data = await response.json();
         if (data.length > 0) {
-            const latitude = parseFloat(data[0].lat);
-            const longitude = parseFloat(data[0].lon);
-            loadMap(latitude, longitude)
-            requestWeatherForecast(latitude, longitude);
+            const lat = parseFloat(data[0].lat);
+            const lon = parseFloat(data[0].lon);
+            loadMap(lat, lon)
+            requestWeatherForecast(lat, lon);
+            setTimeout(() => {
+                //getAirPollutionInfo(lat, lon);
+            }, 1500);
 
         } else {
             console.error('Keine Ergebnisse gefunden.');
@@ -128,19 +131,6 @@ function weatherRequest() {
             .then((data) => {
                 console.log(data);
 
-
-
-
-
-
-
-
-
-
-
-                setTimeout(() => {
-                    getAirPollutionInfo(lat, lon);
-                }, 1500);
             })
             .catch((error) => {
                 console.log(error);
@@ -282,7 +272,6 @@ function requestWeatherForecast(lat, lon) {
             console.log('ForecastData', data);
             let tempMin;
             let tempMax;
-            let temp;
             let weatherIcon;
             let index;
             let hour;
@@ -314,7 +303,7 @@ function requestWeatherForecast(lat, lon) {
             document.getElementById('outpWind').innerHTML = `${windgesch.toFixed(0)} Km/h`;
             set_wind_definition(windgesch.toFixed(0));
            
-            document.getElementById("outpAirQuali").innerHTML = 'Lade Werte ...';
+            //document.getElementById("outpAirQuali").innerHTML = 'Lade Werte ...';
             ausw();
             /////////////////////////////////////////
             //* Normal Stuff
@@ -690,9 +679,9 @@ function requestWeatherForecast(lat, lon) {
 
             ausw();
         })
-        .catch((error) => {
-            console.log(`Forecast Err: ${error}`);
-        });
+        // .catch((error) => {
+        //     console.log(`Forecast Err: ${error}`);
+        // });
 }
 
 //?####################################################################################################
@@ -923,7 +912,6 @@ function loadData() {
             cityList = JSON.parse(localStorage.getItem('stored_CityList'));
             adress = cityList[0];
             getAddressCoordinates(adress);
-            //weatherRequest();
             showSavedCitys();
             currentLocationButton.hidden = false;
         } else {
@@ -963,7 +951,7 @@ function showSavedCitys() {
 }
 
 //?####################################################################################################
-// Speichert eine Stadt in den localStorage
+//* Speichert eine Stadt in den localStorage
 function saveCity() {
     localStorage.setItem('stored_CityList', JSON.stringify(cityList));
 }
@@ -1000,7 +988,7 @@ function getCity() {
     typeSelect.value = 'opt_temp';
     window.scrollTo(0, 0);
     adress = this.innerText;
-    weatherRequest();
+    getAddressCoordinates(adress);
     cityContainer.classList.remove('active');
 }
 
@@ -1239,7 +1227,7 @@ function countingUp(temperature) {
 //?####################################################################################################
 // Air Pollution
 function getAirPollutionInfo(latitude, longitude) {
-    const pollutionLink = `https://api.openweathermap.org/data/3.0/air_pollution?lat=${latitude}&lon=${longitude}&appid=${ky}`;
+    const pollutionLink = `https://api.openweathermap.org/data/2.5/air_pollution?lat=${latitude}&lon=${longitude}&appid=${ky}`;
     fetch(pollutionLink)
         .then((response) => response.json())
         .then((data) => {
@@ -1287,8 +1275,6 @@ function getAirPollutionInfo(latitude, longitude) {
                 infoBtn.classList.add("active");
                 document.getElementById("detainTextAirQuality").innerHTML = infostring;
             }
-            // Debugging
-            //document.getElementById("errorlog").innerHTML = 'getAirPollutionInfo = ok';
         }).catch((error) => {
             //document.getElementById("errorlog").innerHTML = error + " | " + error.message;
         });
