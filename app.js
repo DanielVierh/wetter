@@ -87,7 +87,7 @@ window.addEventListener('keydown', (e) => {
     }
 });
 
-//* Add function to decode address in lat and lon
+//* Func to decode address in lat and lon -- call load map and requestWeatherForecast
 
 async function getAddressCoordinates(address) {
     try {
@@ -96,8 +96,7 @@ async function getAddressCoordinates(address) {
         if (data.length > 0) {
             const latitude = parseFloat(data[0].lat);
             const longitude = parseFloat(data[0].lon);
-            console.log('Längengrad:', longitude);
-            console.log('Breitengrad:', latitude);
+            loadMap(latitude, longitude)
             requestWeatherForecast(latitude, longitude);
 
         } else {
@@ -127,8 +126,8 @@ function weatherRequest() {
             .then((response) => response.json())
             .then((data) => {
                 console.log(data);
-                deleteSpinner()
-                weatherContainer.style.display = 'flex';
+                deleteSpinner() 
+                weatherContainer.style.display = 'flex'; 
                 isCurrentLocation = false;
                 document.getElementById('errorLeiste').hidden = true;
                 document.getElementById('btnAddCity').hidden = false;
@@ -291,7 +290,7 @@ function dcrK(val, offs) {
 function requestWeatherForecast(lat, lon) {
     loadSpinner();
     //apiLink = `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&exclude=minutely&appid=${ky}&lang=de&units=metric`;
-    apiLink = `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&appid=${ky}`;
+    apiLink = `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&appid=${ky}&lang=de&units=metric`;
             
     fetch(apiLink)
         .then((response) => response.json())
