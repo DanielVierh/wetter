@@ -6,6 +6,7 @@ let cityList = [];
 let ky = '';
 let adress = '';
 let timezone;
+let timezoneOffset;
 const winterTime = 3600;
 const summerTime = 7200;
 let iconVal;
@@ -286,8 +287,8 @@ function requestWeatherForecast(lat, lon) {
             let index;
             let hour;
             let weekDay;
-            const timezoneOffset = data.timezone_offset;
-            timezone = data.timezone;
+            timezoneOffset = data.timezone_offset;
+            //timezone = data.timezone;
             const windgesch = data.current.wind_speed * 3.6;
             let imgSrc = `https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/widgets/${data.current.weather[0].icon}.png`;
 
@@ -324,13 +325,9 @@ function requestWeatherForecast(lat, lon) {
             }
 
 
-
-
-            //////////////!SECTION - forecast
             setTimeout(() => {
                 initUpcountingTemp(temp);
             }, 1000);
-            ///////////////////////
 
 
             //?####################################################################################################
@@ -417,9 +414,9 @@ function requestWeatherForecast(lat, lon) {
             }
 
             //* Sonnenaufgang roh für Sonnenstand
-            sunriseRaw = intTimeConvert(data.current.sunrise + timezone - timeSubstract);
-            next_sunrise = intTimeConvert(data.daily[1].sunrise + timezone - timeSubstract);
-            sunsetRaw = intTimeConvert(data.current.sunset + timezone - timeSubstract);
+            sunriseRaw = intTimeConvert(data.current.sunrise + timezoneOffset - timeSubstract);
+            next_sunrise = intTimeConvert(data.daily[1].sunrise + timezoneOffset - timeSubstract);
+            sunsetRaw = intTimeConvert(data.current.sunset + timezoneOffset - timeSubstract);
             // Für Anzeige Auf-Untergang
             sunrise = rawDatetime_in_Time(data.current.sunrise);
             sunset = rawDatetime_in_Time(data.current.sunset);
@@ -431,7 +428,7 @@ function requestWeatherForecast(lat, lon) {
 
 
             // Akt. Ortsdatum & Zeit
-            const dateTimeNowRaw = intTimeConvert(data.current.dt + timezone - timeSubstract);
+            const dateTimeNowRaw = intTimeConvert(data.current.dt + timezoneOffset - timeSubstract);
             const dateTimeNow_Day = splitVal(dateTimeNowRaw + '', " ", 2);
             const dateTimeNow_Month = splitVal(dateTimeNowRaw + '', " ", 1);
             const dateTimeNow_TIME = splitVal(dateTimeNowRaw + '', " ", 4);
@@ -536,7 +533,7 @@ function requestWeatherForecast(lat, lon) {
                     timeMinusSummertime = 0;
                 }
                 hour = splitVal(
-                    intTimeConvert(data.hourly[i].dt + timezone - timeMinusSummertime) + '',
+                    intTimeConvert(data.hourly[i].dt + timezoneOffset - timeMinusSummertime) + '',
                     ' ',
                     4,
                 );
@@ -583,7 +580,9 @@ function requestWeatherForecast(lat, lon) {
                     const tempDiffToday_Tomorrow = (data.daily[i + 1].temp.max - data.daily[i].temp.max).toFixed(1);
                     const lblTempDiff = document.getElementById("outpTempDiff");
                     const maxTomorrow = data.daily[i + 1].temp.max;
-                    const tomorrowWeatherTrend = data.daily[i + 1].weather[0].description;
+                    //const tomorrowWeatherTrend = data.daily[i + 1].weather[0].description;
+                    const tomorrowWeatherTrendRaw = data.daily[i + 1].summary;
+                    let tomorrowWeatherTrend = '';
                     if (tempDiffToday_Tomorrow >= 1) {
                         lblTempDiff.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-thermometer-half" viewBox="0 0 16 16">
   <path d="M9.5 12.5a1.5 1.5 0 1 1-2-1.415V6.5a.5.5 0 0 1 1 0v4.585a1.5 1.5 0 0 1 1 1.415"/>
@@ -600,10 +599,18 @@ function requestWeatherForecast(lat, lon) {
   <path d="M5.5 2.5a2.5 2.5 0 0 1 5 0v7.55a3.5 3.5 0 1 1-5 0zM8 1a1.5 1.5 0 0 0-1.5 1.5v7.987l-.167.15a2.5 2.5 0 1 0 3.333 0l-.166-.15V2.5A1.5 1.5 0 0 0 8 1"/>
 </svg> Die Temperatur bleibt morgen stabil. Die maximale Temperatur wird in etwa ${parseInt(maxTomorrow)}°C betragen.`;
                     }
-                    document.getElementById("outputWeatherTrend").innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cloud-sun" viewBox="0 0 16 16">
-                    <path d="M7 8a3.5 3.5 0 0 1 3.5 3.555.5.5 0 0 0 .624.492A1.503 1.503 0 0 1 13 13.5a1.5 1.5 0 0 1-1.5 1.5H3a2 2 0 1 1 .1-3.998.5.5 0 0 0 .51-.375A3.5 3.5 0 0 1 7 8m4.473 3a4.5 4.5 0 0 0-8.72-.99A3 3 0 0 0 3 16h8.5a2.5 2.5 0 0 0 0-5z"/>
-                    <path d="M10.5 1.5a.5.5 0 0 0-1 0v1a.5.5 0 0 0 1 0zm3.743 1.964a.5.5 0 1 0-.707-.707l-.708.707a.5.5 0 0 0 .708.708zm-7.779-.707a.5.5 0 0 0-.707.707l.707.708a.5.5 0 1 0 .708-.708zm1.734 3.374a2 2 0 1 1 3.296 2.198q.3.423.516.898a3 3 0 1 0-4.84-3.225q.529.017 1.028.129m4.484 4.074c.6.215 1.125.59 1.522 1.072a.5.5 0 0 0 .039-.742l-.707-.707a.5.5 0 0 0-.854.377M14.5 6.5a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1z"/>
-                  </svg> Das Wetter morgen: ${tomorrowWeatherTrend}.`;
+                    fetchTranslation('en', 'de', tomorrowWeatherTrendRaw)
+                    .then(translation => {
+                        tomorrowWeatherTrend = translation[0][0][0];
+                        document.getElementById("outputWeatherTrend").innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cloud-sun" viewBox="0 0 16 16">
+                        <path d="M7 8a3.5 3.5 0 0 1 3.5 3.555.5.5 0 0 0 .624.492A1.503 1.503 0 0 1 13 13.5a1.5 1.5 0 0 1-1.5 1.5H3a2 2 0 1 1 .1-3.998.5.5 0 0 0 .51-.375A3.5 3.5 0 0 1 7 8m4.473 3a4.5 4.5 0 0 0-8.72-.99A3 3 0 0 0 3 16h8.5a2.5 2.5 0 0 0 0-5z"/>
+                        <path d="M10.5 1.5a.5.5 0 0 0-1 0v1a.5.5 0 0 0 1 0zm3.743 1.964a.5.5 0 1 0-.707-.707l-.708.707a.5.5 0 0 0 .708.708zm-7.779-.707a.5.5 0 0 0-.707.707l.707.708a.5.5 0 1 0 .708-.708zm1.734 3.374a2 2 0 1 1 3.296 2.198q.3.423.516.898a3 3 0 1 0-4.84-3.225q.529.017 1.028.129m4.484 4.074c.6.215 1.125.59 1.522 1.072a.5.5 0 0 0 .039-.742l-.707-.707a.5.5 0 0 0-.854.377M14.5 6.5a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1z"/>
+                      </svg> Das Wetter morgen: ${tomorrowWeatherTrend}.`;
+                    })
+                    .catch(error => {
+                        console.error("Translation error:", error);
+                    });
+
 
                 }
 
@@ -1052,7 +1059,7 @@ function getDate(weekDay) {
 //?####################################################################################################
 // Funktion, welche ein Uhrzeit extrahiert. In Berücksichtigung der Zeitzohne
 function rawDatetime_in_Time(rawDatetime) {
-    const raw = intTimeConvert(rawDatetime + timezone - timeSubstract);
+    const raw = intTimeConvert(rawDatetime + timezoneOffset - timeSubstract);
     const time = splitVal(raw + '', " ", 4);
     const pureTime = `${splitVal(time + '', ":", 0)}:${splitVal(time + '', ":", 1)}`;
     return pureTime;
@@ -1169,7 +1176,7 @@ function changeWeatherType(type) {
             timeMinusSummertime = 0;
         }
         hour = splitVal(
-            intTimeConvert(savedData.hourly[i].dt + timezone - timeMinusSummertime) + '',
+            intTimeConvert(savedData.hourly[i].dt + timezoneOffset - timeMinusSummertime) + '',
             ' ',
             4,
         );
@@ -1454,7 +1461,7 @@ function calc_time_to_next_sunevent() {
         console.log('night');
         const current_timestamp = new Date();
         let current_unix_timestamp = parseInt((new Date(current_timestamp).getTime() / 1000).toFixed(0));
-        current_unix_timestamp = current_unix_timestamp + timezone - timeSubstract;
+        current_unix_timestamp = current_unix_timestamp + timezoneOffset - timeSubstract;
         const correct_timestamp = intTimeConvert(current_unix_timestamp);
         const duration = minutesDiff(correct_timestamp, sunriseRaw);
         sun_event.innerHTML = `Sonne geht in ${duration} auf`;
@@ -1466,7 +1473,7 @@ function calc_time_to_next_sunevent() {
         console.log('evening');
         const current_timestamp = new Date();
         let current_unix_timestamp = parseInt((new Date(current_timestamp).getTime() / 1000).toFixed(0));
-        current_unix_timestamp = current_unix_timestamp + timezone - timeSubstract;
+        current_unix_timestamp = current_unix_timestamp + timezoneOffset - timeSubstract;
         const correct_timestamp = intTimeConvert(current_unix_timestamp);
         const duration = minutesDiff(correct_timestamp, next_sunrise);
         sun_event.innerHTML = `Sonne geht in ${duration} auf`;
@@ -1510,3 +1517,23 @@ btn_show_cityModal.addEventListener('click', () => {
 document.getElementById('btn_close_cityModal').addEventListener('click', () => {
     cityContainer.classList.remove('active');
 })
+
+
+//* ANCHOR Fetch request to translate text
+//////////////////////////////
+async function fetchTranslation(sourceLang, targetLang, sourceText) {
+    const url = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=" +
+        sourceLang + "&tl=" + targetLang + "&dt=t&q=" + encodeURI(sourceText);
+
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error fetching translation:', error);
+        return null;
+    }
+}
