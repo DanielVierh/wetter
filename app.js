@@ -432,9 +432,7 @@ function requestWeatherForecast(lat, lon) {
             }
             if (dateTimeNowRaw < sunsetRaw) {
                 isBeforeSunset = true;
-                console.warn('isBeforeSunset');
             }
-            console.warn('set sunEvent');
             if (isAfterSunrise === true && isAfterSunset === true && isBeforeSunrise == false) {
                 // ? Abends vor Mitternacht
                 sunEvent = 'evening'; //* For func calc_time_to_next_sunevent
