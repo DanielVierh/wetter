@@ -4,7 +4,7 @@ let cityCode = '';
 let apiLink = '';
 let cityList = [];
 let ky = '';
-let adress = '';
+let address = '';
 let timezone;
 let timezoneOffset;
 const winterTime = 3600;
@@ -34,7 +34,7 @@ let weatherSettings = {
     appeareanceMode: ''
 }
 
-class Adress {
+class Address {
     constructor(name, display_name, lon, lat) {
         this.name = name;
         this.display_name = display_name;
@@ -81,10 +81,10 @@ window.onload = loadData();
 //?####################################################################################################
 // Eingegebene Stadt suchen
 function showWeather() {
-    adress = searchField.value;
-    getAddressCoordinates(adress);
-    if (adress.slice(-1) === ' ') {
-        adress = adress.trimEnd();
+    address = searchField.value;
+    getAddressCoordinates(address);
+    if (address.slice(-1) === ' ') {
+        address = address.trimEnd();
     }
     searchField.value = '';
 }
@@ -113,7 +113,7 @@ async function getAddressCoordinates(address) {
             address = data[0].name;
             ortLabel.innerHTML = address;
 
-            const new_address = new Adress(address, display_name, lon, lat);
+            const new_address = new Address(address, display_name, lon, lat);
             console.log(new_address);
 
             loadMap(lat, lon);
@@ -132,7 +132,7 @@ async function getAddressCoordinates(address) {
             );
             deleteSpinner();
             console.log('In nicht gefunden');
-            adress = '';
+            address = '';
             let index;
             for (let i = 0; i <= 7; i++) {
                 index = `forecastBlock${i}`;
@@ -899,8 +899,8 @@ function loadData() {
     setTimeout(() => {
         if (localStorage.getItem('stored_CityList') != null) {
             cityList = JSON.parse(localStorage.getItem('stored_CityList'));
-            adress = cityList[0];
-            getAddressCoordinates(adress);
+            address = cityList[0];
+            getAddressCoordinates(address);
             showSavedCitys();
             currentLocationButton.hidden = false;
         } else {
@@ -952,18 +952,18 @@ function saveSettings() {
 //?####################################################################################################
 // Fügt die Stadt in die Liste der Städte hinzu, nach Überprüfung, ob diese bereits vorhanden ist
 function addCity() {
-    if (adress != '') {
-        if (cityList.includes(adress)) {
+    if (address != '') {
+        if (cityList.includes(address)) {
             createNotification(
-                `"${adress}" hast du bereits abgespeichert!`,
+                `"${address}" hast du bereits abgespeichert!`,
                 'warning',
                 3000
             );
         } else {
-            if (adress != '') {
-                cityList.push(adress);
+            if (address != '') {
+                cityList.push(address);
                 saveCity();
-                createNotification(`${adress} wurde gespeichert`, 'success', 3000);
+                createNotification(`${address} wurde gespeichert`, 'success', 3000);
                 showSavedCitys();
             }
         }
@@ -976,22 +976,22 @@ function getCity() {
     weatherContainer.style.display = 'flex';
     typeSelect.value = 'opt_temp';
     window.scrollTo(0, 0);
-    adress = this.innerText;
-    getAddressCoordinates(adress);
+    address = this.innerText;
+    getAddressCoordinates(address);
     cityContainer.classList.remove('active');
 }
 
 //?####################################################################################################
 // Lösche die Stadt, falls in der Liste vorhanden
 function delCity() {
-    if (adress != '') {
-        if (cityList.includes(adress)) {
+    if (address != '') {
+        if (cityList.includes(address)) {
             const confirm = window.confirm(
-                `Möchtest du die Stadt "${adress}" wirklich aus Deiner Liste entfernen?`,
+                `Möchtest du die Stadt "${address}" wirklich aus Deiner Liste entfernen?`,
             );
             if (confirm) {
                 for (let i = 0; i < cityList.length; i++) {
-                    if (adress === cityList[i]) {
+                    if (address === cityList[i]) {
                         cityList.splice(i, 1);
                         saveCity();
                         location.reload();
@@ -1089,8 +1089,8 @@ function createNotification(message, messageType, showTime) {
 //?####################################################################################################
 // Stadt markieren, diese wird bei Neustart zuerst geladen
 function startCity() {
-    const cityName = adress;
-    const arrIndex = cityList.indexOf(adress);
+    const cityName = address;
+    const arrIndex = cityList.indexOf(address);
     if (arrIndex === -1) {
         cityList.splice(0, 0, cityName);
     } else {
