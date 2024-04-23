@@ -106,7 +106,6 @@ async function getAddressCoordinates(address) {
         const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`);
         const data = await response.json();
         if (data.length > 0) {
-            console.log('openstreetmap Data', data);
             const lat = parseFloat(data[0].lat);
             const lon = parseFloat(data[0].lon);
             const display_name = data[0].display_name
@@ -131,7 +130,6 @@ async function getAddressCoordinates(address) {
                 2000
             );
             deleteSpinner();
-            console.log('In nicht gefunden');
             address = '';
             let index;
             for (let i = 0; i <= 7; i++) {
@@ -1220,7 +1218,6 @@ function getAirPollutionInfo(latitude, longitude) {
     fetch(pollutionLink)
         .then((response) => response.json())
         .then((data) => {
-            console.log(data);
             const airQualiBox = document.getElementById("airQualiBox");
             const airQualityList = ['/', 'SEHR GUT', 'GUT', 'MODERAT', 'SCHLECHT', 'SEHR SCHLECHT']
             const airQualityColor = ['transparent', 'green', 'rgba(144, 238, 144, 0.678)', 'rgba(255, 196, 0, 0.669)', 'rgba(180, 89, 9, 0.938)', 'red']
@@ -1323,7 +1320,6 @@ btnSaveSettings.addEventListener("click", () => {
 function changeAppearance(selectObject) {
     const value = selectObject.value;
     setAppearance(value);
-    console.log(value);
 }
 
 
@@ -1396,7 +1392,6 @@ function reset_Col() {
 }
 
 function loadSpinner() {
-    console.log('Show Spinner');
     const loadingDivs = document.querySelectorAll('.loading')
     loadingDivs.forEach((loadingdiv) => {
         loadingdiv.classList.add("active");
@@ -1433,7 +1428,6 @@ setInterval(() => {
 //* LINK - calc_time_to_next_sunevent wird sekündlich aufgerufen
 function calc_time_to_next_sunevent() {
     if (sunEvent === 'night') {
-        console.log('night');
         const current_timestamp = new Date();
         let current_unix_timestamp = parseInt((new Date(current_timestamp).getTime() / 1000).toFixed(0));
         current_unix_timestamp = current_unix_timestamp + timezoneOffset - timeSubstract;
@@ -1445,7 +1439,6 @@ function calc_time_to_next_sunevent() {
     }
 
     if (sunEvent === 'evening') {
-        console.log('evening');
         const current_timestamp = new Date();
         let current_unix_timestamp = parseInt((new Date(current_timestamp).getTime() / 1000).toFixed(0));
         current_unix_timestamp = current_unix_timestamp + timezoneOffset - timeSubstract;
@@ -1457,7 +1450,6 @@ function calc_time_to_next_sunevent() {
     }
 
     if (sunEvent === 'day') {
-        console.log('day');
         const current_timestamp = new Date();
         const duration = minutesDiff(current_timestamp, sunsetRaw);
         sun_event.innerHTML = `Sonne geht in ${duration} unter`;
