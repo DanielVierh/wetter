@@ -124,7 +124,24 @@ async function getAddressCoordinates(address) {
             // }, 1500);
 
         } else {
-            console.error('Keine Ergebnisse gefunden.');
+            weatherContainer.style.display = 'none';
+            createNotification(
+                'Der Ort konnte nicht gefunden werden :(',
+                'alert',
+                2000
+            );
+            deleteSpinner();
+            console.log('In nicht gefunden');
+            adress = '';
+            let index;
+            for (let i = 0; i <= 7; i++) {
+                index = `forecastBlock${i}`;
+                document.getElementById(index).hidden = true;
+            }
+            for (let i = 0; i <= 24; i++) {
+                index = `hourForecastBlock${i}`;
+                document.getElementById(index).hidden = true;
+            }
         }
     } catch (error) {
         console.error('Fehler beim Abrufen der Daten:', error);
