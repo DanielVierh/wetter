@@ -276,7 +276,7 @@ function requestWeatherForecast(lat, lon) {
             // * Stuff from weather request func
             deleteSpinner();
             temp = parseInt(data.current.temp);
-
+            initUpcountingTemp(temp);
             weatherContainer.style.display = 'flex';
             isCurrentLocation = false;
             document.getElementById('errorLeiste').hidden = true;
@@ -306,9 +306,6 @@ function requestWeatherForecast(lat, lon) {
             }
 
 
-            setTimeout(() => {
-                initUpcountingTemp(temp);
-            }, 1000);
 
 
             //?####################################################################################################
