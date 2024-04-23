@@ -150,51 +150,6 @@ async function getAddressCoordinates(address) {
 
 
 
-
-// Interessant wenn die Map location marker funtioniert
-// https://openweathermap.org/api/geocoding-api   -- Reverse geocoding
-//?####################################################################################################
-// Wetter Request
-function weatherRequest() {
-    if (adress != '') {
-        if (isNaN(adress)) {
-            apiLink = `https://api.openweathermap.org/data/3.0/weather?q=${adress}&appid=${ky}&lang=de&units=metric`;
-        } else {
-            apiLink = `https://api.openweathermap.org/data/3.0/weather?zip=${adress},de&APPID=${ky}&lang=de&units=metric`;
-        }
-
-        fetch(apiLink)
-            .then((response) => response.json())
-            .then((data) => {
-                console.log(data);
-
-            })
-            .catch((error) => {
-                console.log(error);
-                weatherContainer.style.display = 'none';
-                createNotification(
-                    'Der Ort konnte nicht gefunden werden :(',
-                    'alert',
-                    2000
-                );
-                deleteSpinner();
-                console.log('In nicht gefunden');
-                adress = '';
-                let index;
-                for (let i = 0; i <= 7; i++) {
-                    index = `forecastBlock${i}`;
-                    document.getElementById(index).hidden = true;
-                }
-                for (let i = 0; i <= 24; i++) {
-                    index = `hourForecastBlock${i}`;
-                    document.getElementById(index).hidden = true;
-                }
-            });
-    }
-}
-
-
-
 function set_wind_definition(windspeed) {
 
     if (windspeed <= 5) {
