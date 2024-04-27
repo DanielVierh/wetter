@@ -229,7 +229,10 @@ function loadMap(lat, lon) {
         maxZoom: 900, attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(meineKarte);
 
-    L.geoJSON(mapPlace).addTo(meineKarte);
+    const city = document.getElementById('outpOrt').innerHTML;
+    L.geoJSON(mapPlace).addTo(meineKarte).bindPopup(`${city}`);;
+
+       
 }
 
 
