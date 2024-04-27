@@ -87,6 +87,7 @@ button {
   color: white;
   font-weight: bold;
   margin: 3px;
+  position: relative;
 }
 
 #errorLeiste {
@@ -862,4 +863,18 @@ button {
           backdrop-filter: blur(20px);
   padding: 10px;
   border-radius: 15px;
+}
+
+.delete-button {
+  position: absolute;
+  background-color: rgb(134, 1, 1);
+  right: -25px;
+  top: 50%;
+  width: 35px;
+  height: 37px;
+  transform: translateY(-50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1rem;
 }/*# sourceMappingURL=style.css.map */

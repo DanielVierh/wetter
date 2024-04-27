@@ -929,6 +929,25 @@ function showSavedCitys() {
         const btn = document.createElement('button');
         btn.appendChild(document.createTextNode(cty));
         btn.onclick = getCity;
+        
+        //* Delete Button and functionality
+        let del_btn = document.createElement('div');
+        del_btn.classList.add('delete-button');
+        del_btn.innerHTML = 'x';
+        del_btn.addEventListener('click',()=> {
+            const confirm = window.confirm(`Möchtest du die Stadt "${cty}" wirklich aus Deiner Liste entfernen?`);
+            if(confirm) {
+                for (let i = 0; i < cityList.length; i++) {
+                    if (cty === cityList[i]) {
+                        cityList.splice(i, 1);
+                        saveCity();
+                        location.reload();
+                    }
+                }
+            }
+        })
+        btn.appendChild(del_btn);
+
         let ul = document.getElementById('outCitys');
         ul.appendChild(btn);
         cityContainer.classList.remove('acitve');
