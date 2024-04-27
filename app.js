@@ -115,7 +115,9 @@ async function getAddressCoordinates(address) {
             const new_address = new Address(address, display_name, lon, lat);
             console.log(new_address);
 
-            loadMap(lat, lon);
+            setTimeout(() => {
+                loadMap(lat, lon);
+            }, 1500);
             requestWeatherForecast(lat, lon);
 
             // setTimeout(() => {
@@ -229,13 +231,11 @@ function loadMap(lat, lon) {
 
     L.geoJSON(mapPlace).addTo(meineKarte);
 
-    setTimeout(() => {
-        //* Loop Places, get coordinates and set pin to map
-        const all_places = cityList;
-        for (let i = 0; i < all_places.length; i++) {
-            set_Map_Pins(all_places[i], meineKarte);
-        }
-    }, 1000);
+    //* Loop Places, get coordinates and set pin to map
+    const all_places = cityList;
+    for (let i = 0; i < all_places.length; i++) {
+        set_Map_Pins(all_places[i], meineKarte);
+    }
 }
 
 //*ANCHOR - Function to set the pins from my places
