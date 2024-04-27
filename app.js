@@ -115,9 +115,7 @@ async function getAddressCoordinates(address) {
             const new_address = new Address(address, display_name, lon, lat);
             console.log(new_address);
 
-            setTimeout(() => {
-                loadMap(lat, lon);
-            }, 1500);
+            loadMap(lat, lon);
             requestWeatherForecast(lat, lon);
 
             // setTimeout(() => {
@@ -230,16 +228,23 @@ function loadMap(lat, lon) {
     }).addTo(meineKarte);
 
     L.geoJSON(mapPlace).addTo(meineKarte);
+    console.log('Bin in Load Map');
+    loop_Places(meineKarte)
 
+}
+
+async function loop_Places(meineKarte) {
     //* Loop Places, get coordinates and set pin to map
     const all_places = cityList;
+    console.log('Bin in loop_Places');
     for (let i = 0; i < all_places.length; i++) {
-        set_Map_Pins(all_places[i], meineKarte);
+        await set_Map_Pins(all_places[i], meineKarte);
     }
 }
 
 //*ANCHOR - Function to set the pins from my places
 async function set_Map_Pins(address, meineKarte) {
+    console.log('Bin in set_Map_Pins');
     try {
         const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`);
         const data = await response.json();
@@ -681,9 +686,9 @@ function requestWeatherForecast(lat, lon) {
                 )} Km/h | Luftdruck: ${pressure} hPa`;
             }
 
-            setTimeout(() => {
-                loadMap(lat, lon)
-            }, 2000);
+            // setTimeout(() => {
+            //     loadMap(lat, lon)
+            // }, 2000);
 
             ausw();
         })
