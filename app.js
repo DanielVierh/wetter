@@ -913,6 +913,7 @@ function loadData() {
         weatherSettings = JSON.parse(localStorage.getItem('stored_WeatherSettings'));
         try {
             setAppearance(`${weatherSettings.appeareanceMode}`);
+            document.getElementById('settingsAppearance').value = weatherSettings.appeareanceMode;
         } catch (error) {
             setAppearance('opt_normalmode');
         }
