@@ -230,7 +230,11 @@ function loadMap(lat, lon) {
     }).addTo(meineKarte);
 
     const city = document.getElementById('outpOrt').innerHTML;
-    L.geoJSON(mapPlace).addTo(meineKarte).bindPopup(`${city}`);;
+    L.geoJSON(mapPlace).addTo(meineKarte).bindPopup(`${city}`);
+
+    var wmsLayer = L.tileLayer.wms('http://ows.mundialis.de/services/service?', {
+    layers: 'TOPO-OSM-WMS'
+}).addTo(meineKarte);
 
        
 }
