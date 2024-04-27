@@ -210,7 +210,6 @@ function set_wind_definition(windspeed) {
 // Open Streetmap
 
 function loadMap(lat, lon) {
-
     let mapPlace = {
         "type": "Point",
         "coordinates": []
@@ -229,7 +228,29 @@ function loadMap(lat, lon) {
     }).addTo(meineKarte);
 
     L.geoJSON(mapPlace).addTo(meineKarte);
+
+    //* Loop Places, get coordinates and set pin to map
+    const all_places = cityList;
+    for(let i = 0; i < all_places.length; i++) {
+        set_Map_Pins(all_places[i], meineKarte);
+    }
 }
+
+//*ANCHOR - Function to set the pins from my places
+async function set_Map_Pins(address, meineKarte) {
+    try {
+        const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`);
+        const data = await response.json();
+        if (data.length > 0) {
+            const lat = parseFloat(data[0].lat);
+            const lon = parseFloat(data[0].lon);
+            L.marker([lat, lon]).addTo(meineKarte);
+        }
+    } catch (error) {
+        console.error('Fehler beim Abrufen der Daten:', error);
+    }
+}
+
 
 function dcrK(val, offs) {
     let dcrStrng = "";
@@ -929,7 +950,7 @@ function showSavedCitys() {
         const btn = document.createElement('button');
         btn.appendChild(document.createTextNode(cty));
         btn.onclick = getCity;
-        
+
         //* Delete Button and functionality
         let del_btn = document.createElement('div');
         del_btn.classList.add('delete-button');
