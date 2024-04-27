@@ -117,7 +117,7 @@ async function getAddressCoordinates(address) {
 
             loadMap(lat, lon);
             requestWeatherForecast(lat, lon);
-
+            
             // setTimeout(() => {
             //     getAirPollutionInfo(lat, lon);
             // }, 1500);
@@ -210,6 +210,7 @@ function set_wind_definition(windspeed) {
 // Open Streetmap
 
 function loadMap(lat, lon) {
+
     let mapPlace = {
         "type": "Point",
         "coordinates": []
@@ -228,34 +229,6 @@ function loadMap(lat, lon) {
     }).addTo(meineKarte);
 
     L.geoJSON(mapPlace).addTo(meineKarte);
-    console.log('Bin in Load Map');
-    loop_Places(meineKarte)
-
-}
-
-async function loop_Places(meineKarte) {
-    //* Loop Places, get coordinates and set pin to map
-    const all_places = cityList;
-    console.log('Bin in loop_Places');
-    for (let i = 0; i < all_places.length; i++) {
-        await set_Map_Pins(all_places[i], meineKarte);
-    }
-}
-
-//*ANCHOR - Function to set the pins from my places
-async function set_Map_Pins(address, meineKarte) {
-    console.log('Bin in set_Map_Pins');
-    try {
-        const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`);
-        const data = await response.json();
-        if (data.length > 0) {
-            const lat = parseFloat(data[0].lat);
-            const lon = parseFloat(data[0].lon);
-            L.marker([lat, lon]).addTo(meineKarte);
-        }
-    } catch (error) {
-        console.error('Fehler beim Abrufen der Daten:', error);
-    }
 }
 
 
@@ -307,20 +280,20 @@ function requestWeatherForecast(lat, lon) {
             isCurrentLocation = false;
             document.getElementById('errorLeiste').hidden = true;
             document.getElementById('btnAddCity').hidden = false;
-
-
+           
+            
             document.getElementById('outpTemp').innerHTML = `🌡`;
 
             iconValRaw = data.current.weather[0].icon;
             iconVal = iconValRaw.slice(-1);
-
+           
             document.getElementById('weatherimg').src = imgSrc;
             document.getElementById('outpWeather').innerHTML =
                 data.current.weather[0].description;
-
+            
             document.getElementById('outpWind').innerHTML = `${windgesch.toFixed(0)} Km/h`;
             set_wind_definition(windgesch.toFixed(0));
-
+           
             //document.getElementById("outpAirQuali").innerHTML = 'Lade Werte ...';
             ausw();
             /////////////////////////////////////////
@@ -602,16 +575,16 @@ function requestWeatherForecast(lat, lon) {
 </svg> Die Temperatur bleibt morgen stabil. Die maximale Temperatur wird in etwa ${parseInt(maxTomorrow)}°C betragen.`;
                     }
                     fetchTranslation('en', 'de', tomorrowWeatherTrendRaw)
-                        .then(translation => {
-                            tomorrowWeatherTrend = translation[0][0][0];
-                            document.getElementById("outputWeatherTrend").innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cloud-sun" viewBox="0 0 16 16">
+                    .then(translation => {
+                        tomorrowWeatherTrend = translation[0][0][0];
+                        document.getElementById("outputWeatherTrend").innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cloud-sun" viewBox="0 0 16 16">
                         <path d="M7 8a3.5 3.5 0 0 1 3.5 3.555.5.5 0 0 0 .624.492A1.503 1.503 0 0 1 13 13.5a1.5 1.5 0 0 1-1.5 1.5H3a2 2 0 1 1 .1-3.998.5.5 0 0 0 .51-.375A3.5 3.5 0 0 1 7 8m4.473 3a4.5 4.5 0 0 0-8.72-.99A3 3 0 0 0 3 16h8.5a2.5 2.5 0 0 0 0-5z"/>
                         <path d="M10.5 1.5a.5.5 0 0 0-1 0v1a.5.5 0 0 0 1 0zm3.743 1.964a.5.5 0 1 0-.707-.707l-.708.707a.5.5 0 0 0 .708.708zm-7.779-.707a.5.5 0 0 0-.707.707l.707.708a.5.5 0 1 0 .708-.708zm1.734 3.374a2 2 0 1 1 3.296 2.198q.3.423.516.898a3 3 0 1 0-4.84-3.225q.529.017 1.028.129m4.484 4.074c.6.215 1.125.59 1.522 1.072a.5.5 0 0 0 .039-.742l-.707-.707a.5.5 0 0 0-.854.377M14.5 6.5a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1z"/>
                       </svg> Das Wetter morgen: ${tomorrowWeatherTrend}.`;
-                        })
-                        .catch(error => {
-                            console.error("Translation error:", error);
-                        });
+                    })
+                    .catch(error => {
+                        console.error("Translation error:", error);
+                    });
 
 
                 }
@@ -686,9 +659,9 @@ function requestWeatherForecast(lat, lon) {
                 )} Km/h | Luftdruck: ${pressure} hPa`;
             }
 
-            // setTimeout(() => {
-            //     loadMap(lat, lon)
-            // }, 2000);
+            setTimeout(() => {
+                loadMap(lat, lon)
+            }, 2000);
 
             ausw();
         })
@@ -962,9 +935,9 @@ function showSavedCitys() {
         let del_btn = document.createElement('div');
         del_btn.classList.add('delete-button');
         del_btn.innerHTML = 'x';
-        del_btn.addEventListener('click', () => {
+        del_btn.addEventListener('click',()=> {
             const confirm = window.confirm(`Möchtest du die Stadt "${cty}" wirklich aus Deiner Liste entfernen?`);
-            if (confirm) {
+            if(confirm) {
                 for (let i = 0; i < cityList.length; i++) {
                     if (cty === cityList[i]) {
                         cityList.splice(i, 1);
