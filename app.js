@@ -317,6 +317,7 @@ function requestWeatherForecast(lat, lon) {
             // * Stuff from weather request func
             deleteSpinner();
             temp = parseInt(data.current.temp);
+            const currTEMP = parseInt(data.current.temp)
             initUpcountingTemp(temp);
             weatherContainer.style.display = 'flex';
             isCurrentLocation = false;
@@ -337,7 +338,7 @@ function requestWeatherForecast(lat, lon) {
             set_wind_definition(windgesch.toFixed(0));
            
             //document.getElementById("outpAirQuali").innerHTML = 'Lade Werte ...';
-            ausw();
+            ausw(currTEMP);
             /////////////////////////////////////////
             //* Normal Stuff
             try {
@@ -678,6 +679,7 @@ function requestWeatherForecast(lat, lon) {
             // Bei Geolocation
             if (isCurrentLocation === true) {
                 temp = parseInt(data.current.temp);
+                const current_temperature = parseInt(data.current.temp);
                 document.getElementById('outpTemp').innerHTML = `${temp}°C`;
                 iconValRaw = data.current.weather[0].icon;
                 iconVal = iconValRaw.slice(-1);
@@ -699,13 +701,13 @@ function requestWeatherForecast(lat, lon) {
                 ).innerHTML = `Wind: ${windgesch.toFixed(
                     0,
                 )} Km/h | Luftdruck: ${pressure} hPa`;
+                ausw(current_temperature);
             }
 
             setTimeout(() => {
                 loadMap(lat, lon)
             }, 2000);
 
-            ausw();
         })
         .catch((error) => {
             console.log(`Forecast Err: ${error}`);
@@ -855,17 +857,16 @@ function intTimeConvert(num) {
 
 //?####################################################################################################
 // Auswertung z.B farbliche Änderung bei Temperaturen und Tag / Nacht anzeige
-function ausw() {
-
+function ausw(param_current_Temp) {
     //?####################################################################################################
     // Temperatur
-    if (temp >= 32) {
+    if (param_current_Temp >= 32) {
         document.getElementById('outpTemp').style.textShadow = '0px 0px 15px red';
-    } else if (temp >= 30) {
+    } else if (param_current_Temp >= 30) {
         document.getElementById('outpTemp').style.textShadow = '0px 0px 15px orange';
-    } else if (temp >= 25) {
+    } else if (param_current_Temp >= 25) {
         document.getElementById('outpTemp').style.textShadow = '0px 0px 15px yellow';
-    } else if (temp > 10) {
+    } else if (param_current_Temp > 10) {
         document.getElementById('outpTemp').style.textShadow = '0px 0px 4px white';
     } else {
         document.getElementById('outpTemp').style.textShadow = '0px 0px 15px aqua';
