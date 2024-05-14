@@ -118,7 +118,7 @@ async function getAddressCoordinates(address) {
 
             loadMap(lat, lon);
             requestWeatherForecast(lat, lon);
-            
+
             // setTimeout(() => {
             //     getAirPollutionInfo(lat, lon);
             // }, 1500);
@@ -212,65 +212,65 @@ function set_wind_definition(windspeed) {
 
 function loadMap(lat, lon) {
 
-// Initialisierung der Karte
-let mapPlace = {
-    "type": "Point",
-    "coordinates": []
-};
+    // Initialisierung der Karte
+    let mapPlace = {
+        "type": "Point",
+        "coordinates": []
+    };
 
-let mapOverViewCoord = [];
-mapPlace.coordinates.push(lon);
-mapPlace.coordinates.push(lat);
-mapOverViewCoord.push(lat);
-mapOverViewCoord.push(lon);
+    let mapOverViewCoord = [];
+    mapPlace.coordinates.push(lon);
+    mapPlace.coordinates.push(lat);
+    mapOverViewCoord.push(lat);
+    mapOverViewCoord.push(lon);
 
-meineKarte.remove();  // Bestehende Karte entfernen
-meineKarte = L.map('karte').setView(mapOverViewCoord, 3);  // Neue Karte erstellen
+    meineKarte.remove();  // Bestehende Karte entfernen
+    meineKarte = L.map('karte').setView(mapOverViewCoord, 3);  // Neue Karte erstellen
 
-// Hinzufügen der Kartenebenen
-L.tileLayer('https://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png', {
-    maxZoom: 900,
-    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-}).addTo(meineKarte);
+    // Hinzufügen der Kartenebenen
+    L.tileLayer('https://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png', {
+        maxZoom: 900,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(meineKarte);
 
-// Marker hinzufügen und Popup binden
-const city = document.getElementById('outpOrt').innerHTML;
-L.geoJSON(mapPlace).addTo(meineKarte).bindPopup(`${city}`);
+    // Marker hinzufügen und Popup binden
+    const city = document.getElementById('outpOrt').innerHTML;
+    L.geoJSON(mapPlace).addTo(meineKarte).bindPopup(`${city}`);
 
-// WMS-Layer hinzufügen
-var wmsLayer = L.tileLayer.wms('http://ows.mundialis.de/services/service?', {
-    layers: 'TOPO-OSM-WMS'
-}).addTo(meineKarte);
+    // WMS-Layer hinzufügen
+    var wmsLayer = L.tileLayer.wms('http://ows.mundialis.de/services/service?', {
+        layers: 'TOPO-OSM-WMS'
+    }).addTo(meineKarte);
 
-// Event-Handler für Klicks auf die Karte
-meineKarte.on('click', function(e) {
-    // Koordinaten des Klicks
-    let latLng = e.latlng;
+    // Event-Handler für Klicks auf die Karte
+    meineKarte.on('click', function (e) {
+        // Koordinaten des Klicks
+        let latLng = e.latlng;
 
-    // Erstelle einen neuen Marker an der Klickposition
-    let newMarker = L.marker(latLng).addTo(meineKarte);
+        // Erstelle einen neuen Marker an der Klickposition
+        let newMarker = L.marker(latLng).addTo(meineKarte);
 
-    // Reverse-Geocoding mit Nominatim
-    fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latLng.lat}&lon=${latLng.lng}&zoom=18&addressdetails=1`)
-        .then(response => response.json())
-        .then(data => {
-            // Überprüfen, ob ein Ortsname vorhanden ist
-            let address = data.address;
-            let placeName = address ? (address.town || address.city || address.village || address.hamlet || 'Ort unbekannt') : 'Ort unbekannt';
+        // Reverse-Geocoding mit Nominatim
+        fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latLng.lat}&lon=${latLng.lng}&zoom=18&addressdetails=1`)
+            .then(response => response.json())
+            .then(data => {
+                // Überprüfen, ob ein Ortsname vorhanden ist
+                let address = data.address;
+                let placeName = address ? (address.town || address.city || address.village || address.hamlet || 'Ort unbekannt') : 'Ort unbekannt';
 
-            // Erzeuge ein Popup mit dem Ortsnamen
-            newMarker.bindPopup(`Ort: ${placeName}`).openPopup();
-        })
-        .catch(error => {
-            console.error('Error during reverse geocoding:', error);
+                // Erzeuge ein Popup mit dem Ortsnamen
+                newMarker.bindPopup(`Ort: ${placeName}`).openPopup();
+            })
+            .catch(error => {
+                console.error('Error during reverse geocoding:', error);
 
-            // Zeige im Fehlerfall die Koordinaten an
-            newMarker.bindPopup(`Koordinaten: <br>Latitude: ${latLng.lat.toFixed(5)}, Longitude: ${latLng.lng.toFixed(5)}`).openPopup();
-        });
-});
+                // Zeige im Fehlerfall die Koordinaten an
+                newMarker.bindPopup(`Koordinaten: <br>Latitude: ${latLng.lat.toFixed(5)}, Longitude: ${latLng.lng.toFixed(5)}`).openPopup();
+            });
+    });
 
 
-       
+
 }
 
 
@@ -323,20 +323,20 @@ function requestWeatherForecast(lat, lon) {
             isCurrentLocation = false;
             document.getElementById('errorLeiste').hidden = true;
             document.getElementById('btnAddCity').hidden = false;
-           
-            
+
+
             document.getElementById('outpTemp').innerHTML = `🌡`;
 
             iconValRaw = data.current.weather[0].icon;
             iconVal = iconValRaw.slice(-1);
-           
+
             document.getElementById('weatherimg').src = imgSrc;
             document.getElementById('outpWeather').innerHTML =
                 data.current.weather[0].description;
-            
+
             document.getElementById('outpWind').innerHTML = `${windgesch.toFixed(0)} Km/h`;
             set_wind_definition(windgesch.toFixed(0));
-           
+
             //document.getElementById("outpAirQuali").innerHTML = 'Lade Werte ...';
             ausw(currTEMP);
             /////////////////////////////////////////
@@ -618,16 +618,16 @@ function requestWeatherForecast(lat, lon) {
 </svg> Die Temperatur bleibt morgen stabil. Die maximale Temperatur wird in etwa ${parseInt(maxTomorrow)}°C betragen.`;
                     }
                     fetchTranslation('en', 'de', tomorrowWeatherTrendRaw)
-                    .then(translation => {
-                        tomorrowWeatherTrend = translation[0][0][0];
-                        document.getElementById("outputWeatherTrend").innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cloud-sun" viewBox="0 0 16 16">
+                        .then(translation => {
+                            tomorrowWeatherTrend = translation[0][0][0];
+                            document.getElementById("outputWeatherTrend").innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cloud-sun" viewBox="0 0 16 16">
                         <path d="M7 8a3.5 3.5 0 0 1 3.5 3.555.5.5 0 0 0 .624.492A1.503 1.503 0 0 1 13 13.5a1.5 1.5 0 0 1-1.5 1.5H3a2 2 0 1 1 .1-3.998.5.5 0 0 0 .51-.375A3.5 3.5 0 0 1 7 8m4.473 3a4.5 4.5 0 0 0-8.72-.99A3 3 0 0 0 3 16h8.5a2.5 2.5 0 0 0 0-5z"/>
                         <path d="M10.5 1.5a.5.5 0 0 0-1 0v1a.5.5 0 0 0 1 0zm3.743 1.964a.5.5 0 1 0-.707-.707l-.708.707a.5.5 0 0 0 .708.708zm-7.779-.707a.5.5 0 0 0-.707.707l.707.708a.5.5 0 1 0 .708-.708zm1.734 3.374a2 2 0 1 1 3.296 2.198q.3.423.516.898a3 3 0 1 0-4.84-3.225q.529.017 1.028.129m4.484 4.074c.6.215 1.125.59 1.522 1.072a.5.5 0 0 0 .039-.742l-.707-.707a.5.5 0 0 0-.854.377M14.5 6.5a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1z"/>
                       </svg> Das Wetter morgen: ${tomorrowWeatherTrend}.`;
-                    })
-                    .catch(error => {
-                        console.error("Translation error:", error);
-                    });
+                        })
+                        .catch(error => {
+                            console.error("Translation error:", error);
+                        });
 
 
                 }
@@ -1547,4 +1547,33 @@ async function fetchTranslation(sourceLang, targetLang, sourceText) {
         console.error('Error fetching translation:', error);
         return null;
     }
+}
+
+
+
+
+/////////////////////////////////////
+
+const days = document.querySelectorAll('.day');
+
+days.forEach((day) => {
+    day.addEventListener('click', () => {
+        const id = day.id;
+        remove_all_forecast_details();
+        let forecast_info_cont = document.createElement('div');
+        forecast_info_cont.classList.add('active-forecast');
+        let content = `
+        <p>Hello</p>
+        Regen: 23mm
+        `
+        forecast_info_cont.innerHTML = content;
+        document.getElementById(id).appendChild(forecast_info_cont);
+    })
+})
+
+function remove_all_forecast_details() {
+    days.forEach((day) => {
+        const id = day.id;
+        document.getElementById(id).classList.remove('active-forecast');
+    })
 }
