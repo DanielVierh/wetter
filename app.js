@@ -1555,25 +1555,37 @@ async function fetchTranslation(sourceLang, targetLang, sourceText) {
 /////////////////////////////////////
 
 const days = document.querySelectorAll('.day');
+const active_forecast = document.getElementById('active_forecast');
+let last_clicked_id = -1;
 
-days.forEach((day) => {
+days.forEach((day, index) => {
     day.addEventListener('click', () => {
-        const id = day.id;
+        if (index === last_clicked_id) {
+            remove_all_forecast_details();
+            return
+        }
+        const savedData = JSON.parse(mainData);
+        last_clicked_id = index;
         remove_all_forecast_details();
-        let forecast_info_cont = document.createElement('div');
-        forecast_info_cont.classList.add('active-forecast');
-        let content = `
-        <p>Hello</p>
-        Regen: 23mm
-        `
-        forecast_info_cont.innerHTML = content;
-        document.getElementById(id).appendChild(forecast_info_cont);
+        setTimeout(() => {
+            const id = day.id;
+            const x_pos = document.getElementById(id).getBoundingClientRect().x;
+            const elem_width = document.getElementById(id).getBoundingClientRect().width;
+            const target_Pos = x_pos - elem_width + 5;
+            console.log(x_pos);
+            active_forecast.classList.add('active');
+            active_forecast.style.left = `${target_Pos}px`;
+            let content = `
+            <p>${savedData.daily[index].weather[0].description}</p>
+            <p>Regen: ${savedData.daily[index].rain} mm</p>
+            <p>UV: ${savedData.daily[index].uvi}</p>
+            `
+            active_forecast.innerHTML = content;
+        }, 200);
     })
 })
 
 function remove_all_forecast_details() {
-    days.forEach((day) => {
-        const id = day.id;
-        document.getElementById(id).classList.remove('active-forecast');
-    })
+    active_forecast.innerHTML = '';
+    active_forecast.classList.remove('active');
 }

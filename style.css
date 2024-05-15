@@ -208,6 +208,7 @@ button {
   height: 80px;
   border-radius: 20px 20px 0 0;
   background-color: rgba(0, 0, 0, 0.5);
+  position: relative;
 }
 
 .forecastImg {
@@ -220,14 +221,17 @@ button {
   padding: 20px 2px;
   background-color: rgba(39, 42, 52, 0.637);
   border-radius: 12px;
-  position: relative;
 }
-.day .active-forecast {
-  content: "";
+
+.active-forecast {
+  display: none;
+}
+.active-forecast.active {
+  display: block;
   position: absolute;
-  top: -109px;
+  top: -120px;
   left: 0%;
-  width: 150px;
+  width: 100px;
   height: 150px;
   background-color: rgba(255, 255, 255, 0.1607843137);
   -webkit-backdrop-filter: blur(6px);
@@ -235,7 +239,18 @@ button {
   border: 1px solid rgba(255, 255, 255, 0.3803921569);
   border-radius: 15px;
   box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.7019607843), 0 0 20px black;
-  transform: rotate(45deg) translateX(-50%);
+  z-index: 1;
+}
+.active-forecast.active::after {
+  content: "";
+  position: absolute;
+  left: 35%;
+  bottom: -20px;
+  width: 24px;
+  height: 40px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  z-index: 0;
 }
 
 .forecastText {
