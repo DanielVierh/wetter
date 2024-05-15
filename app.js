@@ -102,6 +102,7 @@ window.addEventListener('keydown', (e) => {
 //TODO - Allgemein soll es zukünfrig ein Objekt geben, welches aus Name, Lat, Lon besteht
 
 async function getAddressCoordinates(address) {
+    remove_all_forecast_details()
     try {
         const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`);
         const data = await response.json();
@@ -1556,32 +1557,31 @@ async function fetchTranslation(sourceLang, targetLang, sourceText) {
 
 const days = document.querySelectorAll('.day');
 const active_forecast = document.getElementById('active_forecast');
-let last_clicked_id = -1;
 
 days.forEach((day, index) => {
     day.addEventListener('click', () => {
-        if (index === last_clicked_id) {
-            remove_all_forecast_details();
-            return
-        }
         const savedData = JSON.parse(mainData);
-        last_clicked_id = index;
         remove_all_forecast_details();
-        setTimeout(() => {
-            const id = day.id;
-            const x_pos = document.getElementById(id).getBoundingClientRect().x;
-            const elem_width = document.getElementById(id).getBoundingClientRect().width;
-            const target_Pos = x_pos - elem_width + 5;
-            console.log(x_pos);
-            active_forecast.classList.add('active');
-            active_forecast.style.left = `${target_Pos}px`;
-            let content = `
-            <p>${savedData.daily[index].weather[0].description}</p>
-            <p>Regen: ${savedData.daily[index].rain} mm</p>
-            <p>UV: ${savedData.daily[index].uvi}</p>
+        const id = day.id;
+        //* Emmit pos 
+        const x_pos = document.getElementById(id).getBoundingClientRect().x;
+        const elem_width = document.getElementById(id).getBoundingClientRect().width;
+        const target_Pos = x_pos - elem_width + 5;
+        //* Show container and add content
+        active_forecast.classList.add('active');
+        active_forecast.style.left = `${target_Pos}px`;
+        const forc_desc = savedData.daily[index + 1].weather[0].description
+        let forc_rain = savedData.daily[index + 1].rain;
+        if(forc_rain === undefined) {
+            forc_rain = 0;
+        }
+        const forc_Uv = savedData.daily[index + 1].uvi;
+        let content = `
+            <p>${forc_desc}</p>
+            <p>Regen: ${forc_rain} mm</p>
+            <p>UV: ${forc_Uv}</p>
             `
-            active_forecast.innerHTML = content;
-        }, 200);
+        active_forecast.innerHTML = content;
     })
 })
 
@@ -1589,3 +1589,7 @@ function remove_all_forecast_details() {
     active_forecast.innerHTML = '';
     active_forecast.classList.remove('active');
 }
+
+active_forecast.addEventListener('click', ()=> {
+    remove_all_forecast_details();
+})
