@@ -1563,13 +1563,10 @@ days.forEach((day, index) => {
         const savedData = JSON.parse(mainData);
         remove_all_forecast_details();
         const id = day.id;
-        //* Emmit pos 
-        const x_pos = document.getElementById(id).getBoundingClientRect().x;
-        const elem_width = document.getElementById(id).getBoundingClientRect().width;
-        const target_Pos = x_pos - elem_width + 5;
+        document.getElementById(id).style.background = '#0094ff'
         //* Show container and add content
         active_forecast.classList.add('active');
-        active_forecast.style.left = `${target_Pos}px`;
+        // active_forecast.style.left = `${target_Pos}px`;
         const forc_desc = savedData.daily[index + 1].weather[0].description
         let forc_rain = savedData.daily[index + 1].rain;
         if(forc_rain === undefined) {
@@ -1588,6 +1585,9 @@ days.forEach((day, index) => {
 function remove_all_forecast_details() {
     active_forecast.innerHTML = '';
     active_forecast.classList.remove('active');
+    days.forEach((day) => {
+        day.style.background = 'rgba(39, 42, 52, 0.637)'
+    })
 }
 
 active_forecast.addEventListener('click', ()=> {
