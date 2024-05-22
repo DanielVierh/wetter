@@ -1,11 +1,8 @@
 const ak = '253hee991ed415gi809d9978e3885h7h';
 let temp = 0;
-let cityCode = '';
-let apiLink = '';
 let cityList = [];
 let ky = '';
 let address = '';
-let timezone;
 let timezoneOffset;
 const winterTime = 3600;
 const summerTime = 7200;
@@ -297,8 +294,7 @@ function dcrK(val, offs) {
 //?####################################################################################################
 function requestWeatherForecast(lat, lon) {
     loadSpinner();
-    //apiLink = `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&exclude=minutely&appid=${ky}&lang=de&units=metric`;
-    apiLink = `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&appid=${ky}&lang=de&units=metric`;
+    const apiLink = `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&appid=${ky}&lang=de&units=metric`;
 
     fetch(apiLink)
         .then((response) => response.json())
@@ -311,7 +307,6 @@ function requestWeatherForecast(lat, lon) {
             let hour;
             let weekDay;
             timezoneOffset = data.timezone_offset;
-            //timezone = data.timezone;
             const windgesch = data.current.wind_speed * 3.6;
             let imgSrc = `https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/widgets/${data.current.weather[0].icon}.png`;
 
