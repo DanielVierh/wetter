@@ -235,40 +235,6 @@ function loadMap(lat, lon) {
     const city = document.getElementById('outpOrt').innerHTML;
     L.geoJSON(mapPlace).addTo(meineKarte).bindPopup(`${city}`);
 
-    // WMS-Layer hinzufügen
-    var wmsLayer = L.tileLayer.wms('http://ows.mundialis.de/services/service?', {
-        layers: 'TOPO-OSM-WMS'
-    }).addTo(meineKarte);
-
-    // Event-Handler für Klicks auf die Karte
-    meineKarte.on('click', function (e) {
-        // Koordinaten des Klicks
-        let latLng = e.latlng;
-
-        // Erstelle einen neuen Marker an der Klickposition
-        let newMarker = L.marker(latLng).addTo(meineKarte);
-
-        // Reverse-Geocoding mit Nominatim
-        fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latLng.lat}&lon=${latLng.lng}&zoom=18&addressdetails=1`)
-            .then(response => response.json())
-            .then(data => {
-                // Überprüfen, ob ein Ortsname vorhanden ist
-                let address = data.address;
-                let placeName = address ? (address.town || address.city || address.village || address.hamlet || 'Ort unbekannt') : 'Ort unbekannt';
-
-                // Erzeuge ein Popup mit dem Ortsnamen
-                newMarker.bindPopup(`Ort: ${placeName}`).openPopup();
-            })
-            .catch(error => {
-                console.error('Error during reverse geocoding:', error);
-
-                // Zeige im Fehlerfall die Koordinaten an
-                newMarker.bindPopup(`Koordinaten: <br>Latitude: ${latLng.lat.toFixed(5)}, Longitude: ${latLng.lng.toFixed(5)}`).openPopup();
-            });
-    });
-
-
-
 }
 
 
