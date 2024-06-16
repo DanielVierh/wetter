@@ -105,6 +105,10 @@ button {
     border-radius: 10px;
     font-weight: bold;
     color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 }
 
 .outputLabel {
@@ -319,11 +323,11 @@ button {
 }
 
 .addDelButton {
-    font-size: 90%;
-    padding: 10%;
-    display: grid;
-    place-content: center;
-    min-width: 80%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 20px;
+    text-align: center;
 }
 
 @media (max-width: 500px) {
