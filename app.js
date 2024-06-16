@@ -1057,6 +1057,7 @@ function splitVal(val, marker, pos) {
 function getCurrentLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(showPosition);
+        createNotification(`Mein Standort wird geladen`, 'info', 3000);
     } else {
         createNotification('Geolocation ist nicht verfügbar', 'alert', 3000);
         isCurrentLocation = false;
@@ -1066,7 +1067,6 @@ function getCurrentLocation() {
 function showPosition(position) {
     const lat = position.coords.latitude.toFixed(1);
     const lon = position.coords.longitude.toFixed(1);
-    createNotification(`Mein Standort Lat:${lat} Lon:${lon} wird geladen`, 'info', 3000);
     isCurrentLocation = true;
     ortLabel.innerHTML = 'Mein Standort';
     requestWeatherForecast(lat, lon);
