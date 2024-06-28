@@ -9,6 +9,7 @@ const summerTime = 7200;
 let iconVal;
 let iconValRaw;
 let isCurrentLocation = false;
+let open_current_Location_requested = false;
 let uvIndexisCritical = false;
 let uvIndexIsCriticalUntil = '';
 let weatherType = 'opt_weather';
@@ -282,7 +283,6 @@ function requestWeatherForecast(lat, lon) {
             const currTEMP = parseInt(data.current.temp)
             initUpcountingTemp(temp);
             weatherContainer.style.display = 'flex';
-            isCurrentLocation = false;
             document.getElementById('errorLeiste').hidden = true;
             document.getElementById('btnAddCity').hidden = false;
 
@@ -638,32 +638,13 @@ function requestWeatherForecast(lat, lon) {
 
 
             //?####################################################################################################
-            // Bei Geolocation
+            //* Bei Geolocation
+            //* Um mehrfachen Request zu vermeiden setTimeout
             if (isCurrentLocation === true) {
-                temp = parseInt(data.current.temp);
-                const current_temperature = parseInt(data.current.temp);
-                document.getElementById('outpTemp').innerHTML = `${temp}°C`;
-                iconValRaw = data.current.weather[0].icon;
-                iconVal = iconValRaw.slice(-1);
-                const imgSrc = `https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/widgets/${data.current.weather[0].icon}.png`;
-                document.getElementById('weatherimg').src = imgSrc;
-                document.getElementById('outpWeather').innerHTML =
-                    data.current.weather[0].description;
-                document.getElementById(
-                    'outMinMax',
-                ).innerHTML = `Min: ${parseInt(
-                    data.daily[0].temp.min,
-                )}°C | Max: ${parseInt(
-                    data.daily[0].temp.max,
-                )}°C | Gefühlt: ${parseInt(data.current.feels_like)}°C`;
-                const pressure = data.current.pressure;
-                const windgesch = data.current.wind_speed * 3.6;
-                document.getElementById(
-                    'outpWind',
-                ).innerHTML = `Wind: ${windgesch.toFixed(
-                    0,
-                )} Km/h | Luftdruck: ${pressure} hPa`;
-                ausw(current_temperature);
+                isCurrentLocation = false;
+                setTimeout(() => {
+                    open_current_Location_requested = false;
+                }, 5000);
             }
 
             setTimeout(() => {
@@ -1053,14 +1034,20 @@ function splitVal(val, marker, pos) {
 }
 
 //?####################################################################################################
-// Geolocation
+//* Geolocation
 function getCurrentLocation() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(showPosition);
-        createNotification(`Mein Standort wird geladen`, 'info', 3000);
-    } else {
-        createNotification('Geolocation ist nicht verfügbar', 'alert', 3000);
-        isCurrentLocation = false;
+    if(open_current_Location_requested === false) {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+            open_current_Location_requested = true;
+            createNotification(`Mein Standort wird geladen`, 'info', 3000);
+        } else {
+            createNotification('Geolocation ist nicht verfügbar', 'alert', 3000);
+            isCurrentLocation = false;
+            open_current_Location_requested = false;
+        }
+    }else {
+        createNotification('Lokales Wetter wird bereits angefragt', 'alert', 5000);
     }
 }
 
