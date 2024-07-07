@@ -619,6 +619,14 @@ function requestWeatherForecast(lat, lon) {
                     0,
                 );
 
+                const date_day = splitVal(
+                    intTimeConvert(data.daily[i + 1].dt) + '',
+                    ' ',
+                    2,
+                );
+
+                index = `outDayDate${i}`;
+                document.getElementById(index).innerHTML = `${date_day}.`;
                 weekDay = getDate(weekDay);
                 index = `outpDay${i}`;
                 document.getElementById(index).innerHTML = weekDay;

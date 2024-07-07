@@ -222,7 +222,7 @@ button {
 
 .day {
   margin: 3px;
-  padding: 20px 2px;
+  padding: 10px 2px 20px 2px;
   background-color: rgba(39, 42, 52, 0.637);
   border-radius: 8px;
   cursor: pointer;
@@ -273,6 +273,11 @@ button {
   .forecastText {
     font-size: 0.7em;
   }
+}
+
+.day-date {
+  font-size: 10px;
+  margin: 0 0 5px 0;
 }
 
 .block-headline {
