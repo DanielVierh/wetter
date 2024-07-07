@@ -71,6 +71,7 @@ const btn_scroll_up = document.getElementById("btn_scroll_up");
 const sun_event = document.getElementById('sun_event');
 const btn_show_cityModal = document.getElementById('btn_show_cityModal');
 const outputUVMaxIndex = document.getElementById('outputUVMaxIndex');
+const todaySummaryContainer = document.getElementById('outp_summary');
 
 //?####################################################################################################
 // Load
@@ -263,6 +264,9 @@ function requestWeatherForecast(lat, lon) {
     loadSpinner();
     const apiLink = `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&appid=${ky}&lang=de&units=metric`;
 
+    //* init
+    todaySummaryContainer.style.opacity = '0'
+
     fetch(apiLink)
         .then((response) => response.json())
         .then((data) => {
@@ -295,7 +299,6 @@ function requestWeatherForecast(lat, lon) {
             document.getElementById('weatherimg').src = imgSrc;
             document.getElementById('outpWeather').innerHTML =
                 data.current.weather[0].description;
-
             document.getElementById('outpWind').innerHTML = `${windgesch.toFixed(0)} Km/h`;
             set_wind_definition(windgesch.toFixed(0));
 
@@ -659,10 +662,15 @@ function requestWeatherForecast(lat, lon) {
                 loadMap(lat, lon)
             }, 2000);
 
+            setTimeout(() => {
+                show_today_summary(data);
+            }, 2000);
+
         })
         .catch((error) => {
             console.log(`Forecast Err: ${error}`);
         });
+
 }
 
 //?####################################################################################################
@@ -1044,7 +1052,7 @@ function splitVal(val, marker, pos) {
 //?####################################################################################################
 //* Geolocation
 function getCurrentLocation() {
-    if(open_current_Location_requested === false) {
+    if (open_current_Location_requested === false) {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(showPosition);
             open_current_Location_requested = true;
@@ -1054,7 +1062,7 @@ function getCurrentLocation() {
             isCurrentLocation = false;
             open_current_Location_requested = false;
         }
-    }else {
+    } else {
         createNotification('Lokales Wetter wird bereits angefragt', 'alert', 5000);
     }
 }
@@ -1490,6 +1498,13 @@ document.getElementById('btn_close_cityModal').addEventListener('click', () => {
 
 //* ANCHOR Fetch request to translate text
 //////////////////////////////
+/**
+ * 
+ * @param { string } sourceLang - en
+ * @param { string } targetLang - de
+ * @param { string } sourceText - text
+ * @returns string
+ */
 async function fetchTranslation(sourceLang, targetLang, sourceText) {
     const url = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=" +
         sourceLang + "&tl=" + targetLang + "&dt=t&q=" + encodeURI(sourceText);
@@ -1526,7 +1541,7 @@ days.forEach((day, index) => {
         // active_forecast.style.left = `${target_Pos}px`;
         const forc_desc = savedData.daily[index + 1].weather[0].description
         let forc_rain = savedData.daily[index + 1].rain;
-        if(forc_rain === undefined) {
+        if (forc_rain === undefined) {
             forc_rain = 0;
         }
         const forc_Uv = savedData.daily[index + 1].uvi;
@@ -1547,6 +1562,20 @@ function remove_all_forecast_details() {
     })
 }
 
-active_forecast.addEventListener('click', ()=> {
+active_forecast.addEventListener('click', () => {
     remove_all_forecast_details();
 })
+
+
+function show_today_summary(data) {
+    let summary_text = data.daily[0].summary
+    fetchTranslation('en', 'de', summary_text)
+        .then(translation => {
+            summary_text = translation[0][0][0];
+            todaySummaryContainer.style.opacity = '1'
+            todaySummaryContainer.innerHTML = summary_text;
+        })
+        .catch(error => {
+            console.error("Translation error:", error);
+        });
+}
