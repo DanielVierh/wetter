@@ -1198,7 +1198,7 @@ function changeWeatherType(type) {
             document.getElementById(index).classList.remove("active");
         }
         if (type === 'opt_dewPoint') {
-            document.getElementById(index).innerHTML = `${nextDewPoint} °C`;
+            document.getElementById(index).innerHTML = `${nextDewPoint}°C`;
             if(nextDewPoint > 16 && temp > 20) {
                 document.getElementById(index).style.color = 'orange'
             }else {
