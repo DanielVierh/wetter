@@ -72,6 +72,7 @@ const sun_event = document.getElementById('sun_event');
 const btn_show_cityModal = document.getElementById('btn_show_cityModal');
 const outputUVMaxIndex = document.getElementById('outputUVMaxIndex');
 const todaySummaryContainer = document.getElementById('outp_summary');
+const opt_dewPoint = document.getElementById('opt_dewPoint');
 
 //?####################################################################################################
 // Load
@@ -386,7 +387,15 @@ function requestWeatherForecast(lat, lon) {
             // Taupunkt und Feuchtigkeit
             const dewPoint = data.current.dew_point;
             const humidity = data.current.humidity;
-            document.getElementById("outpHumidity").innerHTML = `${humidity}% <br/><br/> <hr> <strong>Taupunkt</strong> <br/> <br/>${dewPoint}°C`
+            let sultry = '';
+
+            if(temp > 20 && dewPoint > 16) {
+                sultry = 'Feuchtwarme Luft'
+            }else {
+                 sultry = ''
+            }
+            
+            document.getElementById("outpHumidity").innerHTML = `${humidity}% <br/><br/> <hr> <span class="mini-headline">Taupunkt</span> <br/> <br/>${dewPoint}°C<br/><span class="sultry">${sultry}</span>`
 
 
             //?####################################################################################################
@@ -505,6 +514,7 @@ function requestWeatherForecast(lat, lon) {
             for (let i = 0; i <= 24; i++) {
                 index = `hourForecastBlock${i}`;
                 document.getElementById(index).hidden = false;
+                
                 temp = parseInt(data.hourly[i].temp);
                 weatherIcon = data.hourly[i].weather[0].icon;
                 // ? Sommerzeit wird rausgerechnet
@@ -534,6 +544,7 @@ function requestWeatherForecast(lat, lon) {
                 document.getElementById(index).innerHTML = `${hour} Uhr`;
                 index = `hourOutpPlus${i}`;
                 document.getElementById(index).innerHTML = `${temp}°C`;
+                document.getElementById(index).style.color = 'white';
                 imgSrc = `https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/widgets/${weatherIcon}.png`;
                 index = `hourForecastImg${i}`;
                 document.getElementById(index).src = imgSrc;
@@ -1136,10 +1147,12 @@ function changeWeatherType(type) {
     for (let i = 0; i <= 24; i++) {
         index = `hourForecastBlock${i}`;
         document.getElementById(index).hidden = false;
+        document.getElementById(index).style.color = 'white';
         temp = parseInt(savedData.hourly[i].temp);
         weatherIcon = savedData.hourly[i].weather[0].icon;
         nextUVIndex = savedData.hourly[i].uvi;
         const nextHumidity = savedData.hourly[i].humidity;
+        const nextDewPoint = savedData.hourly[i].dew_point.toFixed(0);
         const nextWind = savedData.hourly[i].wind_speed;
         const nextClouds = savedData.hourly[i].clouds;
         let nextRain = 0;
@@ -1170,6 +1183,8 @@ function changeWeatherType(type) {
         index = `hourOutp${i}`;
         document.getElementById(index).innerHTML = `${hour} Uhr`;
         index = `hourOutpPlus${i}`;
+        document.getElementById(index).style.color = 'white';
+
         if (type === 'opt_uvindex') {
             document.getElementById(index).innerHTML = `${nextUVIndex}`;
             document.getElementById(index).classList.remove("active");
@@ -1182,6 +1197,16 @@ function changeWeatherType(type) {
             document.getElementById(index).innerHTML = `${nextHumidity} %`;
             document.getElementById(index).classList.remove("active");
         }
+        if (type === 'opt_dewPoint') {
+            document.getElementById(index).innerHTML = `${nextDewPoint} °C`;
+            if(nextDewPoint > 16 && temp > 20) {
+                document.getElementById(index).style.color = 'orange'
+            }else {
+                 document.getElementById(index).style.color = 'white';
+            }
+            document.getElementById(index).classList.remove("active");
+        }
+
         if (type === 'opt_wind') {
             document.getElementById(index).innerHTML = `${windgesch.toFixed(0)} Km/h`;
             document.getElementById(index).classList.add("active");

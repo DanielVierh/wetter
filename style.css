@@ -928,4 +928,15 @@ button {
   justify-content: center;
   align-items: center;
   font-size: 1rem;
+}
+
+.mini-headline {
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+.sultry {
+  color: orange;
+  font-size: 0.8rem;
+  letter-spacing: 1.3px;
 }/*# sourceMappingURL=style.css.map */
