@@ -263,6 +263,7 @@ button {
   text-align: left;
   font-weight: bold;
   text-shadow: 0 0 10px black;
+  margin: 6px 0;
 }
 
 .forecastText {
