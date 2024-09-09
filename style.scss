@@ -270,6 +270,22 @@ button {
         z-index: 1;
         padding: 15px;
 
+        &::after {
+            content: 'x';
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background-color: #5a5e65;
+            
+        }
+
         p {
             font-size: 16px;
             text-align: left;
