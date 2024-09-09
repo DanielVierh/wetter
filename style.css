@@ -239,10 +239,11 @@ button {
 }
 
 .active-forecast {
-  display: none;
+  transform: translateX(200%);
+  transition: transform 1s ease-in-out;
 }
 .active-forecast.active {
-  display: block;
+  transform: translateX(0%);
   position: absolute;
   top: 130px;
   left: 50%;

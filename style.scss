@@ -251,10 +251,11 @@ button {
 }
 
 .active-forecast {
-    display: none;
+    transform: translateX(200%);
+    transition: transform 1s ease-in-out;
 
     &.active {
-        display: block;
+       transform: translateX(0%);
         position: absolute;
         top: 130px;
         left: 50%;
@@ -283,7 +284,7 @@ button {
             align-items: center;
             text-align: center;
             background-color: #5a5e65;
-            
+
         }
 
         p {
