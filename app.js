@@ -944,7 +944,16 @@ function loadData() {
             // Keine Einträge vorhanden
             weatherContainer.style.display = 'none';
             cityContainer.style.display = 'none';
-            loadMap(51.162290, 6.462739);
+            loadMap(51.162290, -20.462739);
+            document.getElementById('karte').innerHTML = 
+            `<h3>Willkommen in meiner Wetterapp</h3>
+            <ul>
+                <li>Gib oben in der Suche einen Stadtnemen ein</li>
+                <li>Manchmal muss man mit einem Komma getrennt den Ländernamen ergänzen. Z.B. Vik, Island</li>
+                <li>Drücke Enter oder auf den Button mit der Lupe</li>
+                <li>Sobald das Wetter angezeigt wird, kannst du mit dem + Button, den Ort abspeichern.</li>
+            </ul>
+            `
             document.getElementById('btn_show_cityModal').style.display = 'none';
         }
     }, 1500);

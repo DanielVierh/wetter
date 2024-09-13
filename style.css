@@ -1000,4 +1000,13 @@ button {
   color: orange;
   font-size: 0.8rem;
   letter-spacing: 1.3px;
+}
+
+.karte h3 {
+  color: blue;
+}
+.karte ul li {
+  color: #102123;
+  font-weight: bold;
+  text-align: left;
 }/*# sourceMappingURL=style.css.map */
