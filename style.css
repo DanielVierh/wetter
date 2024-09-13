@@ -710,6 +710,51 @@ button {
   font-size: 0.8em;
 }
 
+.newContainer {
+  display: none;
+}
+
+.morenewInfo {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.9s ease;
+}
+.morenewInfo .inner {
+  overflow: hidden;
+}
+
+.morenewInfo.active {
+  grid-template-rows: 1fr;
+}
+
+.newContainer.active {
+  display: block;
+  background-color: rgba(0, 170, 255, 0.685);
+  color: white;
+  font-weight: bold;
+  height: auto;
+  width: 80%;
+  max-width: 600px;
+  border: 1px solid gray;
+  border-radius: 15px;
+  margin: 50px auto;
+  box-shadow: 0 15px 10px black;
+  padding: 0 15px 25px 15px;
+}
+.newContainer.active ul {
+  margin: 0;
+}
+.newContainer.active ul li {
+  list-style: square;
+  text-align: left;
+}
+.newContainer.active h5 {
+  font-weight: bold;
+  font-size: 1.2rem;
+  border-top: 1px solid white;
+  padding: 20px 0 0 0;
+}
+
 .settingsbutton {
   position: absolute;
   left: 15px;
