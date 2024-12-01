@@ -931,7 +931,6 @@ function loadData() {
     setTimeout(() => {
         if (localStorage.getItem('stored_CityList') != null) {
             cityList = JSON.parse(localStorage.getItem('stored_CityList'));
-            console.log('miep');
             
             if(cityList.length === 0) {
                 document.getElementById('btn_show_cityModal').style.display = 'none';
