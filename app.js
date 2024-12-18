@@ -1618,6 +1618,13 @@ days.forEach((day, index) => {
         active_forecast.classList.add('active');
         // active_forecast.style.left = `${target_Pos}px`;
         const forc_desc = savedData.daily[index + 1].weather[0].description;
+    
+        const forc_sunrise = rawDatetime_in_Time(savedData.daily[index + 1].sunrise);
+        const forc_sunset = rawDatetime_in_Time(savedData.daily[index + 1].sunset);
+       
+
+        
+        
         let forc_rain = savedData.daily[index + 1].rain;
         if (forc_rain === undefined) {
             forc_rain = 0;
@@ -1625,7 +1632,7 @@ days.forEach((day, index) => {
         const forc_Uv = savedData.daily[index + 1].uvi;
         const forc_dewPointVal = savedData.daily[index + 1].dew_point.toFixed(0);
         let forc_dewPoint = '';
-        console.log('forc_dewPoint', forc_dewPoint);
+
         if (forc_dewPointVal > 17) {
             forc_dewPoint = `Taupunkt: ${forc_dewPointVal}°C (feuchtwarme Luft)`
         } else {
@@ -1637,6 +1644,8 @@ days.forEach((day, index) => {
             <p>Regen: ${forc_rain} mm</p>
             <p>UV: ${forc_Uv}</p>
             <p>${forc_dewPoint}</p>
+            <p>Sonnenaufgang: ${forc_sunrise}</p>
+            <p>Sonnenuntergang: ${forc_sunset}</p>
             `
         active_forecast.innerHTML = content;
     })
