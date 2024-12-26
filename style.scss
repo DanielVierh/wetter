@@ -328,19 +328,51 @@ button {
     margin-left: -30px;
 }
 
-.hourForecastContainer {
-    display: flex;
-    overflow-x: auto;
-    width: 90%;
+.hourForecastWrapper {
+    position: relative; // Stellen Sie sicher, dass das übergeordnete Element relativ positioniert ist
+    width: 100%;
     max-width: 600px;
-    border: 2px solid rgba(255, 255, 255, 0.356);
-    padding: 15px;
-    border-radius: 15px;
-    background-color: rgba(158, 156, 156, 0.308);
-    box-shadow: 5px 5px 5px black, inset 10px 8px 15px black;
-    margin-left: -30px;
-    backdrop-filter: blur(20px);
+   transform: translateX(-25px);
+
+    .hourForecastContainer {
+        display: flex;
+        overflow-x: auto;
+        width: 100%;
+        border: 2px solid rgba(255, 255, 255, 0.084);
+        padding: 15px;
+        border-radius: 15px;
+        background-color: rgba(158, 156, 156, 0.308);
+        box-shadow: 5px 5px 5px black, inset 10px 8px 15px black;
+        backdrop-filter: blur(20px);
+        transition: all 0.5s ease;
+
+        &::-webkit-scrollbar {
+            height: 10px;
+        }
+        &::-webkit-scrollbar-thumb {
+            background: linear-gradient(45deg, #2da6b6, #4472bc);
+            border-radius: 10px;
+        }
+        &::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+    }
+
+    .shadow {
+        position: absolute;
+        top: 0;
+        right: -32px;
+        width: 100px; // Passen Sie die Breite nach Bedarf an
+        height: 98%;
+        background: linear-gradient(to left, rgb(0, 0, 0), transparent); // Beispiel für einen Schatteneffekt
+        pointer-events: none; // Verhindert, dass der Schatten scrollbar ist
+        border-radius: 0 15px 15px 0;
+    }
+    
 }
+
+
 
 .std {
     margin-right: 15px;
