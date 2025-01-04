@@ -1192,8 +1192,18 @@ function changeWeatherType(type) {
         const nextWind = savedData.hourly[i].wind_speed;
         const nextClouds = savedData.hourly[i].clouds;
         let nextRain = 0;
+        
+        //* for Rain
         if (savedData.hourly[i].rain) {
             nextRain = savedData.hourly[i].rain;
+            nextRain = JSON.stringify(nextRain);
+            nextRain = splitVal(nextRain + ' ', ':', 1)
+            nextRain = splitVal(nextRain + ' ', '}', 0)
+
+        }
+        //* for Snow
+        if (savedData.hourly[i].snow) {
+            nextRain = savedData.hourly[i].snow;
             nextRain = JSON.stringify(nextRain);
             nextRain = splitVal(nextRain + ' ', ':', 1)
             nextRain = splitVal(nextRain + ' ', '}', 0)
