@@ -557,15 +557,19 @@ function requestWeatherForecast(lat, lon) {
 
             //?####################################################################################################
             //* ANCHOR -  Vorausgestellte For Schleife um die absolute tiefst und höchst temp der kommenden 5 Tage zu ermitteln
-            let deepestTemp = 100;
-            let highestTemp = -50;
+            const real_temp = Math.round(data.current.temp, 0);
+            let deepestTemp = real_temp - 50;
+            let highestTemp = real_temp;
+
+            
+
             for (let i = 0; i <= 6; i++) {
                 const compareDeepestTemp = parseInt(data.daily[i + 1].temp.min);
                 const compareHighestTemp = parseInt(data.daily[i + 1].temp.max);
-                if (compareDeepestTemp < deepestTemp) {
+                if (compareDeepestTemp > deepestTemp) {
                     deepestTemp = compareDeepestTemp;
                 }
-                if (compareHighestTemp > highestTemp) {
+                if (compareHighestTemp < highestTemp) {
                     highestTemp = compareHighestTemp;
                 }
             }
@@ -1192,7 +1196,7 @@ function changeWeatherType(type) {
         const nextWind = savedData.hourly[i].wind_speed;
         const nextClouds = savedData.hourly[i].clouds;
         let nextRain = 0;
-        
+
         //* for Rain
         if (savedData.hourly[i].rain) {
             nextRain = savedData.hourly[i].rain;
@@ -1274,15 +1278,21 @@ function changeWeatherType(type) {
 
 //?####################################################################################################
 //?   Animation von Temp
-let load = -50;
+let load = -60;
 let intv = undefined;
+let is_counting_up = false;
 
 function initUpcountingTemp(temperature) {
-    load = -50;
+    load = -60;
+    is_counting_up = false
     intv = setInterval(function () { countingUp(temperature); }, 17);
 }
 
 function countingUp(temperature) {
+    if(is_counting_up === false) {
+        is_counting_up = true;
+        load = temperature - 50; 
+    }
     load++;
     if (load === temperature) {
         clearInterval(intv);
