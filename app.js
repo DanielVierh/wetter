@@ -72,7 +72,6 @@ const sun_event = document.getElementById('sun_event');
 const btn_show_cityModal = document.getElementById('btn_show_cityModal');
 const outputUVMaxIndex = document.getElementById('outputUVMaxIndex');
 const outputDewPoint = document.getElementById('outputDewPoint');
-const todaySummaryContainer = document.getElementById('outp_summary');
 const opt_dewPoint = document.getElementById('opt_dewPoint');
 
 //?####################################################################################################
@@ -271,7 +270,6 @@ function requestWeatherForecast(lat, lon) {
     const apiLink = `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&appid=${ky}&lang=de&units=metric`;
 
     //* init
-    todaySummaryContainer.style.opacity = '0'
 
     fetch(apiLink)
         .then((response) => response.json())
@@ -584,7 +582,6 @@ function requestWeatherForecast(lat, lon) {
                     const lblTempDiff = document.getElementById("outpTempDiff");
                     const maxTomorrow = data.daily[i + 1].temp.max;
                     //const tomorrowWeatherTrend = data.daily[i + 1].weather[0].description;
-                    const tomorrowWeatherTrendRaw = data.daily[i + 1].summary;
                     let tomorrowWeatherTrend = '';
                     if (tempDiffToday_Tomorrow >= 1) {
                         lblTempDiff.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-thermometer-half" viewBox="0 0 16 16">
@@ -602,19 +599,7 @@ function requestWeatherForecast(lat, lon) {
   <path d="M5.5 2.5a2.5 2.5 0 0 1 5 0v7.55a3.5 3.5 0 1 1-5 0zM8 1a1.5 1.5 0 0 0-1.5 1.5v7.987l-.167.15a2.5 2.5 0 1 0 3.333 0l-.166-.15V2.5A1.5 1.5 0 0 0 8 1"/>
 </svg> Die Temperatur bleibt morgen stabil. Die maximale Temperatur wird in etwa ${parseInt(maxTomorrow)}°C betragen.`;
                     }
-                    fetchTranslation('en', 'de', tomorrowWeatherTrendRaw)
-                        .then(translation => {
-                            tomorrowWeatherTrend = translation[0][0][0];
-                            document.getElementById("outputWeatherTrend").innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cloud-sun" viewBox="0 0 16 16">
-                        <path d="M7 8a3.5 3.5 0 0 1 3.5 3.555.5.5 0 0 0 .624.492A1.503 1.503 0 0 1 13 13.5a1.5 1.5 0 0 1-1.5 1.5H3a2 2 0 1 1 .1-3.998.5.5 0 0 0 .51-.375A3.5 3.5 0 0 1 7 8m4.473 3a4.5 4.5 0 0 0-8.72-.99A3 3 0 0 0 3 16h8.5a2.5 2.5 0 0 0 0-5z"/>
-                        <path d="M10.5 1.5a.5.5 0 0 0-1 0v1a.5.5 0 0 0 1 0zm3.743 1.964a.5.5 0 1 0-.707-.707l-.708.707a.5.5 0 0 0 .708.708zm-7.779-.707a.5.5 0 0 0-.707.707l.707.708a.5.5 0 1 0 .708-.708zm1.734 3.374a2 2 0 1 1 3.296 2.198q.3.423.516.898a3 3 0 1 0-4.84-3.225q.529.017 1.028.129m4.484 4.074c.6.215 1.125.59 1.522 1.072a.5.5 0 0 0 .039-.742l-.707-.707a.5.5 0 0 0-.854.377M14.5 6.5a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1z"/>
-                      </svg> Das Wetter morgen: ${tomorrowWeatherTrend}.`;
-                        })
-                        .catch(error => {
-                            console.error("Translation error:", error);
-                        });
-
-
+        
                 }
 
                 document.getElementById(index).hidden = false;
@@ -680,10 +665,6 @@ function requestWeatherForecast(lat, lon) {
 
             setTimeout(() => {
                 loadMap(lat, lon)
-            }, 2000);
-
-            setTimeout(() => {
-                show_today_summary(data);
             }, 2000);
 
         })
@@ -1594,35 +1575,6 @@ document.getElementById('btn_close_cityModal').addEventListener('click', () => {
 })
 
 
-//* ANCHOR Fetch request to translate text
-//////////////////////////////
-/**
- * 
- * @param { string } sourceLang - en
- * @param { string } targetLang - de
- * @param { string } sourceText - text
- * @returns string
- */
-async function fetchTranslation(sourceLang, targetLang, sourceText) {
-    const url = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=" +
-        sourceLang + "&tl=" + targetLang + "&dt=t&q=" + encodeURI(sourceText);
-
-    try {
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        return data;
-    } catch (error) {
-        console.error('Error fetching translation:', error);
-        return null;
-    }
-}
-
-
-
-
 /////////////////////////////////////
 
 const days = document.querySelectorAll('.day');
@@ -1682,17 +1634,3 @@ function remove_all_forecast_details() {
 active_forecast.addEventListener('click', () => {
     remove_all_forecast_details();
 })
-
-
-function show_today_summary(data) {
-    let summary_text = data.daily[0].summary
-    fetchTranslation('en', 'de', summary_text)
-        .then(translation => {
-            summary_text = translation[0][0][0];
-            todaySummaryContainer.style.opacity = '1'
-            todaySummaryContainer.innerHTML = summary_text;
-        })
-        .catch(error => {
-            console.error("Translation error:", error);
-        });
-}
