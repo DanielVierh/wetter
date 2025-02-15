@@ -124,9 +124,9 @@ async function getAddressCoordinates(address) {
             loadMap(lat, lon);
             requestWeatherForecast(lat, lon);
 
-            // setTimeout(() => {
-            //     getAirPollutionInfo(lat, lon);
-            // }, 1500);
+            setTimeout(() => {
+                getAirPollutionInfo(lat, lon);
+            }, 1500);
 
         } else {
             weatherContainer.style.display = 'none';
@@ -1290,6 +1290,8 @@ function getAirPollutionInfo(latitude, longitude) {
     fetch(pollutionLink)
         .then((response) => response.json())
         .then((data) => {
+            console.log('air pol', data);
+            
             const airQualiBox = document.getElementById("airQualiBox");
             const airQualityList = ['/', 'SEHR GUT', 'GUT', 'MODERAT', 'SCHLECHT', 'SEHR SCHLECHT']
             const airQualityColor = ['transparent', 'green', 'rgba(144, 238, 144, 0.678)', 'rgba(255, 196, 0, 0.669)', 'rgba(180, 89, 9, 0.938)', 'red']
