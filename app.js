@@ -427,7 +427,8 @@ function requestWeatherForecast(lat, lon) {
             //* ANCHOR -  Akt. Ortsdatum & Zeit
             const dateTimeNowRaw = intTimeConvert(data.current.dt + timezoneOffset - timeSubstract);
             const dateTimeNow_Day = splitVal(dateTimeNowRaw + '', " ", 2);
-            const dateTimeNow_Month = splitVal(dateTimeNowRaw + '', " ", 1);
+            let dateTimeNow_Month = splitVal(dateTimeNowRaw + '', " ", 1);
+            dateTimeNow_Month = convert_Month(dateTimeNow_Month);
             const dateTimeNow_TIME = splitVal(dateTimeNowRaw + '', " ", 4);
             const dateTimeNow_Hour = splitVal(dateTimeNow_TIME + '', ":", 0)
             const dateTimeNow_Minute = splitVal(dateTimeNow_TIME + '', ":", 1)
@@ -1636,3 +1637,49 @@ function remove_all_forecast_details() {
 active_forecast.addEventListener('click', () => {
     remove_all_forecast_details();
 })
+
+
+//?####################################################################################################
+// Wandelt den Monat in den deutschen Namen um
+function convert_Month(month) {
+    let monthName = '';
+    switch (month) {
+        case 'January':
+            monthName = 'Januar';
+            break;
+        case 'February':
+            monthName = 'Februar';
+            break;
+        case 'March':
+            monthName = 'März';
+            break;
+        case 'April':
+            monthName = 'April';
+            break;
+        case 'May':
+            monthName = 'Mai';
+            break;
+        case 'June':
+            monthName = 'Juni';
+            break;
+        case 'July':
+            monthName = 'Juli';
+            break;
+        case 'August':
+            monthName = 'August';
+            break;
+        case 'September':
+            monthName = 'September';
+            break;
+        case 'October':
+            monthName = 'Oktober';
+            break;
+        case 'November':
+            monthName = 'November';
+            break;
+        case 'December':
+            monthName = 'Dezember';
+            break;
+    }
+    return monthName;
+}
