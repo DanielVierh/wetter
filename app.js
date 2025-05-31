@@ -1240,7 +1240,7 @@ function changeWeatherType(type) {
         }
 
         if (type === 'opt_wind') {
-            document.getElementById(index).innerHTML = `${windgesch.toFixed(0)} Km/h`;
+            document.getElementById(index).innerHTML = `${windgesch.toFixed(0)}`;
             document.getElementById(index).classList.add("active");
         }
         if (type === 'opt_rain') {
