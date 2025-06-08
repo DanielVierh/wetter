@@ -1643,7 +1643,6 @@ active_forecast.addEventListener('click', () => {
 // Wandelt den Monat in den deutschen Namen um
 function convert_Month(month) {
     let monthName = '';
-    console.log(month);
     switch (month) {
         case 'Jan':
             monthName = 'Jan';
