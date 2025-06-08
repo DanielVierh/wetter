@@ -1643,42 +1643,43 @@ active_forecast.addEventListener('click', () => {
 // Wandelt den Monat in den deutschen Namen um
 function convert_Month(month) {
     let monthName = '';
+    console.log(month);
     switch (month) {
-        case 'January':
-            monthName = 'Januar';
+        case 'Jan':
+            monthName = 'Jan';
             break;
-        case 'February':
-            monthName = 'Februar';
+        case 'Feb':
+            monthName = 'Feb';
             break;
-        case 'March':
+        case 'Mar':
             monthName = 'März';
             break;
-        case 'April':
-            monthName = 'April';
+        case 'Apr':
+            monthName = 'Apr';
             break;
         case 'May':
             monthName = 'Mai';
             break;
-        case 'June':
-            monthName = 'Juni';
+        case 'Jun':
+            monthName = 'Jun';
             break;
-        case 'July':
-            monthName = 'Juli';
+        case 'Jul':
+            monthName = 'Jul';
             break;
-        case 'August':
-            monthName = 'August';
+        case 'Aug':
+            monthName = 'Aug';
             break;
-        case 'September':
-            monthName = 'September';
+        case 'Sep':
+            monthName = 'Sep';
             break;
-        case 'October':
-            monthName = 'Oktober';
+        case 'Oct':
+            monthName = 'Okt';
             break;
-        case 'November':
-            monthName = 'November';
+        case 'Nov':
+            monthName = 'Nov';
             break;
-        case 'December':
-            monthName = 'Dezember';
+        case 'Dec':
+            monthName = 'Dez';
             break;
     }
     return monthName;
