@@ -83,7 +83,8 @@ window.onload = loadData();
 function showWeather() {
     
     if (searchField.value.length > 1) {
-        
+        // Reset weatherForecastType to temp
+        weatherForecastType.selectedIndex = 0;
         address = searchField.value;
         getAddressCoordinates(address);
         if (address.slice(-1) === ' ') {
