@@ -530,6 +530,25 @@ button {
   letter-spacing: 2px;
 }
 
+.average-container {
+  width: 90%;
+  max-width: 600px;
+  background-color: rgba(0, 0, 0, 0.5);
+  margin-left: -30px;
+  margin-bottom: 2px;
+  padding: 1rem 1.4rem;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 8px 0;
+  font-size: 0.7rem;
+}
+.average-container p {
+  margin: 0;
+}
+
 .tempContainer {
   width: 90%;
   max-width: 600px;

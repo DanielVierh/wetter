@@ -73,6 +73,9 @@ const btn_show_cityModal = document.getElementById('btn_show_cityModal');
 const outputUVMaxIndex = document.getElementById('outputUVMaxIndex');
 const outputDewPoint = document.getElementById('outputDewPoint');
 const opt_dewPoint = document.getElementById('opt_dewPoint');
+const lbl_outp_rain_sum = document.getElementById('lbl_outp_rain_sum');
+const lbl_outp_average_temp_day = document.getElementById('lbl_outp_average_temp_day');
+const lbl_outp_average_temp_night = document.getElementById('lbl_outp_average_temp_night');
 
 //?####################################################################################################
 //* ANCHOR -  Load
@@ -576,8 +579,22 @@ function requestWeatherForecast(lat, lon) {
 
             //?####################################################################################################
             //* ANCHOR -  Forecast Tage Felder mit Inhalt befüllen
+            let average_temp_day = 0;
+            let average_temp_night = 0;
+            let rain_sum = 0;
+
             for (let i = 0; i <= 6; i++) {
                 index = `forecastBlock${i}`;
+                
+                //* accumulate rain 
+                if(data.daily[i].rain !== undefined) {
+                    rain_sum += data.daily[i].rain;
+                }
+                //* accumulate temp day
+                average_temp_day += data.daily[i].temp.max;
+                //* accumulate temp night
+                average_temp_night += parseFloat(data.daily[i].temp.night);
+
                 //* ANCHOR -  Checkt, ob es morgen wärmer oder kühler wird
                 if (i === 0) {
                     const tempDiffToday_Tomorrow = (data.daily[i + 1].temp.max - data.daily[i].temp.max).toFixed(1);
@@ -653,7 +670,10 @@ function requestWeatherForecast(lat, lon) {
 
             }
 
-
+            lbl_outp_rain_sum.innerHTML = rain_sum;
+            lbl_outp_average_temp_day.innerHTML = Math.floor(average_temp_day / 7);
+            lbl_outp_average_temp_night.innerHTML = Math.floor(average_temp_night / 7);
+            
 
             //?####################################################################################################
             //* ANCHOR -  Bei Geolocation
