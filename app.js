@@ -670,7 +670,7 @@ function requestWeatherForecast(lat, lon) {
 
             }
 
-            lbl_outp_rain_sum.innerHTML = rain_sum;
+            lbl_outp_rain_sum.innerHTML = Math.floor(rain_sum);
             lbl_outp_average_temp_day.innerHTML = Math.floor(average_temp_day / 7);
             lbl_outp_average_temp_night.innerHTML = Math.floor(average_temp_night / 7);
             
