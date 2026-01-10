@@ -1716,7 +1716,7 @@ days.forEach((day, index) => {
     document.getElementById(id).style.background = "#0094ff";
     //* Show container and add content
     active_forecast.classList.add("active");
-    // active_forecast.style.left = `${target_Pos}px`;
+    const summary = savedData.daily[index + 1].summary;
     const forc_desc = savedData.daily[index + 1].weather[0].description;
 
     const forc_sunrise = rawDatetime_in_Time(
@@ -1745,6 +1745,7 @@ days.forEach((day, index) => {
             <p>${forc_dewPoint}</p>
             <p>Sonnenaufgang: ${forc_sunrise}</p>
             <p>Sonnenuntergang: ${forc_sunset}</p>
+            <p>Summary: ${summary}</p>
             `;
     active_forecast.innerHTML = content;
   });
