@@ -367,6 +367,16 @@
             </div>
         </div>
 
+        <div class="forecastChartContainer" aria-label="Temperaturverlauf und Niederschlag (7 Tage)">
+            <canvas id="forecastCanvas"></canvas>
+            <div class="forecastCanvasTooltip" id="forecastCanvasTooltip" hidden></div>
+            <div class="forecastChartLegend" aria-hidden="true">
+                <div class="legendItem"><span class="legendSwatch tempMax"></span>Temp. Max</div>
+                <div class="legendItem"><span class="legendSwatch tempMin"></span>Temp. Min</div>
+                <div class="legendItem"><span class="legendSwatch precip"></span>Niederschlag</div>
+            </div>
+        </div>
+
         <div class="tempContainer">
             <div class="col" id="tempDay0"></div>
             <div class="col" id="tempDay1"></div>

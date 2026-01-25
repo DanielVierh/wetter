@@ -255,7 +255,9 @@ button {
     backdrop-filter: blur(6px);
     border: 1px solid rgba(255, 255, 255, 0.3803921569);
     border-radius: 15px;
-    box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.7019607843), 0 0 20px black;
+    box-shadow:
+      inset 0 0 40px rgba(0, 0, 0, 0.7019607843),
+      0 0 20px black;
     z-index: 1;
     padding: 15px;
 
@@ -328,7 +330,9 @@ button {
     padding: 15px;
     border-radius: 15px;
     background-color: rgba(158, 156, 156, 0.308);
-    box-shadow: 5px 5px 5px black, inset 10px 8px 15px black;
+    box-shadow:
+      5px 5px 5px black,
+      inset 10px 8px 15px black;
     backdrop-filter: blur(20px);
     transition: all 0.5s ease;
 
@@ -580,9 +584,85 @@ button {
   margin-left: -30px;
   padding: 1.4rem;
   border-radius: 0 0 20px 20px;
-  display: flex;
+  display: none;
   justify-content: space-evenly;
   align-items: center;
+}
+
+.forecastChartContainer {
+  width: 90%;
+  max-width: 600px;
+  background-color: rgba(0, 0, 0, 0.5);
+  margin-top: 0;
+  margin-left: -30px;
+  padding: 1.4rem;
+  border-radius: 0 0 20px 20px;
+  position: relative;
+}
+
+#forecastCanvas {
+  width: 100%;
+  height: 220px;
+  display: block;
+}
+
+.forecastChartLegend {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 8px;
+  font-size: 0.75rem;
+  opacity: 0.9;
+  flex-wrap: wrap;
+
+  .legendItem {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.08);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+  }
+}
+
+.legendSwatch {
+  width: 14px;
+  height: 6px;
+  border-radius: 999px;
+  display: inline-block;
+
+  &.tempMax {
+    background: linear-gradient(to right, #ffb74d, #ff5252);
+  }
+
+  &.tempMin {
+    background: rgba(255, 255, 255, 0.85);
+  }
+
+  &.precip {
+    background: rgba(70, 160, 255, 0.85);
+  }
+}
+
+.forecastCanvasTooltip {
+  position: absolute;
+  z-index: 10;
+  min-width: 160px;
+  max-width: 240px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(10, 12, 16, 0.75);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+  text-align: left;
+  font-size: 0.8rem;
+  line-height: 1.2;
+  pointer-events: none;
 }
 
 .col {

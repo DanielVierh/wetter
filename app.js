@@ -74,15 +74,27 @@ const outputDewPoint = document.getElementById("outputDewPoint");
 const opt_dewPoint = document.getElementById("opt_dewPoint");
 const lbl_outp_rain_sum = document.getElementById("lbl_outp_rain_sum");
 const lbl_outp_average_temp_day = document.getElementById(
-  "lbl_outp_average_temp_day"
+  "lbl_outp_average_temp_day",
 );
 const lbl_outp_average_temp_night = document.getElementById(
-  "lbl_outp_average_temp_night"
+  "lbl_outp_average_temp_night",
 );
+
+const forecastCanvas = document.getElementById("forecastCanvas");
+const forecastCanvasTooltip = document.getElementById("forecastCanvasTooltip");
+
+let lastWeeklyForecastSeries = null;
+let lastWeeklyForecastLayout = null;
 
 //?####################################################################################################
 //* ANCHOR -  Load
 window.onload = loadData();
+
+window.addEventListener("resize", () => {
+  if (lastWeeklyForecastSeries) {
+    drawWeeklyForecastChart(lastWeeklyForecastSeries);
+  }
+});
 
 //?####################################################################################################
 //* ANCHOR -  Eingegebene Stadt suchen
@@ -116,8 +128,8 @@ async function getAddressCoordinates(address) {
   try {
     const response = await fetch(
       `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
-        address
-      )}`
+        address,
+      )}`,
     );
     const data = await response.json();
     if (data.length > 0) {
@@ -142,7 +154,7 @@ async function getAddressCoordinates(address) {
       createNotification(
         "Der Ort konnte nicht gefunden werden :(",
         "alert",
-        2000
+        2000,
       );
       deleteSpinner();
       address = "";
@@ -260,7 +272,7 @@ function dcrK(val, offs) {
       const shiftedChar = String.fromCharCode(
         ((char.toLowerCase().charCodeAt(0) - "a".charCodeAt(0) - offs + 26) %
           26) +
-          "a".charCodeAt(0)
+          "a".charCodeAt(0),
       );
       if (char === char.toUpperCase()) {
         dcrStrng += shiftedChar.toUpperCase();
@@ -315,7 +327,7 @@ function requestWeatherForecast(lat, lon) {
       document.getElementById("outpWeather").innerHTML =
         data.current.weather[0].description;
       document.getElementById("outpWind").innerHTML = `${windgesch.toFixed(
-        0
+        0,
       )} Km/h`;
       set_wind_definition(windgesch.toFixed(0));
 
@@ -397,9 +409,8 @@ function requestWeatherForecast(lat, lon) {
       //?####################################################################################################
       //* ANCHOR -  Windgeschwidigkeit und Richtung
       windDeg = data.current.wind_deg;
-      document.getElementById(
-        "windDirect"
-      ).style.transform = `rotate(${windDeg}deg)`;
+      document.getElementById("windDirect").style.transform =
+        `rotate(${windDeg}deg)`;
 
       //?####################################################################################################
       //* ANCHOR -  Taupunkt und Feuchtigkeit
@@ -413,9 +424,8 @@ function requestWeatherForecast(lat, lon) {
         sultry = "";
       }
 
-      document.getElementById(
-        "outpHumidity"
-      ).innerHTML = `${humidity}% <br/><br/> <hr> <span class="mini-headline">Taupunkt</span> <br/> <br/>${dewPoint}°C<br/><span class="sultry">${sultry}</span>`;
+      document.getElementById("outpHumidity").innerHTML =
+        `${humidity}% <br/><br/> <hr> <span class="mini-headline">Taupunkt</span> <br/> <br/>${dewPoint}°C<br/><span class="sultry">${sultry}</span>`;
 
       //?####################################################################################################
       //* ANCHOR -  Sonnen auf - untergang
@@ -431,13 +441,13 @@ function requestWeatherForecast(lat, lon) {
 
       //* Sonnenaufgang roh für Sonnenstand
       sunriseRaw = intTimeConvert(
-        data.current.sunrise + timezoneOffset - timeSubstract
+        data.current.sunrise + timezoneOffset - timeSubstract,
       );
       next_sunrise = intTimeConvert(
-        data.daily[1].sunrise + timezoneOffset - timeSubstract
+        data.daily[1].sunrise + timezoneOffset - timeSubstract,
       );
       sunsetRaw = intTimeConvert(
-        data.current.sunset + timezoneOffset - timeSubstract
+        data.current.sunset + timezoneOffset - timeSubstract,
       );
       // Für Anzeige Auf-Untergang
       sunrise = rawDatetime_in_Time(data.current.sunrise);
@@ -454,7 +464,7 @@ function requestWeatherForecast(lat, lon) {
 
       //* ANCHOR -  Akt. Ortsdatum & Zeit
       const dateTimeNowRaw = intTimeConvert(
-        data.current.dt + timezoneOffset - timeSubstract
+        data.current.dt + timezoneOffset - timeSubstract,
       );
       const dateTimeNow_Day = splitVal(dateTimeNowRaw + "", " ", 2);
       let dateTimeNow_Month = splitVal(dateTimeNowRaw + "", " ", 1);
@@ -462,9 +472,8 @@ function requestWeatherForecast(lat, lon) {
       const dateTimeNow_TIME = splitVal(dateTimeNowRaw + "", " ", 4);
       const dateTimeNow_Hour = splitVal(dateTimeNow_TIME + "", ":", 0);
       const dateTimeNow_Minute = splitVal(dateTimeNow_TIME + "", ":", 1);
-      document.getElementById(
-        "outCurrDatetime"
-      ).innerHTML = `${dateTimeNow_Day}.${dateTimeNow_Month} | ${dateTimeNow_Hour}:${dateTimeNow_Minute}`;
+      document.getElementById("outCurrDatetime").innerHTML =
+        `${dateTimeNow_Day}.${dateTimeNow_Month} | ${dateTimeNow_Hour}:${dateTimeNow_Minute}`;
 
       //?####################################################################################################
       //* ANCHOR -  Sonnenstand ermitteln
@@ -493,7 +502,7 @@ function requestWeatherForecast(lat, lon) {
         // ? Abends vor Mitternacht
         sunEvent = "evening"; //* For func calc_time_to_next_sunevent
         const styleElem = document.head.appendChild(
-          document.createElement("style")
+          document.createElement("style"),
         );
         styleElem.innerHTML =
           "#sunstand:after {left: 95px; top: 0px; background-Color: transparent;}";
@@ -505,7 +514,7 @@ function requestWeatherForecast(lat, lon) {
         // ? Nachts nach Mitternacht
         sunEvent = "night"; //* For func calc_time_to_next_sunevent
         const styleElem = document.head.appendChild(
-          document.createElement("style")
+          document.createElement("style"),
         );
         styleElem.innerHTML =
           "#sunstand:after {left: -15px; top: -3px; background-Color: transparent;}";
@@ -517,7 +526,7 @@ function requestWeatherForecast(lat, lon) {
         const currentTimeProzentDiff = (currentTimeDiff * 100) / todayTimeDiff;
         const currentTimeProzent = parseInt(100 - currentTimeProzentDiff);
         const styleElem = document.head.appendChild(
-          document.createElement("style")
+          document.createElement("style"),
         );
         styleElem.innerHTML = `#sunstand:after {left: ${
           currentTimeProzent - 5
@@ -549,19 +558,16 @@ function requestWeatherForecast(lat, lon) {
       let tempFeelsLike = parseInt(data.current.feels_like);
       document.getElementById("outp_MinTemp").innerHTML = `Min: ${tempMin}°C`;
       document.getElementById("outp_MaxTemp").innerHTML = `Max: ${tempMax}°C`;
-      document.getElementById(
-        "outp_feltTemp"
-      ).innerHTML = `Gefühlt: ${tempFeelsLike}°C`;
+      document.getElementById("outp_feltTemp").innerHTML =
+        `Gefühlt: ${tempFeelsLike}°C`;
       outpSmallCurrentTemp.innerHTML = `${currentTemp}°C`;
 
       //?####################################################################################################
       //* ANCHOR -  Current UV Index
-      document.getElementById(
-        "outUvIndx"
-      ).innerHTML = `${uvIndex} - ${inerpreteUvIndex(uvIndex)}`;
-      document.getElementById(
-        "outpMaxUvIndex"
-      ).innerHTML = `Heute Max: ${maxUvIndex}`;
+      document.getElementById("outUvIndx").innerHTML =
+        `${uvIndex} - ${inerpreteUvIndex(uvIndex)}`;
+      document.getElementById("outpMaxUvIndex").innerHTML =
+        `Heute Max: ${maxUvIndex}`;
 
       timeMinusSummertime = 0;
       //?####################################################################################################
@@ -582,10 +588,10 @@ function requestWeatherForecast(lat, lon) {
         }
         hour = splitVal(
           intTimeConvert(
-            data.hourly[i].dt + timezoneOffset - timeMinusSummertime
+            data.hourly[i].dt + timezoneOffset - timeMinusSummertime,
           ) + "",
           " ",
-          4
+          4,
         );
         hour = splitVal(hour, ":", 0);
 
@@ -656,25 +662,25 @@ function requestWeatherForecast(lat, lon) {
   <path d="M9.5 12.5a1.5 1.5 0 1 1-2-1.415V6.5a.5.5 0 0 1 1 0v4.585a1.5 1.5 0 0 1 1 1.415"/>
   <path d="M5.5 2.5a2.5 2.5 0 0 1 5 0v7.55a3.5 3.5 0 1 1-5 0zM8 1a1.5 1.5 0 0 0-1.5 1.5v7.987l-.167.15a2.5 2.5 0 1 0 3.333 0l-.166-.15V2.5A1.5 1.5 0 0 0 8 1"/>
 </svg> Morgen wird es ca. ${parseInt(
-              tempDiffToday_Tomorrow
+              tempDiffToday_Tomorrow,
             )}°C wärmer, mit einer maximalen Temperatur von ${parseInt(
-              maxTomorrow
+              maxTomorrow,
             )}°C`;
           } else if (tempDiffToday_Tomorrow <= -1) {
             lblTempDiff.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-thermometer-half" viewBox="0 0 16 16">
   <path d="M9.5 12.5a1.5 1.5 0 1 1-2-1.415V6.5a.5.5 0 0 1 1 0v4.585a1.5 1.5 0 0 1 1 1.415"/>
   <path d="M5.5 2.5a2.5 2.5 0 0 1 5 0v7.55a3.5 3.5 0 1 1-5 0zM8 1a1.5 1.5 0 0 0-1.5 1.5v7.987l-.167.15a2.5 2.5 0 1 0 3.333 0l-.166-.15V2.5A1.5 1.5 0 0 0 8 1"/>
 </svg> Morgen kühlt es um ${parseInt(
-              tempDiffToday_Tomorrow
+              tempDiffToday_Tomorrow,
             )}°C, auf eine maximale Temperatur von ${parseInt(
-              maxTomorrow
+              maxTomorrow,
             )}°C ab.`;
           } else {
             lblTempDiff.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-thermometer-half" viewBox="0 0 16 16">
   <path d="M9.5 12.5a1.5 1.5 0 1 1-2-1.415V6.5a.5.5 0 0 1 1 0v4.585a1.5 1.5 0 0 1 1 1.415"/>
   <path d="M5.5 2.5a2.5 2.5 0 0 1 5 0v7.55a3.5 3.5 0 1 1-5 0zM8 1a1.5 1.5 0 0 0-1.5 1.5v7.987l-.167.15a2.5 2.5 0 1 0 3.333 0l-.166-.15V2.5A1.5 1.5 0 0 0 8 1"/>
 </svg> Die Temperatur bleibt morgen stabil. Die maximale Temperatur wird in etwa ${parseInt(
-              maxTomorrow
+              maxTomorrow,
             )}°C betragen.`;
           }
         } else {
@@ -709,7 +715,7 @@ function requestWeatherForecast(lat, lon) {
         const date_day = splitVal(
           intTimeConvert(data.daily[i + 1].dt) + "",
           " ",
-          2
+          2,
         );
 
         index = `outDayDate${i}`;
@@ -720,13 +726,11 @@ function requestWeatherForecast(lat, lon) {
         index = `outpDayPlus${i}`;
         const viewport_width = window.innerWidth;
         if (viewport_width > 600) {
-          document.getElementById(
-            index
-          ).innerHTML = `${tempMin}°C / ${tempMax}°C`;
+          document.getElementById(index).innerHTML =
+            `${tempMin}°C / ${tempMax}°C`;
         } else {
-          document.getElementById(
-            index
-          ).innerHTML = `${tempMin}°C-${tempMax}°C`;
+          document.getElementById(index).innerHTML =
+            `${tempMin}°C-${tempMax}°C`;
         }
         imgSrc = `https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/widgets/${weatherIcon}.png`;
         index = `foreCastImg${i}`;
@@ -736,8 +740,10 @@ function requestWeatherForecast(lat, lon) {
       lbl_outp_rain_sum.innerHTML = parseFloat(rain_sum).toFixed(2);
       lbl_outp_average_temp_day.innerHTML = Math.floor(average_temp_day / 7);
       lbl_outp_average_temp_night.innerHTML = Math.floor(
-        average_temp_night / 7
+        average_temp_night / 7,
       );
+
+      renderWeeklyForecastChartFromForecast(data);
 
       //?####################################################################################################
       //* ANCHOR -  Bei Geolocation
@@ -774,10 +780,10 @@ function get_MoonData(data) {
 
   // document.getElementById("outpMoonPhase").innerHTML = `${moonPhaseTrend}`
   document.getElementById("outpMoonRise").innerHTML = `${rawDatetime_in_Time(
-    data.daily[0].moonrise
+    data.daily[0].moonrise,
   )}`;
   document.getElementById("outpMoonSet").innerHTML = `${rawDatetime_in_Time(
-    data.daily[0].moonset
+    data.daily[0].moonset,
   )}`;
 }
 
@@ -848,37 +854,32 @@ function get_RainData(data) {
   } catch (error) {
     console.log("SnowError", error);
   }
-  document.getElementById(
-    "outpRain"
-  ).innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-umbrella" viewBox="0 0 16 16">
+  document.getElementById("outpRain").innerHTML =
+    `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-umbrella" viewBox="0 0 16 16">
     <path d="M8 0a.5.5 0 0 1 .5.5v.514C12.625 1.238 16 4.22 16 8c0 0 0 .5-.5.5-.149 0-.352-.145-.352-.145l-.004-.004-.025-.023a3.5 3.5 0 0 0-.555-.394A3.17 3.17 0 0 0 13 7.5c-.638 0-1.178.213-1.564.434a3.5 3.5 0 0 0-.555.394l-.025.023-.003.003s-.204.146-.353.146-.352-.145-.352-.145l-.004-.004-.025-.023a3.5 3.5 0 0 0-.555-.394 3.3 3.3 0 0 0-1.064-.39V13.5H8h.5v.039l-.005.083a3 3 0 0 1-.298 1.102 2.26 2.26 0 0 1-.763.88C7.06 15.851 6.587 16 6 16s-1.061-.148-1.434-.396a2.26 2.26 0 0 1-.763-.88 3 3 0 0 1-.302-1.185v-.025l-.001-.009v-.003s0-.002.5-.002h-.5V13a.5.5 0 0 1 1 0v.506l.003.044a2 2 0 0 0 .195.726c.095.191.23.367.423.495.19.127.466.229.879.229s.689-.102.879-.229c.193-.128.328-.304.424-.495a2 2 0 0 0 .197-.77V7.544a3.3 3.3 0 0 0-1.064.39 3.5 3.5 0 0 0-.58.417l-.004.004S5.65 8.5 5.5 8.5s-.352-.145-.352-.145l-.004-.004a3.5 3.5 0 0 0-.58-.417A3.17 3.17 0 0 0 3 7.5c-.638 0-1.177.213-1.564.434a3.5 3.5 0 0 0-.58.417l-.004.004S.65 8.5.5 8.5C0 8.5 0 8 0 8c0-3.78 3.375-6.762 7.5-6.986V.5A.5.5 0 0 1 8 0M6.577 2.123c-2.833.5-4.99 2.458-5.474 4.854A4.1 4.1 0 0 1 3 6.5c.806 0 1.48.25 1.962.511a9.7 9.7 0 0 1 .344-2.358c.242-.868.64-1.765 1.271-2.53m-.615 4.93A4.16 4.16 0 0 1 8 6.5a4.16 4.16 0 0 1 2.038.553 8.7 8.7 0 0 0-.307-2.13C9.434 3.858 8.898 2.83 8 2.117c-.898.712-1.434 1.74-1.731 2.804a8.7 8.7 0 0 0-.307 2.131zm3.46-4.93c.631.765 1.03 1.662 1.272 2.53.233.833.328 1.66.344 2.358A4.14 4.14 0 0 1 13 6.5c.77 0 1.42.23 1.897.477-.484-2.396-2.641-4.355-5.474-4.854z"/>
   </svg> ${rain} mm`;
   document.getElementById("niedrschl").innerHTML = "<strong>Regen</strong>";
   if (snow > 0) {
     document.getElementById("niedrschl").innerHTML = "<strong>Schnee</strong>";
-    document.getElementById(
-      "outpRain"
-    ).innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-snow" viewBox="0 0 16 16">
+    document.getElementById("outpRain").innerHTML =
+      `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-snow" viewBox="0 0 16 16">
         <path d="M8 16a.5.5 0 0 1-.5-.5v-1.293l-.646.647a.5.5 0 0 1-.707-.708L7.5 12.793V8.866l-3.4 1.963-.496 1.85a.5.5 0 1 1-.966-.26l.237-.882-1.12.646a.5.5 0 0 1-.5-.866l1.12-.646-.884-.237a.5.5 0 1 1 .26-.966l1.848.495L7 8 3.6 6.037l-1.85.495a.5.5 0 0 1-.258-.966l.883-.237-1.12-.646a.5.5 0 1 1 .5-.866l1.12.646-.237-.883a.5.5 0 1 1 .966-.258l.495 1.849L7.5 7.134V3.207L6.147 1.854a.5.5 0 1 1 .707-.708l.646.647V.5a.5.5 0 1 1 1 0v1.293l.647-.647a.5.5 0 1 1 .707.708L8.5 3.207v3.927l3.4-1.963.496-1.85a.5.5 0 1 1 .966.26l-.236.882 1.12-.646a.5.5 0 0 1 .5.866l-1.12.646.883.237a.5.5 0 1 1-.26.966l-1.848-.495L9 8l3.4 1.963 1.849-.495a.5.5 0 0 1 .259.966l-.883.237 1.12.646a.5.5 0 0 1-.5.866l-1.12-.646.236.883a.5.5 0 1 1-.966.258l-.495-1.849-3.4-1.963v3.927l1.353 1.353a.5.5 0 0 1-.707.708l-.647-.647V15.5a.5.5 0 0 1-.5.5z"/>
       </svg> ${snow} mm`;
   }
 
   if (tomorrowRain === 0 && tomorrowSnow === 0) {
-    document.getElementById(
-      "outputRainTomorrow"
-    ).innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-brightness-high-fill" viewBox="0 0 16 16">
+    document.getElementById("outputRainTomorrow").innerHTML =
+      `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-brightness-high-fill" viewBox="0 0 16 16">
         <path d="M12 8a4 4 0 1 1-8 0 4 4 0 0 1 8 0M8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0m0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13m8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5M3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8m10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0m-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0m9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707M4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708"/>
       </svg> Es bleibt morgen trocken.`;
   } else if (tomorrowRain > 0) {
-    document.getElementById(
-      "outputRainTomorrow"
-    ).innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-umbrella" viewBox="0 0 16 16">
+    document.getElementById("outputRainTomorrow").innerHTML =
+      `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-umbrella" viewBox="0 0 16 16">
         <path d="M8 0a.5.5 0 0 1 .5.5v.514C12.625 1.238 16 4.22 16 8c0 0 0 .5-.5.5-.149 0-.352-.145-.352-.145l-.004-.004-.025-.023a3.5 3.5 0 0 0-.555-.394A3.17 3.17 0 0 0 13 7.5c-.638 0-1.178.213-1.564.434a3.5 3.5 0 0 0-.555.394l-.025.023-.003.003s-.204.146-.353.146-.352-.145-.352-.145l-.004-.004-.025-.023a3.5 3.5 0 0 0-.555-.394 3.3 3.3 0 0 0-1.064-.39V13.5H8h.5v.039l-.005.083a3 3 0 0 1-.298 1.102 2.26 2.26 0 0 1-.763.88C7.06 15.851 6.587 16 6 16s-1.061-.148-1.434-.396a2.26 2.26 0 0 1-.763-.88 3 3 0 0 1-.302-1.185v-.025l-.001-.009v-.003s0-.002.5-.002h-.5V13a.5.5 0 0 1 1 0v.506l.003.044a2 2 0 0 0 .195.726c.095.191.23.367.423.495.19.127.466.229.879.229s.689-.102.879-.229c.193-.128.328-.304.424-.495a2 2 0 0 0 .197-.77V7.544a3.3 3.3 0 0 0-1.064.39 3.5 3.5 0 0 0-.58.417l-.004.004S5.65 8.5 5.5 8.5s-.352-.145-.352-.145l-.004-.004a3.5 3.5 0 0 0-.58-.417A3.17 3.17 0 0 0 3 7.5c-.638 0-1.177.213-1.564.434a3.5 3.5 0 0 0-.58.417l-.004.004S.65 8.5.5 8.5C0 8.5 0 8 0 8c0-3.78 3.375-6.762 7.5-6.986V.5A.5.5 0 0 1 8 0M6.577 2.123c-2.833.5-4.99 2.458-5.474 4.854A4.1 4.1 0 0 1 3 6.5c.806 0 1.48.25 1.962.511a9.7 9.7 0 0 1 .344-2.358c.242-.868.64-1.765 1.271-2.53m-.615 4.93A4.16 4.16 0 0 1 8 6.5a4.16 4.16 0 0 1 2.038.553 8.7 8.7 0 0 0-.307-2.13C9.434 3.858 8.898 2.83 8 2.117c-.898.712-1.434 1.74-1.731 2.804a8.7 8.7 0 0 0-.307 2.131zm3.46-4.93c.631.765 1.03 1.662 1.272 2.53.233.833.328 1.66.344 2.358A4.14 4.14 0 0 1 13 6.5c.77 0 1.42.23 1.897.477-.484-2.396-2.641-4.355-5.474-4.854z"/>
       </svg> Im laufe des Tages werden ${tomorrowRain} mm Regen erwartet.`;
   } else if (tomorrowSnow > 0) {
-    document.getElementById(
-      "outputRainTomorrow"
-    ).innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-snow" viewBox="0 0 16 16">
+    document.getElementById("outputRainTomorrow").innerHTML =
+      `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-snow" viewBox="0 0 16 16">
         <path d="M8 16a.5.5 0 0 1-.5-.5v-1.293l-.646.647a.5.5 0 0 1-.707-.708L7.5 12.793V8.866l-3.4 1.963-.496 1.85a.5.5 0 1 1-.966-.26l.237-.882-1.12.646a.5.5 0 0 1-.5-.866l1.12-.646-.884-.237a.5.5 0 1 1 .26-.966l1.848.495L7 8 3.6 6.037l-1.85.495a.5.5 0 0 1-.258-.966l.883-.237-1.12-.646a.5.5 0 1 1 .5-.866l1.12.646-.237-.883a.5.5 0 1 1 .966-.258l.495 1.849L7.5 7.134V3.207L6.147 1.854a.5.5 0 1 1 .707-.708l.646.647V.5a.5.5 0 1 1 1 0v1.293l.647-.647a.5.5 0 1 1 .707.708L8.5 3.207v3.927l3.4-1.963.496-1.85a.5.5 0 1 1 .966.26l-.236.882 1.12-.646a.5.5 0 0 1 .5.866l-1.12.646.883.237a.5.5 0 1 1-.26.966l-1.848-.495L9 8l3.4 1.963 1.849-.495a.5.5 0 0 1 .259.966l-.883.237 1.12.646a.5.5 0 0 1-.5.866l-1.12-.646.236.883a.5.5 0 1 1-.966.258l-.495-1.849-3.4-1.963v3.927l1.353 1.353a.5.5 0 0 1-.707.708l-.647-.647V15.5a.5.5 0 0 1-.5.5z"/>
       </svg> Im laufe des Tages werden ${tomorrowSnow} mm Schnee erwartet.`;
   }
@@ -1027,9 +1028,8 @@ function loadData() {
       weatherContainer.style.display = "none";
       cityContainer.style.display = "none";
       loadMap(51.16229, -20.462739);
-      document.getElementById(
-        "karte"
-      ).innerHTML = `<h3>Willkommen in meiner Wetterapp</h3>
+      document.getElementById("karte").innerHTML =
+        `<h3>Willkommen in meiner Wetterapp</h3>
             <ul>
                 <li>Gib oben in der Suche einen Stadtnemen ein</li>
                 <li>Manchmal muss man mit einem Komma getrennt den Ländernamen ergänzen. Z.B. Vik, Island</li>
@@ -1043,7 +1043,7 @@ function loadData() {
 
   if (localStorage.getItem("stored_WeatherSettings") != null) {
     weatherSettings = JSON.parse(
-      localStorage.getItem("stored_WeatherSettings")
+      localStorage.getItem("stored_WeatherSettings"),
     );
     try {
       setAppearance(`${weatherSettings.appeareanceMode}`);
@@ -1082,7 +1082,7 @@ function saveCity() {
 function saveSettings() {
   localStorage.setItem(
     "stored_WeatherSettings",
-    JSON.stringify(weatherSettings)
+    JSON.stringify(weatherSettings),
   );
 }
 
@@ -1094,7 +1094,7 @@ function addCity() {
       createNotification(
         `"${address}" hast du bereits abgespeichert!`,
         "warning",
-        3000
+        3000,
       );
     } else {
       if (address != "") {
@@ -1124,7 +1124,7 @@ function delCity() {
   if (address != "") {
     if (cityList.includes(address)) {
       const confirm = window.confirm(
-        `Möchtest du die Stadt "${address}" wirklich aus Deiner Liste entfernen?`
+        `Möchtest du die Stadt "${address}" wirklich aus Deiner Liste entfernen?`,
       );
       if (confirm) {
         for (let i = 0; i < cityList.length; i++) {
@@ -1170,6 +1170,406 @@ function getDate(weekDay) {
   return day;
 }
 
+function renderWeeklyForecastChartFromForecast(data) {
+  if (!forecastCanvas) {
+    return;
+  }
+  if (!data || !data.daily || data.daily.length < 8) {
+    return;
+  }
+
+  const series = [];
+  for (let i = 0; i <= 6; i++) {
+    const daily = data.daily[i + 1];
+    const minTemp = Number.isFinite(daily?.temp?.min)
+      ? Math.round(daily.temp.min)
+      : 0;
+    const maxTemp = Number.isFinite(daily?.temp?.max)
+      ? Math.round(daily.temp.max)
+      : 0;
+
+    const rain = Number.isFinite(daily?.rain) ? daily.rain : 0;
+    const snow = Number.isFinite(daily?.snow) ? daily.snow : 0;
+    const precip = rain + snow;
+
+    const dtRaw = intTimeConvert(daily.dt) + "";
+    const weekdayEn = splitVal(dtRaw, " ", 0);
+    const weekdayDe = getDate(weekdayEn);
+    const dateDay = splitVal(dtRaw, " ", 2);
+
+    series.push({
+      i,
+      label: `${weekdayDe} ${dateDay}.`,
+      weekday: weekdayDe,
+      dateDay: `${dateDay}.`,
+      minTemp,
+      maxTemp,
+      precip,
+    });
+  }
+
+  lastWeeklyForecastSeries = series;
+  drawWeeklyForecastChart(series);
+}
+
+function drawWeeklyForecastChart(series) {
+  if (!forecastCanvas) {
+    return;
+  }
+  if (!Array.isArray(series) || series.length === 0) {
+    return;
+  }
+
+  const cssWidth = forecastCanvas.clientWidth;
+  const cssHeight = forecastCanvas.clientHeight || 220;
+  if (!cssWidth || cssWidth < 50) {
+    return;
+  }
+
+  const dpr = window.devicePixelRatio || 1;
+  forecastCanvas.width = Math.floor(cssWidth * dpr);
+  forecastCanvas.height = Math.floor(cssHeight * dpr);
+
+  const ctx = forecastCanvas.getContext("2d");
+  if (!ctx) {
+    return;
+  }
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, cssWidth, cssHeight);
+
+  const padding = { left: 44, right: 14, top: 14, bottom: 34 };
+  const plotLeft = padding.left;
+  const plotTop = padding.top;
+  const plotRight = cssWidth - padding.right;
+  const plotBottom = cssHeight - padding.bottom;
+  const plotW = plotRight - plotLeft;
+  const plotH = plotBottom - plotTop;
+
+  lastWeeklyForecastLayout = {
+    cssWidth,
+    cssHeight,
+    plotLeft,
+    plotTop,
+    plotRight,
+    plotBottom,
+  };
+
+  const roundRectPath = (x, y, w, h, r) => {
+    if (typeof ctx.roundRect === "function") {
+      ctx.roundRect(x, y, w, h, r);
+      return;
+    }
+    const radius = Math.max(0, Math.min(r, w / 2, h / 2));
+    ctx.moveTo(x + radius, y);
+    ctx.arcTo(x + w, y, x + w, y + h, radius);
+    ctx.arcTo(x + w, y + h, x, y + h, radius);
+    ctx.arcTo(x, y + h, x, y, radius);
+    ctx.arcTo(x, y, x + w, y, radius);
+  };
+
+  const maxTemps = series.map((d) => d.maxTemp);
+  const minTemps = series.map((d) => d.minTemp);
+  const precipVals = series.map((d) => d.precip);
+
+  let tMin = Math.min(...minTemps);
+  let tMax = Math.max(...maxTemps);
+  if (!Number.isFinite(tMin)) tMin = 0;
+  if (!Number.isFinite(tMax)) tMax = 1;
+  if (tMin === tMax) {
+    tMin -= 1;
+    tMax += 1;
+  }
+
+  const yMin = Math.floor(tMin - 2);
+  const yMax = Math.ceil(tMax + 2);
+  const yRange = Math.max(1, yMax - yMin);
+
+  const maxPrecip = Math.max(
+    0,
+    ...precipVals.filter((v) => Number.isFinite(v)),
+  );
+  const precipMaxHeight = plotH * 0.33;
+
+  const n = series.length;
+  const xForIndex = (idx) => {
+    if (n === 1) return plotLeft + plotW / 2;
+    return plotLeft + (plotW * idx) / (n - 1);
+  };
+  const yForTemp = (tempVal) => {
+    const t = (yMax - tempVal) / yRange;
+    return plotTop + t * plotH;
+  };
+
+  const niceStep = (rawStep) => {
+    if (!Number.isFinite(rawStep) || rawStep <= 0) return 1;
+    const exponent = Math.floor(Math.log10(rawStep));
+    const fraction = rawStep / Math.pow(10, exponent);
+    let niceFraction = 1;
+    if (fraction <= 1) niceFraction = 1;
+    else if (fraction <= 2) niceFraction = 2;
+    else if (fraction <= 5) niceFraction = 5;
+    else niceFraction = 10;
+    return niceFraction * Math.pow(10, exponent);
+  };
+
+  const tickStep = niceStep(yRange / 4);
+  const tickStart = Math.floor(yMin / tickStep) * tickStep;
+  const tickEnd = Math.ceil(yMax / tickStep) * tickStep;
+
+  // Background plot area
+  ctx.save();
+  ctx.fillStyle = "rgba(255,255,255,0.04)";
+  ctx.strokeStyle = "rgba(255,255,255,0.12)";
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  roundRectPath(plotLeft, plotTop, plotW, plotH, 12);
+  ctx.fill();
+  ctx.stroke();
+  ctx.restore();
+
+  // Grid + Y labels
+  ctx.save();
+  ctx.font = "12px sans-serif";
+  ctx.fillStyle = "rgba(255,255,255,0.80)";
+  ctx.strokeStyle = "rgba(255,255,255,0.10)";
+  ctx.lineWidth = 1;
+
+  for (let t = tickStart; t <= tickEnd; t += tickStep) {
+    const y = yForTemp(t);
+    ctx.beginPath();
+    ctx.moveTo(plotLeft, y);
+    ctx.lineTo(plotRight, y);
+    ctx.stroke();
+
+    ctx.textAlign = "right";
+    ctx.textBaseline = "middle";
+    ctx.fillText(`${t}°`, plotLeft - 8, y);
+  }
+
+  // Vertical grid lines per day
+  for (let i = 0; i < n; i++) {
+    const x = xForIndex(i);
+    ctx.beginPath();
+    ctx.moveTo(x, plotTop);
+    ctx.lineTo(x, plotBottom);
+    ctx.stroke();
+  }
+  ctx.restore();
+
+  // Precip bars
+  if (maxPrecip > 0) {
+    ctx.save();
+    const barW = Math.min(26, (plotW / n) * 0.55);
+    ctx.fillStyle = "rgba(70, 160, 255, 0.35)";
+    ctx.strokeStyle = "rgba(70, 160, 255, 0.85)";
+    ctx.lineWidth = 1;
+
+    for (let i = 0; i < n; i++) {
+      const p = Number.isFinite(series[i].precip) ? series[i].precip : 0;
+      const h = (p / maxPrecip) * precipMaxHeight;
+      if (h <= 0) continue;
+
+      const x = xForIndex(i);
+      const x0 = x - barW / 2;
+      const y0 = plotBottom - h;
+      ctx.beginPath();
+      roundRectPath(x0, y0, barW, h, 6);
+      ctx.fill();
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  // Build points
+  const maxPoints = series.map((d, idx) => ({
+    x: xForIndex(idx),
+    y: yForTemp(d.maxTemp),
+  }));
+  const minPoints = series.map((d, idx) => ({
+    x: xForIndex(idx),
+    y: yForTemp(d.minTemp),
+  }));
+
+  // Fill band between min/max
+  ctx.save();
+  ctx.fillStyle = "rgba(255, 183, 77, 0.12)";
+  ctx.beginPath();
+  maxPoints.forEach((p, idx) => {
+    if (idx === 0) ctx.moveTo(p.x, p.y);
+    else ctx.lineTo(p.x, p.y);
+  });
+  for (let idx = minPoints.length - 1; idx >= 0; idx--) {
+    const p = minPoints[idx];
+    ctx.lineTo(p.x, p.y);
+  }
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
+
+  // Max temp line
+  ctx.save();
+  const grad = ctx.createLinearGradient(plotLeft, 0, plotRight, 0);
+  grad.addColorStop(0, "#ffb74d");
+  grad.addColorStop(1, "#ff5252");
+  ctx.strokeStyle = grad;
+  ctx.lineWidth = 3;
+  ctx.lineJoin = "round";
+  ctx.lineCap = "round";
+  ctx.beginPath();
+  maxPoints.forEach((p, idx) => {
+    if (idx === 0) {
+      ctx.moveTo(p.x, p.y);
+      return;
+    }
+    const prev = maxPoints[idx - 1];
+    const cx = (prev.x + p.x) / 2;
+    ctx.quadraticCurveTo(prev.x, prev.y, cx, (prev.y + p.y) / 2);
+    if (idx === maxPoints.length - 1) {
+      ctx.quadraticCurveTo(cx, (prev.y + p.y) / 2, p.x, p.y);
+    }
+  });
+  ctx.stroke();
+  ctx.restore();
+
+  // Min temp dashed line
+  ctx.save();
+  ctx.strokeStyle = "rgba(255, 255, 255, 0.75)";
+  ctx.setLineDash([6, 5]);
+  ctx.lineWidth = 2;
+  ctx.lineJoin = "round";
+  ctx.lineCap = "round";
+  ctx.beginPath();
+  minPoints.forEach((p, idx) => {
+    if (idx === 0) ctx.moveTo(p.x, p.y);
+    else ctx.lineTo(p.x, p.y);
+  });
+  ctx.stroke();
+  ctx.restore();
+
+  // Points
+  const drawPoint = (x, y, stroke, fill) => {
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(x, y, 4.2, 0, Math.PI * 2);
+    ctx.fillStyle = fill;
+    ctx.strokeStyle = stroke;
+    ctx.lineWidth = 2;
+    ctx.fill();
+    ctx.stroke();
+    ctx.restore();
+  };
+
+  for (let i = 0; i < n; i++) {
+    drawPoint(maxPoints[i].x, maxPoints[i].y, "rgba(0,0,0,0.35)", "#fff");
+    drawPoint(
+      minPoints[i].x,
+      minPoints[i].y,
+      "rgba(0,0,0,0.35)",
+      "rgba(255,255,255,0.85)",
+    );
+  }
+
+  // X labels
+  ctx.save();
+  ctx.font = "12px sans-serif";
+  ctx.fillStyle = "rgba(255,255,255,0.85)";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "top";
+  for (let i = 0; i < n; i++) {
+    const x = xForIndex(i);
+    ctx.fillText(series[i].label, x, plotBottom + 10);
+  }
+  ctx.restore();
+
+  // Tooltip handlers (einmalig)
+  if (!forecastCanvas.__hasForecastTooltipHandlers) {
+    forecastCanvas.__hasForecastTooltipHandlers = true;
+
+    const hideTooltip = () => {
+      if (!forecastCanvasTooltip) return;
+      forecastCanvasTooltip.hidden = true;
+    };
+
+    forecastCanvas.addEventListener("mouseleave", hideTooltip);
+    forecastCanvas.addEventListener("touchend", hideTooltip, {
+      passive: true,
+    });
+
+    const showAt = (clientX, clientY) => {
+      if (!forecastCanvasTooltip) return;
+      if (!lastWeeklyForecastSeries) return;
+      if (!lastWeeklyForecastLayout) return;
+
+      const { plotLeft, plotRight } = lastWeeklyForecastLayout;
+      const n = lastWeeklyForecastSeries.length;
+      const xForIndex = (idx) => {
+        const plotW = plotRight - plotLeft;
+        if (n === 1) return plotLeft + plotW / 2;
+        return plotLeft + (plotW * idx) / (n - 1);
+      };
+
+      const rect = forecastCanvas.getBoundingClientRect();
+      const x = clientX - rect.left;
+      const y = clientY - rect.top;
+      const plotX = Math.min(Math.max(x, plotLeft), plotRight);
+
+      let closestIdx = 0;
+      let closestDist = Infinity;
+      for (let i = 0; i < lastWeeklyForecastSeries.length; i++) {
+        const px = xForIndex(i);
+        const dist = Math.abs(px - plotX);
+        if (dist < closestDist) {
+          closestDist = dist;
+          closestIdx = i;
+        }
+      }
+
+      const d = lastWeeklyForecastSeries[closestIdx];
+      const precipText = `${d.precip.toFixed(1)} mm`;
+      forecastCanvasTooltip.innerHTML = `
+        <div style="font-weight:700; margin-bottom:6px;">${d.label}</div>
+        <div>Temp. Max: <strong>${d.maxTemp}°C</strong></div>
+        <div>Temp. Min: <strong>${d.minTemp}°C</strong></div>
+        <div>Niederschlag: <strong>${precipText}</strong></div>
+      `;
+
+      const parentRect = forecastCanvas.parentElement.getBoundingClientRect();
+      const relX = clientX - parentRect.left;
+      const relY = clientY - parentRect.top;
+
+      const pad = 10;
+      const tooltipW = 240;
+      const tooltipH = 110;
+      const left = Math.min(
+        Math.max(relX + 12, pad),
+        parentRect.width - tooltipW - pad,
+      );
+      const top = Math.min(
+        Math.max(relY - tooltipH - 12, pad),
+        parentRect.height - tooltipH - pad,
+      );
+
+      forecastCanvasTooltip.style.left = `${left}px`;
+      forecastCanvasTooltip.style.top = `${top}px`;
+      forecastCanvasTooltip.hidden = false;
+    };
+
+    forecastCanvas.addEventListener("mousemove", (e) => {
+      showAt(e.clientX, e.clientY);
+    });
+
+    forecastCanvas.addEventListener(
+      "touchmove",
+      (e) => {
+        const t = e.touches?.[0];
+        if (!t) return;
+        showAt(t.clientX, t.clientY);
+      },
+      { passive: true },
+    );
+  }
+}
+
 //?####################################################################################################
 // Funktion, welche ein Uhrzeit extrahiert. In Berücksichtigung der Zeitzohne
 function rawDatetime_in_Time(rawDatetime) {
@@ -1178,7 +1578,7 @@ function rawDatetime_in_Time(rawDatetime) {
   const pureTime = `${splitVal(time + "", ":", 0)}:${splitVal(
     time + "",
     ":",
-    1
+    1,
   )}`;
   return pureTime;
 }
@@ -1248,7 +1648,7 @@ function startCity() {
   createNotification(
     `"${cityName}" wird nun immer beim Start angezeigt`,
     "success",
-    2000
+    2000,
   );
   saveCity();
   showSavedCitys();
@@ -1314,10 +1714,10 @@ function changeWeatherType(type) {
     }
     hour = splitVal(
       intTimeConvert(
-        savedData.hourly[i].dt + timezoneOffset - timeMinusSummertime
+        savedData.hourly[i].dt + timezoneOffset - timeMinusSummertime,
       ) + "",
       " ",
-      4
+      4,
     );
     hour = splitVal(hour, ":", 0);
 
@@ -1420,9 +1820,8 @@ function getAirPollutionInfo(latitude, longitude) {
         "red",
       ];
       const airQuality = data.list[0].main.aqi;
-      document.getElementById(
-        "outpAirQuali"
-      ).innerHTML = `${airQuality} - ${airQualityList[airQuality]}`;
+      document.getElementById("outpAirQuali").innerHTML =
+        `${airQuality} - ${airQualityList[airQuality]}`;
       airQualiBox.style.backgroundColor = `${airQualityColor[airQuality]}`;
 
       infoBtn.classList.remove("active");
@@ -1445,7 +1844,7 @@ function getAirPollutionInfo(latitude, longitude) {
         }
         if (pm2_5 >= 30) {
           pollutionArray.push(
-            `Feinstaub(pm2_5): ${pm2_5} (moderat ab 30) <br>`
+            `Feinstaub(pm2_5): ${pm2_5} (moderat ab 30) <br>`,
           );
         }
         if (pm10 >= 50) {
@@ -1619,18 +2018,15 @@ setInterval(() => {
   const winDeg_plus_20 = windDeg + 20;
   const randomDirection = parseInt(Math.random() * 2 + 1);
   if (randomDirection === 1) {
-    document.getElementById(
-      "windDirect"
-    ).style.transform = `rotate(${windDeg_minus_20}deg)`;
+    document.getElementById("windDirect").style.transform =
+      `rotate(${windDeg_minus_20}deg)`;
   } else {
-    document.getElementById(
-      "windDirect"
-    ).style.transform = `rotate(${winDeg_plus_20}deg)`;
+    document.getElementById("windDirect").style.transform =
+      `rotate(${winDeg_plus_20}deg)`;
   }
   setTimeout(() => {
-    document.getElementById(
-      "windDirect"
-    ).style.transform = `rotate(${windDeg}deg)`;
+    document.getElementById("windDirect").style.transform =
+      `rotate(${windDeg}deg)`;
   }, 1300);
 }, 10000);
 
@@ -1643,7 +2039,7 @@ function calc_time_to_next_sunevent() {
   if (sunEvent === "night") {
     const current_timestamp = new Date();
     let current_unix_timestamp = parseInt(
-      (new Date(current_timestamp).getTime() / 1000).toFixed(0)
+      (new Date(current_timestamp).getTime() / 1000).toFixed(0),
     );
     current_unix_timestamp =
       current_unix_timestamp + timezoneOffset - timeSubstract;
@@ -1657,7 +2053,7 @@ function calc_time_to_next_sunevent() {
   if (sunEvent === "evening") {
     const current_timestamp = new Date();
     let current_unix_timestamp = parseInt(
-      (new Date(current_timestamp).getTime() / 1000).toFixed(0)
+      (new Date(current_timestamp).getTime() / 1000).toFixed(0),
     );
     current_unix_timestamp =
       current_unix_timestamp + timezoneOffset - timeSubstract;
@@ -1720,7 +2116,7 @@ days.forEach((day, index) => {
     const forc_desc = savedData.daily[index + 1].weather[0].description;
 
     const forc_sunrise = rawDatetime_in_Time(
-      savedData.daily[index + 1].sunrise
+      savedData.daily[index + 1].sunrise,
     );
     const forc_sunset = rawDatetime_in_Time(savedData.daily[index + 1].sunset);
 
