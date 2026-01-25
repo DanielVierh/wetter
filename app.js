@@ -250,15 +250,49 @@ function loadMap(lat, lon) {
   mapOverViewCoord.push(lat);
   mapOverViewCoord.push(lon);
 
-  meineKarte.remove(); // Bestehende Karte entfernen
+  try {
+    meineKarte.remove(); // Bestehende Karte entfernen
+  } catch {
+    // ignore
+  }
   meineKarte = L.map("karte").setView(mapOverViewCoord, 3); // Neue Karte erstellen
 
-  // Hinzufügen der Kartenebenen
-  L.tileLayer("https://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png", {
-    maxZoom: 900,
-    attribution:
-      '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-  }).addTo(meineKarte);
+  // Basis-Karte
+  const baseLayer = L.tileLayer(
+    "https://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png",
+    {
+      maxZoom: 19,
+      attribution:
+        '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    },
+  ).addTo(meineKarte);
+
+  // Regenradar / Niederschlags-Overlay (OpenWeather Tile Layer)
+  // Hinweis: Das ist ein Niederschlags-Layer (kein animiertes Radar).
+  let precipitationLayer = null;
+  if (ky && typeof ky === "string" && ky.length > 5) {
+    precipitationLayer = L.tileLayer(
+      `https://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=${ky}`,
+      {
+        maxZoom: 19,
+        opacity: 0.65,
+        attribution:
+          'Weather data &copy; <a href="https://openweathermap.org/" target="_blank" rel="noopener noreferrer">OpenWeather</a>',
+      },
+    );
+
+    // Default: an
+    precipitationLayer.addTo(meineKarte);
+  }
+
+  // Layer Toggle
+  const overlays = {};
+  if (precipitationLayer) {
+    overlays["Regenradar"] = precipitationLayer;
+  }
+  L.control
+    .layers({ Karte: baseLayer }, overlays, { collapsed: true })
+    .addTo(meineKarte);
 
   // Marker hinzufügen und Popup binden
   const city = document.getElementById("outpOrt").innerHTML;
