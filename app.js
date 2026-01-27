@@ -275,7 +275,7 @@ function loadMap(lat, lon) {
       `https://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=${ky}`,
       {
         maxZoom: 19,
-        opacity: 0.65,
+        opacity: 1,
         attribution:
           'Weather data &copy; <a href="https://openweathermap.org/" target="_blank" rel="noopener noreferrer">OpenWeather</a>',
       },
