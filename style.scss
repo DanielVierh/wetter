@@ -834,7 +834,7 @@ button {
 
 .alertContainer.active {
   display: block;
-  background-color: rgba(255, 0, 0, 0.685);
+  background: linear-gradient(to bottom, rgb(147, 20, 20), black);
   color: white;
   font-weight: bold;
   height: auto;
