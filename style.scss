@@ -367,6 +367,8 @@ button {
 
 .std {
   margin-right: 15px;
+  min-width: 64px;
+  text-align: center;
 }
 
 .forecastTextHour {
@@ -663,6 +665,83 @@ button {
   font-size: 0.8rem;
   line-height: 1.2;
   pointer-events: none;
+}
+
+.hourlyForecastChartContainer {
+  width: 100%;
+  max-width: 600px;
+  transform: translateX(-25px);
+  margin-top: 8px;
+  position: relative;
+}
+
+.hourlyForecastChartScroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  width: 100%;
+  border: 2px solid rgba(255, 255, 255, 0.084);
+  border-radius: 15px;
+  background-color: rgba(158, 156, 156, 0.308);
+  box-shadow:
+    5px 5px 5px black,
+    inset 10px 8px 15px black;
+  backdrop-filter: blur(20px);
+
+  &::-webkit-scrollbar {
+    height: 10px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: linear-gradient(45deg, #2da6b6, #4472bc);
+    border-radius: 10px;
+  }
+  &::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+  }
+}
+
+#hourlyForecastCanvas {
+  width: 100%;
+  height: 180px;
+  display: block;
+}
+
+.hourlyForecastLegend {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 8px;
+  font-size: 0.75rem;
+  opacity: 0.9;
+  flex-wrap: wrap;
+
+  .legendItem {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.08);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+  }
+}
+
+.legendSwatch {
+  &.tempLine {
+    background: linear-gradient(to right, #ffb74d, #ff5252);
+    height: 6px;
+  }
+
+  &.sun {
+    background: linear-gradient(
+      to right,
+      rgba(255, 213, 79, 0.95),
+      rgba(255, 152, 0, 0.95)
+    );
+    height: 6px;
+  }
 }
 
 .col {

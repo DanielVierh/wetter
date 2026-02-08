@@ -83,8 +83,18 @@ const lbl_outp_average_temp_night = document.getElementById(
 const forecastCanvas = document.getElementById("forecastCanvas");
 const forecastCanvasTooltip = document.getElementById("forecastCanvasTooltip");
 
+const hourlyForecastCanvas = document.getElementById("hourlyForecastCanvas");
+const hourlyForecastTooltip = document.getElementById("hourlyForecastTooltip");
+const hourlyForecastChartScroll = document.getElementById(
+  "hourlyForecastChartScroll",
+);
+const hourForecastContainer = document.querySelector(".hourForecastContainer");
+
 let lastWeeklyForecastSeries = null;
 let lastWeeklyForecastLayout = null;
+
+let lastHourlyForecastSeries = null;
+let lastHourlyForecastLayout = null;
 
 //?####################################################################################################
 //* ANCHOR -  Load
@@ -93,6 +103,10 @@ window.onload = loadData();
 window.addEventListener("resize", () => {
   if (lastWeeklyForecastSeries) {
     drawWeeklyForecastChart(lastWeeklyForecastSeries);
+  }
+
+  if (lastHourlyForecastSeries) {
+    drawHourlyForecastChart(lastHourlyForecastSeries);
   }
 });
 
@@ -648,6 +662,8 @@ function requestWeatherForecast(lat, lon) {
         index = `hourForecastImg${i}`;
         document.getElementById(index).src = imgSrc;
       }
+
+      renderHourlyForecastChartFromForecast(data);
 
       //?####################################################################################################
       //* ANCHOR -  Vorausgestellte For Schleife um die absolute tiefst und höchst temp der kommenden 5 Tage zu ermitteln
@@ -1244,6 +1260,387 @@ function renderWeeklyForecastChartFromForecast(data) {
 
   lastWeeklyForecastSeries = series;
   drawWeeklyForecastChart(series);
+}
+
+function renderHourlyForecastChartFromForecast(data) {
+  if (!hourlyForecastCanvas || !hourlyForecastChartScroll) {
+    return;
+  }
+  if (!data || !Array.isArray(data.hourly) || data.hourly.length < 25) {
+    return;
+  }
+
+  const series = [];
+  for (let i = 0; i <= 24; i++) {
+    const h = data.hourly[i];
+    const tempVal = Number.isFinite(h?.temp) ? h.temp : 0;
+    const rain = Number.isFinite(h?.rain?.["1h"]) ? h.rain["1h"] : 0;
+    const snow = Number.isFinite(h?.snow?.["1h"]) ? h.snow["1h"] : 0;
+    const precip = rain + snow;
+    const uvi = Number.isFinite(h?.uvi) ? h.uvi : 0;
+
+    const hourLabelEl = document.getElementById(`hourOutp${i}`);
+    const hourLabel = hourLabelEl?.innerText?.trim() || `${i} Uhr`;
+
+    series.push({
+      i,
+      label: hourLabel,
+      temp: tempVal,
+      precip,
+      uvi,
+    });
+  }
+
+  lastHourlyForecastSeries = series;
+  // Layout erst nach DOM-Update berechnen
+  requestAnimationFrame(() => {
+    drawHourlyForecastChart(series);
+  });
+}
+
+function drawHourlyForecastChart(series) {
+  if (!hourlyForecastCanvas || !hourlyForecastChartScroll) {
+    return;
+  }
+  if (!Array.isArray(series) || series.length === 0) {
+    return;
+  }
+
+  const cssHeight = hourlyForecastCanvas.clientHeight || 180;
+
+  const paddingLeft = 15;
+  const paddingRight = 15;
+
+  let stdWidth = 64;
+  let stdGap = 15;
+  if (hourForecastContainer) {
+    const firstStd = hourForecastContainer.querySelector(".std:not([hidden])");
+    if (firstStd) {
+      stdWidth = Math.max(48, firstStd.offsetWidth || stdWidth);
+      const cs = window.getComputedStyle(firstStd);
+      const mr = parseFloat(cs.marginRight);
+      if (Number.isFinite(mr)) {
+        stdGap = mr;
+      }
+      const parentCs = window.getComputedStyle(hourForecastContainer);
+      const pl = parseFloat(parentCs.paddingLeft);
+      const pr = parseFloat(parentCs.paddingRight);
+      if (Number.isFinite(pl)) {
+        // eslint-disable-next-line no-unused-vars
+        // kept for clarity; we use constants unless DOM says otherwise
+      }
+      if (Number.isFinite(pr)) {
+        // eslint-disable-next-line no-unused-vars
+      }
+    }
+  }
+
+  const n = series.length;
+  const contentWidth =
+    paddingLeft + paddingRight + n * stdWidth + Math.max(0, n - 1) * stdGap;
+
+  hourlyForecastCanvas.style.width = `${contentWidth}px`;
+  hourlyForecastCanvas.style.height = `${cssHeight}px`;
+
+  // Scroll-Viewport optisch an Slider koppeln
+  if (hourForecastContainer && hourlyForecastChartScroll.clientWidth) {
+    // kein Zwang, aber hilfreich bei Layout-Änderungen
+  }
+
+  const dpr = window.devicePixelRatio || 1;
+  hourlyForecastCanvas.width = Math.floor(contentWidth * dpr);
+  hourlyForecastCanvas.height = Math.floor(cssHeight * dpr);
+
+  const ctx = hourlyForecastCanvas.getContext("2d");
+  if (!ctx) {
+    return;
+  }
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, contentWidth, cssHeight);
+
+  const plot = {
+    left: paddingLeft,
+    right: contentWidth - paddingRight,
+    top: 12,
+    bottom: cssHeight - 26,
+  };
+  const plotW = plot.right - plot.left;
+  const plotH = plot.bottom - plot.top;
+
+  const xCenters = [];
+  for (let i = 0; i < n; i++) {
+    const x = plot.left + stdWidth / 2 + i * (stdWidth + stdGap);
+    xCenters.push(x);
+  }
+
+  lastHourlyForecastLayout = {
+    cssHeight,
+    cssWidth: contentWidth,
+    plot,
+    xCenters,
+  };
+
+  const temps = series.map((d) => (Number.isFinite(d.temp) ? d.temp : 0));
+  const precips = series.map((d) => (Number.isFinite(d.precip) ? d.precip : 0));
+  const uvis = series.map((d) => (Number.isFinite(d.uvi) ? d.uvi : 0));
+
+  let tMin = Math.min(...temps);
+  let tMax = Math.max(...temps);
+  if (!Number.isFinite(tMin)) tMin = 0;
+  if (!Number.isFinite(tMax)) tMax = 1;
+  if (tMin === tMax) {
+    tMin -= 1;
+    tMax += 1;
+  }
+  const yMin = Math.floor(tMin - 1);
+  const yMax = Math.ceil(tMax + 1);
+  const yRange = Math.max(1, yMax - yMin);
+
+  const maxPrecip = Math.max(0, ...precips);
+  const maxUvi = Math.max(0.5, ...uvis);
+
+  const yForTemp = (tempVal) => {
+    const t = (yMax - tempVal) / yRange;
+    return plot.top + t * plotH;
+  };
+
+  // Background
+  ctx.save();
+  ctx.fillStyle = "rgba(255,255,255,0.04)";
+  ctx.strokeStyle = "rgba(255,255,255,0.12)";
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  if (typeof ctx.roundRect === "function") {
+    ctx.roundRect(plot.left, plot.top, plotW, plotH, 12);
+  } else {
+    ctx.rect(plot.left, plot.top, plotW, plotH);
+  }
+  ctx.fill();
+  ctx.stroke();
+  ctx.restore();
+
+  // Grid (leicht)
+  ctx.save();
+  ctx.strokeStyle = "rgba(255,255,255,0.10)";
+  ctx.lineWidth = 1;
+  for (let g = 0; g <= 4; g++) {
+    const y = plot.top + (plotH * g) / 4;
+    ctx.beginPath();
+    ctx.moveTo(plot.left, y);
+    ctx.lineTo(plot.right, y);
+    ctx.stroke();
+  }
+  ctx.restore();
+
+  // Sonne (UV) als Fläche im unteren Bereich
+  ctx.save();
+  const sunHeight = plotH * 0.45;
+  const sunBase = plot.bottom;
+  const sunGrad = ctx.createLinearGradient(0, sunBase - sunHeight, 0, sunBase);
+  sunGrad.addColorStop(0, "rgba(255, 193, 7, 0.35)");
+  sunGrad.addColorStop(1, "rgba(255, 193, 7, 0.02)");
+  ctx.fillStyle = sunGrad;
+  ctx.beginPath();
+  ctx.moveTo(plot.left, sunBase);
+  for (let i = 0; i < n; i++) {
+    const val = Number.isFinite(series[i].uvi) ? series[i].uvi : 0;
+    const h = (val / maxUvi) * sunHeight;
+    ctx.lineTo(xCenters[i], sunBase - h);
+  }
+  ctx.lineTo(plot.right, sunBase);
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
+
+  // Niederschlag als Balken
+  if (maxPrecip > 0) {
+    ctx.save();
+    const barMaxH = plotH * 0.45;
+    const barW = Math.min(22, stdWidth * 0.55);
+    ctx.fillStyle = "rgba(70, 160, 255, 0.35)";
+    ctx.strokeStyle = "rgba(70, 160, 255, 0.85)";
+    ctx.lineWidth = 1;
+
+    for (let i = 0; i < n; i++) {
+      const p = Number.isFinite(series[i].precip) ? series[i].precip : 0;
+      const h = (p / maxPrecip) * barMaxH;
+      if (h <= 0) continue;
+      const x0 = xCenters[i] - barW / 2;
+      const y0 = plot.bottom - h;
+      ctx.beginPath();
+      if (typeof ctx.roundRect === "function") {
+        ctx.roundRect(x0, y0, barW, h, 6);
+      } else {
+        ctx.rect(x0, y0, barW, h);
+      }
+      ctx.fill();
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  // Temperatur-Linie
+  ctx.save();
+  const grad = ctx.createLinearGradient(plot.left, 0, plot.right, 0);
+  grad.addColorStop(0, "#ffb74d");
+  grad.addColorStop(1, "#ff5252");
+  ctx.strokeStyle = grad;
+  ctx.lineWidth = 3;
+  ctx.lineJoin = "round";
+  ctx.lineCap = "round";
+  ctx.beginPath();
+  for (let i = 0; i < n; i++) {
+    const y = yForTemp(series[i].temp);
+    const x = xCenters[i];
+    if (i === 0) {
+      ctx.moveTo(x, y);
+    } else {
+      ctx.lineTo(x, y);
+    }
+  }
+  ctx.stroke();
+  ctx.restore();
+
+  // X Labels (alle 3 Stunden)
+  ctx.save();
+  ctx.font = "11px sans-serif";
+  ctx.fillStyle = "rgba(255,255,255,0.85)";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "top";
+  for (let i = 0; i < n; i++) {
+    if (i % 3 !== 0 && i !== n - 1) continue;
+    const raw = series[i].label;
+    const hourNumber = (raw.match(/\d{1,2}/)?.[0] ?? "").toString();
+    const label = hourNumber ? `${hourNumber}h` : raw;
+    ctx.fillText(label, xCenters[i], plot.bottom + 8);
+  }
+  ctx.restore();
+
+  initHourlyForecastInteractions();
+}
+
+function initHourlyForecastInteractions() {
+  if (!hourlyForecastCanvas || !hourlyForecastTooltip) {
+    return;
+  }
+
+  // Scroll-Sync zwischen Slider (Stunden-Kacheln) und Chart
+  if (hourForecastContainer && hourlyForecastChartScroll) {
+    if (!hourForecastContainer.__hasHourlyScrollSync) {
+      hourForecastContainer.__hasHourlyScrollSync = true;
+      let isSyncing = false;
+      const sync = (src, dst) => {
+        if (isSyncing) return;
+        isSyncing = true;
+        dst.scrollLeft = src.scrollLeft;
+        requestAnimationFrame(() => {
+          isSyncing = false;
+        });
+      };
+
+      hourForecastContainer.addEventListener(
+        "scroll",
+        () => sync(hourForecastContainer, hourlyForecastChartScroll),
+        { passive: true },
+      );
+      hourlyForecastChartScroll.addEventListener(
+        "scroll",
+        () => sync(hourlyForecastChartScroll, hourForecastContainer),
+        { passive: true },
+      );
+    }
+  }
+
+  // Tooltip (einmalig)
+  if (hourlyForecastCanvas.__hasHourlyTooltipHandlers) {
+    return;
+  }
+  hourlyForecastCanvas.__hasHourlyTooltipHandlers = true;
+
+  const hideTooltip = () => {
+    hourlyForecastTooltip.hidden = true;
+  };
+
+  hourlyForecastCanvas.addEventListener("mouseleave", hideTooltip);
+  hourlyForecastCanvas.addEventListener("touchend", hideTooltip, {
+    passive: true,
+  });
+
+  const showAt = (clientX, clientY) => {
+    if (!lastHourlyForecastSeries || !lastHourlyForecastLayout) {
+      return;
+    }
+    const parent = hourlyForecastCanvas.closest(
+      ".hourlyForecastChartContainer",
+    );
+    if (!parent) {
+      return;
+    }
+
+    const rect = hourlyForecastCanvas.getBoundingClientRect();
+    const xInView = clientX - rect.left;
+    const scrollLeft = hourlyForecastChartScroll?.scrollLeft || 0;
+    const x = xInView + scrollLeft;
+
+    const { xCenters } = lastHourlyForecastLayout;
+    let closestIdx = 0;
+    let closestDist = Infinity;
+    for (let i = 0; i < xCenters.length; i++) {
+      const dist = Math.abs(xCenters[i] - x);
+      if (dist < closestDist) {
+        closestDist = dist;
+        closestIdx = i;
+      }
+    }
+
+    const d = lastHourlyForecastSeries[closestIdx];
+    const tempText = `${Math.round(d.temp)}°C`;
+    const precipText = `${(Number.isFinite(d.precip) ? d.precip : 0).toFixed(
+      1,
+    )} mm`;
+    const sunText = `${(Number.isFinite(d.uvi) ? d.uvi : 0).toFixed(1)} UV`;
+
+    hourlyForecastTooltip.innerHTML = `
+      <div style="font-weight:700; margin-bottom:6px;">${d.label}</div>
+      <div>Temperatur: <strong>${tempText}</strong></div>
+      <div>Niederschlag: <strong>${precipText}</strong></div>
+      <div>Sonne: <strong>${sunText}</strong></div>
+    `;
+
+    const parentRect = parent.getBoundingClientRect();
+    const relX = clientX - parentRect.left;
+    const relY = clientY - parentRect.top;
+
+    const pad = 10;
+    const tooltipW = 240;
+    const tooltipH = 110;
+    const left = Math.min(
+      Math.max(relX + 12, pad),
+      parentRect.width - tooltipW - pad,
+    );
+    const top = Math.min(
+      Math.max(relY - tooltipH - 12, pad),
+      parentRect.height - tooltipH - pad,
+    );
+
+    hourlyForecastTooltip.style.left = `${left}px`;
+    hourlyForecastTooltip.style.top = `${top}px`;
+    hourlyForecastTooltip.hidden = false;
+  };
+
+  hourlyForecastCanvas.addEventListener("mousemove", (e) => {
+    showAt(e.clientX, e.clientY);
+  });
+
+  hourlyForecastCanvas.addEventListener(
+    "touchmove",
+    (e) => {
+      const t = e.touches?.[0];
+      if (!t) return;
+      showAt(t.clientX, t.clientY);
+    },
+    { passive: true },
+  );
 }
 
 function drawWeeklyForecastChart(series) {

@@ -315,6 +315,19 @@
         <div class="shadow"></div>
 
     </div>
+
+    <div class="hourlyForecastChartContainer" aria-label="Stündlicher Verlauf (24 Stunden)">
+        <div class="hourlyForecastChartScroll" id="hourlyForecastChartScroll" aria-label="Stündliches Diagramm (scrollbar)">
+            <canvas id="hourlyForecastCanvas"></canvas>
+        </div>
+        <div class="forecastCanvasTooltip" id="hourlyForecastTooltip" hidden></div>
+        <div class="hourlyForecastLegend" aria-hidden="true">
+            <div class="legendItem"><span class="legendSwatch tempLine"></span>Temperatur</div>
+            <div class="legendItem"><span class="legendSwatch precip"></span>Niederschlag (mm/h)</div>
+            <div class="legendItem"><span class="legendSwatch sun"></span>Sonne (UV)</div>
+        </div>
+    </div>
+
         <h4 class="block-headline">7 Tage Vorhersage</h4>
         <div class="average-container">
             <p>Regensumme der nä. 7 Tage: <span id="lbl_outp_rain_sum">-</span> mm</p>
