@@ -3,9 +3,7 @@ let temp = 0;
 let cityList = [];
 let ky = "";
 let address = "";
-let timezoneOffset;
-const winterTime = 3600;
-const summerTime = 7200;
+let timezoneName = "UTC";
 let iconVal;
 let iconValRaw;
 let isCurrentLocation = false;
@@ -353,7 +351,7 @@ function requestWeatherForecast(lat, lon) {
       let index;
       let hour;
       let weekDay;
-      timezoneOffset = data.timezone_offset;
+      timezoneName = data.timezone || "UTC";
       const windgesch = data.current.wind_speed * 3.6;
       let imgSrc = `https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/widgets/${data.current.weather[0].icon}.png`;
 
@@ -395,8 +393,8 @@ function requestWeatherForecast(lat, lon) {
         showAlert = 0;
         let alertBody = data.alerts[showAlert].description;
         let alertEvent = data.alerts[showAlert].event;
-        let alertStart = intTimeConvert(data.alerts[showAlert].start);
-        let alertEnd = intTimeConvert(data.alerts[showAlert].end);
+        let alertStart = formatUnixDateTime(data.alerts[showAlert].start);
+        let alertEnd = formatUnixDateTime(data.alerts[showAlert].end);
         let alertSender = data.alerts[showAlert].sender_name;
 
         const alertAmount = data.alerts.length;
@@ -417,8 +415,8 @@ function requestWeatherForecast(lat, lon) {
           }
           alertBody = data.alerts[showAlert].description;
           alertEvent = data.alerts[showAlert].event;
-          alertStart = intTimeConvert(data.alerts[showAlert].start);
-          alertEnd = intTimeConvert(data.alerts[showAlert].end);
+          alertStart = formatUnixDateTime(data.alerts[showAlert].start);
+          alertEnd = formatUnixDateTime(data.alerts[showAlert].end);
           alertSender = data.alerts[showAlert].sender_name;
 
           outpAlertHeadline.innerHTML =
@@ -477,26 +475,10 @@ function requestWeatherForecast(lat, lon) {
 
       //?####################################################################################################
       //* ANCHOR -  Sonnen auf - untergang
-
-      if (
-        splitVal(intTimeConvert(data.current.sunrise) + "", " ", 5) ===
-        "GMT+0200"
-      ) {
-        timeSubstract = summerTime;
-      } else {
-        timeSubstract = winterTime;
-      }
-
       //* Sonnenaufgang roh für Sonnenstand
-      sunriseRaw = intTimeConvert(
-        data.current.sunrise + timezoneOffset - timeSubstract,
-      );
-      next_sunrise = intTimeConvert(
-        data.daily[1].sunrise + timezoneOffset - timeSubstract,
-      );
-      sunsetRaw = intTimeConvert(
-        data.current.sunset + timezoneOffset - timeSubstract,
-      );
+      sunriseRaw = intTimeConvert(data.current.sunrise);
+      next_sunrise = intTimeConvert(data.daily[1].sunrise);
+      sunsetRaw = intTimeConvert(data.current.sunset);
       // Für Anzeige Auf-Untergang
       sunrise = rawDatetime_in_Time(data.current.sunrise);
       sunset = rawDatetime_in_Time(data.current.sunset);
@@ -511,13 +493,18 @@ function requestWeatherForecast(lat, lon) {
         sunset;
 
       //* ANCHOR -  Akt. Ortsdatum & Zeit
-      const dateTimeNowRaw = intTimeConvert(
-        data.current.dt + timezoneOffset - timeSubstract,
-      );
-      const dateTimeNow_Day = splitVal(dateTimeNowRaw + "", " ", 2);
-      let dateTimeNow_Month = splitVal(dateTimeNowRaw + "", " ", 1);
-      dateTimeNow_Month = convert_Month(dateTimeNow_Month);
-      const dateTimeNow_TIME = splitVal(dateTimeNowRaw + "", " ", 4);
+      const dateTimeNowRaw = intTimeConvert(data.current.dt);
+      const dateTimeNow_Day = formatUnixInTimezone(data.current.dt, {
+        day: "2-digit",
+      });
+      const dateTimeNow_Month = formatUnixInTimezone(data.current.dt, {
+        month: "2-digit",
+      });
+      const dateTimeNow_TIME = formatUnixInTimezone(data.current.dt, {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+      });
       const dateTimeNow_Hour = splitVal(dateTimeNow_TIME + "", ":", 0);
       const dateTimeNow_Minute = splitVal(dateTimeNow_TIME + "", ":", 1);
       document.getElementById("outCurrDatetime").innerHTML =
@@ -617,7 +604,6 @@ function requestWeatherForecast(lat, lon) {
       document.getElementById("outpMaxUvIndex").innerHTML =
         `Heute Max: ${maxUvIndex}`;
 
-      timeMinusSummertime = 0;
       //?####################################################################################################
       //* ANCHOR -  Forecast Stunden Felder einblenden
       for (let i = 0; i <= 24; i++) {
@@ -626,22 +612,10 @@ function requestWeatherForecast(lat, lon) {
 
         temp = parseInt(data.hourly[i].temp);
         weatherIcon = data.hourly[i].weather[0].icon;
-        // ? Sommerzeit wird rausgerechnet
-        const gmt = splitVal(intTimeConvert(data.hourly[i].dt) + "", " ", 5);
-
-        if (gmt === "GMT+0200") {
-          timeMinusSummertime = timeSubstract;
-        } else {
-          timeMinusSummertime = 0;
-        }
-        hour = splitVal(
-          intTimeConvert(
-            data.hourly[i].dt + timezoneOffset - timeMinusSummertime,
-          ) + "",
-          " ",
-          4,
-        );
-        hour = splitVal(hour, ":", 0);
+        hour = formatUnixInTimezone(data.hourly[i].dt, {
+          hour: "2-digit",
+          hour12: false,
+        });
 
         nextUVIndex = data.hourly[i].uvi;
 
@@ -760,17 +734,16 @@ function requestWeatherForecast(lat, lon) {
         balken.style.marginTop = `${margin_Top}px`;
 
         weatherIcon = data.daily[i + 1].weather[0].icon;
-        weekDay = splitVal(intTimeConvert(data.daily[i + 1].dt) + "", " ", 0);
+        weekDay = formatUnixInTimezone(data.daily[i + 1].dt, {
+          weekday: "short",
+        });
 
-        const date_day = splitVal(
-          intTimeConvert(data.daily[i + 1].dt) + "",
-          " ",
-          2,
-        );
+        const date_day = formatUnixInTimezone(data.daily[i + 1].dt, {
+          day: "2-digit",
+        });
 
         index = `outDayDate${i}`;
         document.getElementById(index).innerHTML = `${date_day}.`;
-        weekDay = getDate(weekDay);
         index = `outpDay${i}`;
         document.getElementById(index).innerHTML = weekDay;
         index = `outpDayPlus${i}`;
@@ -976,6 +949,43 @@ function inerpreteUvIndex(uvindex) {
 function intTimeConvert(num) {
   let dte = new Date(num * 1000);
   return dte;
+}
+
+function formatUnixInTimezone(unixSeconds, options, locale = "de-DE") {
+  const numericUnix = Number(unixSeconds);
+  if (!Number.isFinite(numericUnix)) {
+    return "";
+  }
+
+  try {
+    return new Intl.DateTimeFormat(locale, {
+      timeZone: timezoneName || "UTC",
+      ...options,
+    }).format(new Date(numericUnix * 1000));
+  } catch (error) {
+    return new Intl.DateTimeFormat(locale, options).format(
+      new Date(numericUnix * 1000),
+    );
+  }
+}
+
+function formatUnixDateTime(unixSeconds) {
+  const weekday = formatUnixInTimezone(unixSeconds, {
+    weekday: "short",
+  }).replace(".", "");
+  const day = formatUnixInTimezone(unixSeconds, {
+    day: "2-digit",
+  });
+  const month = formatUnixInTimezone(unixSeconds, {
+    month: "2-digit",
+  });
+  const time = formatUnixInTimezone(unixSeconds, {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  });
+
+  return `${weekday}, ${day}.${month} ${time} Uhr`;
 }
 
 //?####################################################################################################
@@ -1242,10 +1252,12 @@ function renderWeeklyForecastChartFromForecast(data) {
     const snow = Number.isFinite(daily?.snow) ? daily.snow : 0;
     const precip = rain + snow;
 
-    const dtRaw = intTimeConvert(daily.dt) + "";
-    const weekdayEn = splitVal(dtRaw, " ", 0);
-    const weekdayDe = getDate(weekdayEn);
-    const dateDay = splitVal(dtRaw, " ", 2);
+    const weekdayDe = formatUnixInTimezone(daily.dt, {
+      weekday: "short",
+    });
+    const dateDay = formatUnixInTimezone(daily.dt, {
+      day: "2-digit",
+    });
 
     series.push({
       i,
@@ -2004,14 +2016,11 @@ function drawWeeklyForecastChart(series) {
 //?####################################################################################################
 // Funktion, welche ein Uhrzeit extrahiert. In Berücksichtigung der Zeitzohne
 function rawDatetime_in_Time(rawDatetime) {
-  const raw = intTimeConvert(rawDatetime + timezoneOffset - timeSubstract);
-  const time = splitVal(raw + "", " ", 4);
-  const pureTime = `${splitVal(time + "", ":", 0)}:${splitVal(
-    time + "",
-    ":",
-    1,
-  )}`;
-  return pureTime;
+  return formatUnixInTimezone(rawDatetime, {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  });
 }
 
 function splitVal(val, marker, pos) {
@@ -2105,7 +2114,6 @@ function getWeathertype(selectObject) {
 
 function changeWeatherType(type) {
   const savedData = JSON.parse(mainData);
-  let timeMinusSummertime = 0;
   for (let i = 0; i <= 24; i++) {
     index = `hourForecastBlock${i}`;
     document.getElementById(index).hidden = false;
@@ -2136,21 +2144,10 @@ function changeWeatherType(type) {
 
     const windgesch = nextWind * 3.6;
 
-    // ? Sommerzeit wird rausgerechnet
-    const gmt = splitVal(intTimeConvert(savedData.hourly[i].dt) + "", " ", 5);
-    if (gmt === "GMT+0200") {
-      timeMinusSummertime = timeSubstract;
-    } else {
-      timeMinusSummertime = 0;
-    }
-    hour = splitVal(
-      intTimeConvert(
-        savedData.hourly[i].dt + timezoneOffset - timeMinusSummertime,
-      ) + "",
-      " ",
-      4,
-    );
-    hour = splitVal(hour, ":", 0);
+    hour = formatUnixInTimezone(savedData.hourly[i].dt, {
+      hour: "2-digit",
+      hour12: false,
+    });
 
     index = `hourOutp${i}`;
     document.getElementById(index).innerHTML = `${hour} Uhr`;
@@ -2469,13 +2466,7 @@ setInterval(() => {
 function calc_time_to_next_sunevent() {
   if (sunEvent === "night") {
     const current_timestamp = new Date();
-    let current_unix_timestamp = parseInt(
-      (new Date(current_timestamp).getTime() / 1000).toFixed(0),
-    );
-    current_unix_timestamp =
-      current_unix_timestamp + timezoneOffset - timeSubstract;
-    const correct_timestamp = intTimeConvert(current_unix_timestamp);
-    const duration = minutesDiff(correct_timestamp, sunriseRaw);
+    const duration = minutesDiff(current_timestamp, sunriseRaw);
     sun_event.innerHTML = `Sonne geht in ${duration} auf`;
     sun_event.classList.add("next-morning");
     sun_event.classList.remove("next-night");
@@ -2483,13 +2474,7 @@ function calc_time_to_next_sunevent() {
 
   if (sunEvent === "evening") {
     const current_timestamp = new Date();
-    let current_unix_timestamp = parseInt(
-      (new Date(current_timestamp).getTime() / 1000).toFixed(0),
-    );
-    current_unix_timestamp =
-      current_unix_timestamp + timezoneOffset - timeSubstract;
-    const correct_timestamp = intTimeConvert(current_unix_timestamp);
-    const duration = minutesDiff(correct_timestamp, next_sunrise);
+    const duration = minutesDiff(current_timestamp, next_sunrise);
     sun_event.innerHTML = `Sonne geht in ${duration} auf`;
     sun_event.classList.add("next-morning");
     sun_event.classList.remove("next-night");
