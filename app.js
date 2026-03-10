@@ -612,23 +612,20 @@ function requestWeatherForecast(lat, lon) {
 
         temp = parseInt(data.hourly[i].temp);
         weatherIcon = data.hourly[i].weather[0].icon;
-        hour = formatUnixInTimezone(data.hourly[i].dt, {
-          hour: "2-digit",
-          hour12: false,
-        });
+        hour = formatHourLabel(data.hourly[i].dt);
 
         nextUVIndex = data.hourly[i].uvi;
 
         if (uvIndexisCritical === true && nextUVIndex < 3) {
           uvIndexisCritical = false;
-          uvIndexIsCriticalUntil = `${hour} Uhr`;
+          uvIndexIsCriticalUntil = hour;
           document.getElementById("outUvIndx").innerHTML =
             document.getElementById("outUvIndx").innerHTML +
             ` bis ${uvIndexIsCriticalUntil}`;
         }
 
         index = `hourOutp${i}`;
-        document.getElementById(index).innerHTML = `${hour} Uhr`;
+        document.getElementById(index).innerHTML = hour;
         index = `hourOutpPlus${i}`;
         document.getElementById(index).innerHTML = `${temp}°C`;
         document.getElementById(index).style.color = "white";
@@ -1590,9 +1587,7 @@ function initHourlyForecastInteractions() {
     }
 
     const rect = hourlyForecastCanvas.getBoundingClientRect();
-    const xInView = clientX - rect.left;
-    const scrollLeft = hourlyForecastChartScroll?.scrollLeft || 0;
-    const x = xInView + scrollLeft;
+    const x = clientX - rect.left;
 
     const { xCenters } = lastHourlyForecastLayout;
     let closestIdx = 0;
@@ -2023,6 +2018,17 @@ function rawDatetime_in_Time(rawDatetime) {
   });
 }
 
+function formatHourLabel(rawDatetime) {
+  const hourRaw = formatUnixInTimezone(rawDatetime, {
+    hour: "2-digit",
+    hour12: false,
+  });
+  const hour = String(hourRaw)
+    .replace(/\s*uhr$/i, "")
+    .trim();
+  return `${hour} Uhr`;
+}
+
 function splitVal(val, marker, pos) {
   const elem = val.split(marker);
   const retVal = elem[pos];
@@ -2144,13 +2150,10 @@ function changeWeatherType(type) {
 
     const windgesch = nextWind * 3.6;
 
-    hour = formatUnixInTimezone(savedData.hourly[i].dt, {
-      hour: "2-digit",
-      hour12: false,
-    });
+    hour = formatHourLabel(savedData.hourly[i].dt);
 
     index = `hourOutp${i}`;
-    document.getElementById(index).innerHTML = `${hour} Uhr`;
+    document.getElementById(index).innerHTML = hour;
     index = `hourOutpPlus${i}`;
     document.getElementById(index).style.color = "white";
 
