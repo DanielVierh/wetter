@@ -87,6 +87,7 @@ const hourlyForecastChartScroll = document.getElementById(
   "hourlyForecastChartScroll",
 );
 const hourForecastContainer = document.querySelector(".hourForecastContainer");
+const lbl_small_uv = document.getElementById("lbl_small_uv");
 
 let lastWeeklyForecastSeries = null;
 let lastWeeklyForecastLayout = null;
@@ -600,7 +601,8 @@ function requestWeatherForecast(lat, lon) {
       //?####################################################################################################
       //* ANCHOR -  Current UV Index
       document.getElementById("outUvIndx").innerHTML =
-        `${uvIndex} - ${inerpreteUvIndex(uvIndex)}`;
+        `${inerpreteUvIndex(uvIndex)}`;
+      lbl_small_uv.innerHTML = uvIndex;
       document.getElementById("outpMaxUvIndex").innerHTML =
         `Heute Max: ${maxUvIndex}`;
 

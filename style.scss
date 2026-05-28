@@ -550,10 +550,15 @@ button {
   letter-spacing: 2px;
 }
 
-.smallTemp {
+.smallTemp,
+.small-uv {
   font-size: 10px;
   margin-bottom: -5px;
   letter-spacing: 2px;
+}
+
+.small-uv {
+  font-size: 1.1rem;
 }
 
 .average-container {

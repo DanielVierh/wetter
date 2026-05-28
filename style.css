@@ -30,12 +30,9 @@ body {
   transition: 1.5s all;
 }
 
-@supports (
-  (-webkit-backdrop-filter: blur(30px)) or (backdrop-filter: blur(30px))
-) {
+@supports (backdrop-filter: blur(30px)) {
   container {
     background: rgba(236, 16, 16, 0.8);
-    -webkit-backdrop-filter: blur(20px);
     backdrop-filter: blur(20px);
   }
 }
@@ -243,13 +240,10 @@ button {
   width: 250px;
   height: auto;
   background-color: rgba(255, 255, 255, 0.1607843137);
-  -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
   border: 1px solid rgba(255, 255, 255, 0.3803921569);
   border-radius: 15px;
-  box-shadow:
-    inset 0 0 40px rgba(0, 0, 0, 0.7019607843),
-    0 0 20px black;
+  box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.7019607843), 0 0 20px black;
   z-index: 1;
   padding: 15px;
 }
@@ -320,10 +314,7 @@ button {
   padding: 15px;
   border-radius: 15px;
   background-color: rgba(158, 156, 156, 0.308);
-  box-shadow:
-    5px 5px 5px black,
-    inset 10px 8px 15px black;
-  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 5px 5px 5px black, inset 10px 8px 15px black;
   backdrop-filter: blur(20px);
   transition: all 0.5s ease;
 }
@@ -532,10 +523,15 @@ button {
   letter-spacing: 2px;
 }
 
-.smallTemp {
+.smallTemp,
+.small-uv {
   font-size: 10px;
   margin-bottom: -5px;
   letter-spacing: 2px;
+}
+
+.small-uv {
+  font-size: 1.1rem;
 }
 
 .average-container {
@@ -606,7 +602,6 @@ button {
   border-radius: 999px;
   border: 1px solid rgba(255, 255, 255, 0.25);
   background: rgba(255, 255, 255, 0.08);
-  -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
 }
 
@@ -635,7 +630,6 @@ button {
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.25);
   background: rgba(10, 12, 16, 0.75);
-  -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
   text-align: left;
@@ -659,9 +653,7 @@ button {
   border: 2px solid rgba(255, 255, 255, 0.084);
   border-radius: 15px;
   background-color: rgba(158, 156, 156, 0.308);
-  box-shadow:
-    5px 5px 5px black,
-    inset 10px 8px 15px black;
+  box-shadow: 5px 5px 5px black, inset 10px 8px 15px black;
   backdrop-filter: blur(20px);
 }
 .hourlyForecastChartScroll::-webkit-scrollbar {
@@ -699,7 +691,6 @@ button {
   border-radius: 999px;
   border: 1px solid rgba(255, 255, 255, 0.25);
   background: rgba(255, 255, 255, 0.08);
-  -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
 }
 
@@ -707,13 +698,8 @@ button {
   background: linear-gradient(to right, #ffb74d, #ff5252);
   height: 6px;
 }
-
 .legendSwatch.sun {
-  background: linear-gradient(
-    to right,
-    rgba(255, 213, 79, 0.95),
-    rgba(255, 152, 0, 0.95)
-  );
+  background: linear-gradient(to right, rgba(255, 213, 79, 0.95), rgba(255, 152, 0, 0.95));
   height: 6px;
 }
 
@@ -773,7 +759,6 @@ button {
   text-align: center;
   transition: all 1s ease-in-out;
   animation: ping 12s infinite;
-  -webkit-backdrop-filter: blur(7px);
   backdrop-filter: blur(7px);
 }
 
@@ -984,7 +969,6 @@ button {
   left: 0;
   top: 0;
   background-color: rgba(0, 0, 0, 0.6);
-  -webkit-backdrop-filter: blur(15px);
   backdrop-filter: blur(15px);
   z-index: 10001;
   border-radius: 0 15px 15px 15px;
@@ -1040,7 +1024,6 @@ button {
   align-items: center;
   cursor: pointer;
   background: rgba(255, 255, 255, 0.3);
-  -webkit-backdrop-filter: blur(13px);
   backdrop-filter: blur(13px);
   transition: all 1s ease-in-out;
   height: 50px;
@@ -1127,7 +1110,6 @@ button {
   justify-content: flex-start;
   align-items: center;
   background: rgba(16, 33, 35, 0.4862745098);
-  -webkit-backdrop-filter: blur(20px);
   backdrop-filter: blur(20px);
   z-index: 999999999;
   overflow-y: scroll;
@@ -1160,7 +1142,6 @@ button {
   bottom: 12%;
   z-index: 9999;
   background: rgba(20, 196, 226, 0.4);
-  -webkit-backdrop-filter: blur(20px);
   backdrop-filter: blur(20px);
   padding: 10px;
   border-radius: 15px;
@@ -1198,4 +1179,4 @@ button {
   color: #102123;
   font-weight: bold;
   text-align: left;
-} /*# sourceMappingURL=style.css.map */
+}/*# sourceMappingURL=style.css.map */
