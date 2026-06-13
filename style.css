@@ -641,7 +641,7 @@ button {
 .hourlyForecastChartContainer {
   width: 100%;
   max-width: 600px;
-  transform: translateX(-25px);
+  transform: translateX(-15px);
   margin-top: 8px;
   position: relative;
 }
