@@ -12,6 +12,7 @@ let uvIndexisCritical = false;
 let uvIndexIsCriticalUntil = "";
 let weatherType = "opt_weather";
 let mainData = [];
+let currentWeatherSummary = null;
 let meineKarte = L.map("karte").setView([51.16229, 6.462739], 2);
 let airQualityInfoboxIsVisible = false;
 let alertInfoboxIsVisible = false;
@@ -35,6 +36,156 @@ class Address {
     this.display_name = display_name;
     this.lon = lon;
     this.lat = lat;
+  }
+}
+
+function getCityEntryName(cityEntry) {
+  if (typeof cityEntry === "string") {
+    return cityEntry;
+  }
+
+  if (cityEntry && typeof cityEntry === "object") {
+    return cityEntry.name || cityEntry.city || cityEntry.address || "";
+  }
+
+  return "";
+}
+
+function normalizeCityEntry(cityEntry) {
+  const cityName = getCityEntryName(cityEntry).trim();
+
+  if (!cityName) {
+    return null;
+  }
+
+  if (typeof cityEntry === "string") {
+    return {
+      name: cityName,
+      lat: null,
+      lon: null,
+      preview: null,
+    };
+  }
+
+  return {
+    name: cityName,
+    lat:
+      cityEntry.lat === undefined || cityEntry.lat === null
+        ? null
+        : cityEntry.lat,
+    lon:
+      cityEntry.lon === undefined || cityEntry.lon === null
+        ? null
+        : cityEntry.lon,
+    preview: cityEntry.preview ? { ...cityEntry.preview } : null,
+  };
+}
+
+function normalizeCityList() {
+  cityList = cityList
+    .map((cityEntry) => normalizeCityEntry(cityEntry))
+    .filter((cityEntry) => cityEntry !== null);
+}
+
+function findCityIndex(cityName) {
+  return cityList.findIndex(
+    (cityEntry) => getCityEntryName(cityEntry) === cityName,
+  );
+}
+
+function getCoordinatesForCity(cityName) {
+  return fetch(
+    `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+      cityName,
+    )}`,
+  )
+    .then((response) => response.json())
+    .then((data) => {
+      if (!data || data.length === 0) {
+        return null;
+      }
+
+      return {
+        lat: parseFloat(data[0].lat),
+        lon: parseFloat(data[0].lon),
+        display_name: data[0].display_name,
+        name: data[0].name || cityName,
+      };
+    });
+}
+
+function setCityPreview(cityName, previewData) {
+  const cityIndex = findCityIndex(cityName);
+
+  if (cityIndex === -1) {
+    return;
+  }
+
+  cityList[cityIndex] = {
+    ...cityList[cityIndex],
+    preview: previewData,
+    lat: previewData.lat ?? cityList[cityIndex].lat ?? null,
+    lon: previewData.lon ?? cityList[cityIndex].lon ?? null,
+  };
+}
+
+async function refreshSavedCityPreviews() {
+  const previewCities = cityList.slice(0, 10);
+
+  if (previewCities.length === 0) {
+    return;
+  }
+
+  let hasUpdates = false;
+
+  for (const cityEntry of previewCities) {
+    try {
+      const cityName = getCityEntryName(cityEntry);
+      if (!cityName) {
+        continue;
+      }
+
+      let lat = cityEntry.lat;
+      let lon = cityEntry.lon;
+
+      if (lat === null || lon === null) {
+        const coordinates = await getCoordinatesForCity(cityName);
+        if (!coordinates) {
+          continue;
+        }
+
+        lat = coordinates.lat;
+        lon = coordinates.lon;
+      }
+
+      const response = await fetch(
+        `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&appid=${ky}&lang=de&units=metric`,
+      );
+      const data = await response.json();
+      const previewData = {
+        current: Math.round(data.current.temp),
+        min: Math.round(data.daily[0].temp.min),
+        max: Math.round(data.daily[0].temp.max),
+        icon: data.current.weather[0].icon,
+        description: data.current.weather[0].description,
+        lat,
+        lon,
+        updatedAt: Date.now(),
+      };
+
+      setCityPreview(cityName, previewData);
+      hasUpdates = true;
+    } catch (error) {
+      console.error(
+        `Fehler beim Laden der Wettervorschau für ${getCityEntryName(cityEntry)}:`,
+        error,
+      );
+    }
+  }
+
+  if (hasUpdates) {
+    saveCity();
+    showSavedCitys();
   }
 }
 
@@ -369,6 +520,22 @@ function requestWeatherForecast(lat, lon) {
 
       iconValRaw = data.current.weather[0].icon;
       iconVal = iconValRaw.slice(-1);
+
+      currentWeatherSummary = {
+        current: currTEMP,
+        min: Math.round(data.daily[0].temp.min),
+        max: Math.round(data.daily[0].temp.max),
+        icon: data.current.weather[0].icon,
+        description: data.current.weather[0].description,
+        lat,
+        lon,
+        updatedAt: Date.now(),
+      };
+
+      setCityPreview(address, currentWeatherSummary);
+      if (findCityIndex(address) !== -1) {
+        saveCity();
+      }
 
       document.getElementById("weatherimg").src = imgSrc;
       document.getElementById("outpWeather").innerHTML =
@@ -1074,13 +1241,29 @@ function loadData() {
   setTimeout(() => {
     if (localStorage.getItem("stored_CityList") != null) {
       cityList = JSON.parse(localStorage.getItem("stored_CityList"));
+      normalizeCityList();
+      saveCity();
 
       if (cityList.length === 0) {
         document.getElementById("btn_show_cityModal").style.display = "none";
+        weatherContainer.style.display = "none";
+        cityContainer.style.display = "none";
+        loadMap(51.16229, -20.462739);
+        document.getElementById("karte").innerHTML =
+          `<h3>Willkommen in meiner Wetterapp</h3>
+            <ul>
+                <li>Gib oben in der Suche einen Stadtnemen ein</li>
+                <li>Manchmal muss man mit einem Komma getrennt den Ländernamen ergänzen. Z.B. Vik, Island</li>
+                <li>Drücke Enter oder auf den Button mit der Lupe</li>
+                <li>Sobald das Wetter angezeigt wird, kannst du mit dem + Button, den Ort abspeichern.</li>
+            </ul>
+            `;
+        return;
       }
-      address = cityList[0];
+      address = getCityEntryName(cityList[0]);
       getAddressCoordinates(address);
       showSavedCitys();
+      refreshSavedCityPreviews();
       currentLocationButton.hidden = false;
     } else {
       // Keine Einträge vorhanden
@@ -1119,16 +1302,74 @@ function loadData() {
 //?####################################################################################################
 // Zeigt abgespeicherte Städte an
 function showSavedCitys() {
-  document.getElementById("outCitys").innerHTML = "";
+  const outCitys = document.getElementById("outCitys");
+  outCitys.innerHTML = "";
+
   for (let i = 0; i < cityList.length; i++) {
     const cty = cityList[i];
-    const btn = document.createElement("button");
-    btn.appendChild(document.createTextNode(cty));
-    btn.onclick = getCity;
+    const cityName = getCityEntryName(cty);
+    const cityItem = document.createElement("li");
+    cityItem.className = "city-item";
 
-    let ul = document.getElementById("outCitys");
-    ul.appendChild(btn);
-    cityContainer.classList.remove("acitve");
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "city-entry-button";
+    btn.addEventListener("click", () => getCity(cityName));
+
+    const cityTitle = document.createElement("span");
+    cityTitle.className = "city-name";
+    cityTitle.textContent = cityName;
+    btn.appendChild(cityTitle);
+
+    const previewRow = document.createElement("span");
+    previewRow.className = "city-preview";
+
+    if (i < 7) {
+      if (cty.preview) {
+        const previewIcon = document.createElement("img");
+        previewIcon.className = "city-preview-icon";
+        previewIcon.alt = cty.preview.description || "Wettericon";
+        previewIcon.src = `https://openweathermap.org/img/wn/${cty.preview.icon}@2x.png`;
+
+        const previewText = document.createElement("span");
+        previewText.className = "city-preview-values";
+
+        const currentLine = document.createElement("span");
+        currentLine.className = "city-preview-value";
+        currentLine.textContent = `Aktuell: ${cty.preview.current}°`;
+
+        const minMaxLine = document.createElement("span");
+        minMaxLine.className = "city-preview-value";
+        minMaxLine.textContent = `H: ${cty.preview.max}° | T: ${cty.preview.min}°`;
+
+        previewText.appendChild(currentLine);
+        previewText.appendChild(minMaxLine);
+        previewRow.appendChild(previewIcon);
+        previewRow.appendChild(previewText);
+      } else {
+        previewRow.classList.add("city-preview-loading");
+        previewRow.textContent = "Wetterdaten werden geladen...";
+      }
+    } else {
+      previewRow.hidden = true;
+    }
+
+    btn.appendChild(previewRow);
+
+    const deleteButton = document.createElement("button");
+    deleteButton.type = "button";
+    deleteButton.className = "city-delete-button";
+    deleteButton.setAttribute("aria-label", `${cityName} löschen`);
+    deleteButton.innerHTML =
+      '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/></svg>';
+    deleteButton.addEventListener("click", (event) => {
+      event.stopPropagation();
+      delCity(cityName);
+    });
+
+    cityItem.appendChild(btn);
+    cityItem.appendChild(deleteButton);
+    outCitys.appendChild(cityItem);
   }
 }
 
@@ -1149,7 +1390,7 @@ function saveSettings() {
 // Fügt die Stadt in die Liste der Städte hinzu, nach Überprüfung, ob diese bereits vorhanden ist
 function addCity() {
   if (address != "") {
-    if (cityList.includes(address)) {
+    if (findCityIndex(address) !== -1) {
       createNotification(
         `"${address}" hast du bereits abgespeichert!`,
         "warning",
@@ -1157,7 +1398,12 @@ function addCity() {
       );
     } else {
       if (address != "") {
-        cityList.push(address);
+        cityList.push({
+          name: address,
+          lat: currentWeatherSummary?.lat ?? null,
+          lon: currentWeatherSummary?.lon ?? null,
+          preview: currentWeatherSummary ? { ...currentWeatherSummary } : null,
+        });
         saveCity();
         createNotification(`${address} wurde gespeichert`, "success", 3000);
         showSavedCitys();
@@ -1168,32 +1414,38 @@ function addCity() {
 
 //?####################################################################################################
 // Ausgewählte Stadt anzeigen
-function getCity() {
+function getCity(cityName) {
   weatherContainer.style.display = "flex";
   typeSelect.value = "opt_temp";
   window.scrollTo(0, 0);
-  address = this.innerText;
+  address = cityName || address;
   getAddressCoordinates(address);
   cityContainer.classList.remove("active");
 }
 
 //?####################################################################################################
 // Lösche die Stadt, falls in der Liste vorhanden
-function delCity() {
-  if (address != "") {
-    if (cityList.includes(address)) {
-      const confirm = window.confirm(
-        `Möchtest du die Stadt "${address}" wirklich aus Deiner Liste entfernen?`,
-      );
-      if (confirm) {
-        for (let i = 0; i < cityList.length; i++) {
-          if (address === cityList[i]) {
-            cityList.splice(i, 1);
-            saveCity();
-            location.reload();
-          }
-        }
-      }
+function delCity(cityName = address) {
+  const targetCityName = cityName || address;
+  if (targetCityName === "") {
+    return;
+  }
+
+  const cityIndex = findCityIndex(targetCityName);
+  if (cityIndex === -1) {
+    return;
+  }
+
+  const confirm = window.confirm(
+    `Möchtest du die Stadt "${targetCityName}" wirklich aus Deiner Liste entfernen?`,
+  );
+  if (confirm) {
+    cityList.splice(cityIndex, 1);
+    saveCity();
+    showSavedCitys();
+
+    if (targetCityName === address) {
+      location.reload();
     }
   }
 }
@@ -2086,12 +2338,18 @@ function createNotification(message, messageType, showTime) {
 // Stadt markieren, diese wird bei Neustart zuerst geladen
 function startCity() {
   const cityName = address;
-  const arrIndex = cityList.indexOf(address);
+  const arrIndex = findCityIndex(address);
   if (arrIndex === -1) {
-    cityList.splice(0, 0, cityName);
+    cityList.splice(0, 0, {
+      name: cityName,
+      lat: currentWeatherSummary?.lat ?? null,
+      lon: currentWeatherSummary?.lon ?? null,
+      preview: currentWeatherSummary ? { ...currentWeatherSummary } : null,
+    });
   } else {
+    const cityEntry = cityList[arrIndex];
     cityList.splice(arrIndex, 1);
-    cityList.splice(0, 0, cityName);
+    cityList.splice(0, 0, cityEntry);
   }
   createNotification(
     `"${cityName}" wird nun immer beim Start angezeigt`,
