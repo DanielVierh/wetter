@@ -532,11 +532,6 @@ function requestWeatherForecast(lat, lon) {
         updatedAt: Date.now(),
       };
 
-      setCityPreview(address, currentWeatherSummary);
-      if (findCityIndex(address) !== -1) {
-        saveCity();
-      }
-
       document.getElementById("weatherimg").src = imgSrc;
       document.getElementById("outpWeather").innerHTML =
         data.current.weather[0].description;
@@ -1263,7 +1258,6 @@ function loadData() {
       address = getCityEntryName(cityList[0]);
       getAddressCoordinates(address);
       showSavedCitys();
-      refreshSavedCityPreviews();
       currentLocationButton.hidden = false;
     } else {
       // Keine Einträge vorhanden
@@ -2772,6 +2766,7 @@ function add_zero(val) {
 
 btn_show_cityModal.addEventListener("click", () => {
   cityContainer.classList.add("active");
+  refreshSavedCityPreviews();
 });
 
 document.getElementById("btn_close_cityModal").addEventListener("click", () => {
