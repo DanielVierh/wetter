@@ -39,6 +39,14 @@ class Address {
   }
 }
 
+function getWeatherIconSrc(iconCode) {
+  if (!iconCode) {
+    return "";
+  }
+
+  return `assets/wetter_icons/${iconCode}.png`;
+}
+
 function getCityEntryName(cityEntry) {
   if (typeof cityEntry === "string") {
     return cityEntry;
@@ -505,7 +513,7 @@ function requestWeatherForecast(lat, lon) {
       let weekDay;
       timezoneName = data.timezone || "UTC";
       const windgesch = data.current.wind_speed * 3.6;
-      let imgSrc = `https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/widgets/${data.current.weather[0].icon}.png`;
+      let imgSrc = getWeatherIconSrc(data.current.weather[0].icon);
 
       // * Stuff from weather request func
       deleteSpinner();
@@ -792,7 +800,7 @@ function requestWeatherForecast(lat, lon) {
         index = `hourOutpPlus${i}`;
         document.getElementById(index).innerHTML = `${temp}°C`;
         document.getElementById(index).style.color = "white";
-        imgSrc = `https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/widgets/${weatherIcon}.png`;
+        imgSrc = getWeatherIconSrc(weatherIcon);
         index = `hourForecastImg${i}`;
         document.getElementById(index).src = imgSrc;
       }
@@ -915,7 +923,7 @@ function requestWeatherForecast(lat, lon) {
           document.getElementById(index).innerHTML =
             `${tempMin}°C-${tempMax}°C`;
         }
-        imgSrc = `https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/widgets/${weatherIcon}.png`;
+        imgSrc = getWeatherIconSrc(weatherIcon);
         index = `foreCastImg${i}`;
         document.getElementById(index).src = imgSrc;
       }
@@ -1322,7 +1330,7 @@ function showSavedCitys() {
         const previewIcon = document.createElement("img");
         previewIcon.className = "city-preview-icon";
         previewIcon.alt = cty.preview.description || "Wettericon";
-        previewIcon.src = `https://openweathermap.org/img/wn/${cty.preview.icon}@2x.png`;
+        previewIcon.src = getWeatherIconSrc(cty.preview.icon);
 
         const previewText = document.createElement("span");
         previewText.className = "city-preview-values";
@@ -2444,7 +2452,7 @@ function changeWeatherType(type) {
       document.getElementById(index).innerHTML = `${nextClouds}%`;
       document.getElementById(index).classList.add("active");
     }
-    imgSrc = `https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/widgets/${weatherIcon}.png`;
+    imgSrc = getWeatherIconSrc(weatherIcon);
     document.getElementById(index).src = imgSrc;
     index = `hourForecastImg${i}`;
   }

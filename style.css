@@ -239,13 +239,12 @@ button {
 .img-temp-wrapper .imag {
   position: absolute;
   left: 50%;
-  top: 0;
-  transform: translateX(-50%);
+  top: 200px;
+  transform: translate(-50%, 50px);
   border-radius: 50%;
-  width: 200px;
+  max-width: 170px;
   z-index: 10;
   opacity: 0.85;
-  animation: hover_weather 25s ease-in-out infinite;
 }
 .img-temp-wrapper #outpTemp {
   position: absolute;
@@ -265,17 +264,6 @@ button {
   }
 }
 
-@keyframes hover_weather {
-  0% {
-    top: 15px;
-  }
-  50% {
-    top: -5px;
-  }
-  100% {
-    top: 15px;
-  }
-}
 .foreCastCont {
   display: flex;
   justify-content: space-evenly;
