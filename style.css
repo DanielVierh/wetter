@@ -239,10 +239,10 @@ button {
 .img-temp-wrapper .imag {
   position: absolute;
   left: 50%;
-  top: 200px;
+  top: 0;
   transform: translate(-50%, 50px);
   border-radius: 50%;
-  max-width: 170px;
+  max-width: 200px;
   z-index: 10;
   opacity: 0.85;
 }
