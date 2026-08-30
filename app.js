@@ -30,6 +30,73 @@ let weatherSettings = {
   appeareanceMode: "",
 };
 
+// Letzte Forecast-Daten für erneute Berechnung der Druck-Tendenz
+let lastForecastDataForPressure = null;
+
+function renderPressureFromData(data) {
+  try {
+    const pressure =
+      data.current && data.current.pressure ? data.current.pressure : null; // hPa
+    const outpPressureElem = document.getElementById("outpPressure");
+    const outpPressureTrendElem = document.getElementById("outpPressureTrend");
+    if (outpPressureElem && pressure !== null) {
+      outpPressureElem.innerHTML = `${pressure} hPa`;
+    }
+
+    const sel = document.getElementById("pressureWindowSelect");
+    let trendHours = 3;
+    if (sel) {
+      const v = parseInt(sel.value, 10);
+      if (Number.isFinite(v) && v > 0) trendHours = v;
+    }
+
+    const pressures = (data.hourly || [])
+      .map((h) => h.pressure)
+      .filter(Boolean);
+    let pressureTrendText = "Keine Tendenz";
+    if (pressures.length >= 2) {
+      const avg = (arr) => arr.reduce((a, b) => a + b, 0) / arr.length;
+      const lastN = pressures.slice(0, trendHours);
+      let prevN = [];
+      if (pressures.length >= trendHours * 2) {
+        prevN = pressures.slice(trendHours, trendHours * 2);
+      } else {
+        prevN = pressures.slice(trendHours);
+      }
+      const latestAvg = lastN.length > 0 ? avg(lastN) : null;
+      const prevAvg = prevN.length > 0 ? avg(prevN) : null;
+      if (latestAvg !== null && prevAvg !== null) {
+        const delta = latestAvg - prevAvg; // hPa over trendHours
+        const deltaRounded = delta.toFixed(1);
+        let trendLabel = "stabil";
+        if (delta <= -2) trendLabel = "stark fallend";
+        else if (delta > -2 && delta <= -0.5) trendLabel = "fallend";
+        else if (delta > -0.5 && delta < 0.5) trendLabel = "stabil";
+        else if (delta >= 0.5 && delta < 2) trendLabel = "steigend";
+        else if (delta >= 2) trendLabel = "stark steigend";
+        const arrow = delta > 0 ? "↑" : delta < 0 ? "↓" : "→";
+        pressureTrendText = `Tendenz: ${trendLabel} ${arrow} (Δ ${deltaRounded} hPa / ${trendHours}h)`;
+      }
+    }
+    if (outpPressureTrendElem) {
+      outpPressureTrendElem.innerHTML = pressureTrendText;
+    }
+  } catch (err) {
+    console.error("Druck-Auswertung Fehler:", err);
+  }
+}
+
+// Recompute pressure trend when the user changes the window
+document.addEventListener("DOMContentLoaded", () => {
+  const sel = document.getElementById("pressureWindowSelect");
+  if (sel) {
+    sel.addEventListener("change", () => {
+      if (lastForecastDataForPressure)
+        renderPressureFromData(lastForecastDataForPressure);
+    });
+  }
+});
+
 class Address {
   constructor(name, display_name, lon, lat) {
     this.name = name;
@@ -643,6 +710,13 @@ function requestWeatherForecast(lat, lon) {
 
       document.getElementById("outpHumidity").innerHTML =
         `${humidity}% <br/><br/> <hr> <span class="mini-headline">Taupunkt</span> <br/> <br/>${dewPoint}°C<br/><span class="sultry">${sultry}</span>`;
+
+      // ################################################################
+      // Luftdruck: aktuellen Wert anzeigen und 3-Stunden-Tendenz auswerten
+      // ################################################################
+      // store data and render pressure + trend via helper (reads selected window)
+      lastForecastDataForPressure = data;
+      renderPressureFromData(data);
 
       //?####################################################################################################
       //* ANCHOR -  Sonnen auf - untergang

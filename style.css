@@ -522,6 +522,23 @@ button {
     width: 75%;
   }
 }
+/* Luftdruck-spezifische Styles */
+.pressureTrend {
+  font-size: 0.95rem;
+  margin-top: 6px;
+  color: #e0e0e0;
+}
+.pressureTrend .up {
+  color: #7cfc00;
+}
+.pressureTrend .down {
+  color: #ff8b8b;
+}
+
+.pressureVal {
+  font-weight: 700;
+  font-size: 1.2rem;
+}
 
 .small {
   width: 100%;
