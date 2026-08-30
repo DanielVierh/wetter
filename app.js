@@ -32,6 +32,8 @@ let weatherSettings = {
 
 // Letzte Forecast-Daten für erneute Berechnung der Druck-Tendenz
 let lastForecastDataForPressure = null;
+// Letzte Forecast-Daten für Sichtweiten-Auswertung
+let lastForecastDataForVisibility = null;
 
 function renderPressureFromData(data) {
   try {
@@ -86,6 +88,69 @@ function renderPressureFromData(data) {
   }
 }
 
+function renderVisibilityFromData(data) {
+  try {
+    const visCurrent =
+      data.current && data.current.visibility ? data.current.visibility : null; // in meters
+    const outpVisElem = document.getElementById("outpVisibility");
+    const outpVisTrendElem = document.getElementById("outpVisibilityTrend");
+    if (outpVisElem && visCurrent !== null) {
+      // display in km if >=1000m
+      if (visCurrent >= 1000) {
+        outpVisElem.innerHTML = `${(visCurrent / 1000).toFixed(1)} km`;
+      } else {
+        outpVisElem.innerHTML = `${visCurrent} m`;
+      }
+    }
+
+    const sel = document.getElementById("visibilityWindowSelect");
+    let trendHours = 3;
+    if (sel) {
+      const v = parseInt(sel.value, 10);
+      if (Number.isFinite(v) && v > 0) trendHours = v;
+    }
+
+    const visValues = (data.hourly || [])
+      .map((h) => (h.visibility !== undefined ? h.visibility : null))
+      .filter((v) => v !== null);
+
+    let visTrendText = "Keine Tendenz";
+    if (visValues.length >= 2) {
+      const avg = (arr) => arr.reduce((a, b) => a + b, 0) / arr.length;
+      const lastN = visValues.slice(0, trendHours);
+      let prevN = [];
+      if (visValues.length >= trendHours * 2) {
+        prevN = visValues.slice(trendHours, trendHours * 2);
+      } else {
+        prevN = visValues.slice(trendHours);
+      }
+      const latestAvg = lastN.length > 0 ? avg(lastN) : null;
+      const prevAvg = prevN.length > 0 ? avg(prevN) : null;
+      if (latestAvg !== null && prevAvg !== null) {
+        const delta = latestAvg - prevAvg; // meters over trendHours
+        const deltaRounded =
+          delta >= 1000 || delta <= -1000
+            ? (delta / 1000).toFixed(2) + " km"
+            : Math.round(delta) + " m";
+        let trendLabel = "stabil";
+        // thresholds in meters
+        if (delta <= -500) trendLabel = "stark abnehmend";
+        else if (delta > -500 && delta <= -100) trendLabel = "abnehmend";
+        else if (delta > -100 && delta < 100) trendLabel = "stabil";
+        else if (delta >= 100 && delta < 500) trendLabel = "zunehmend";
+        else if (delta >= 500) trendLabel = "stark zunehmend";
+        const arrow = delta > 0 ? "↑" : delta < 0 ? "↓" : "→";
+        visTrendText = `Tendenz: ${trendLabel} ${arrow} (Δ ${deltaRounded} / ${trendHours}h)`;
+      }
+    }
+    if (outpVisTrendElem) {
+      outpVisTrendElem.innerHTML = visTrendText;
+    }
+  } catch (err) {
+    console.error("Sichtweiten-Auswertung Fehler:", err);
+  }
+}
+
 // Recompute pressure trend when the user changes the window
 document.addEventListener("DOMContentLoaded", () => {
   const sel = document.getElementById("pressureWindowSelect");
@@ -93,6 +158,13 @@ document.addEventListener("DOMContentLoaded", () => {
     sel.addEventListener("change", () => {
       if (lastForecastDataForPressure)
         renderPressureFromData(lastForecastDataForPressure);
+    });
+  }
+  const visSel = document.getElementById("visibilityWindowSelect");
+  if (visSel) {
+    visSel.addEventListener("change", () => {
+      if (lastForecastDataForVisibility)
+        renderVisibilityFromData(lastForecastDataForVisibility);
     });
   }
 });
@@ -714,9 +786,11 @@ function requestWeatherForecast(lat, lon) {
       // ################################################################
       // Luftdruck: aktuellen Wert anzeigen und 3-Stunden-Tendenz auswerten
       // ################################################################
-      // store data and render pressure + trend via helper (reads selected window)
+      // store data and render pressure + visibility trends via helper (reads selected window)
       lastForecastDataForPressure = data;
+      lastForecastDataForVisibility = data;
       renderPressureFromData(data);
+      renderVisibilityFromData(data);
 
       //?####################################################################################################
       //* ANCHOR -  Sonnen auf - untergang

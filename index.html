@@ -86,6 +86,7 @@
                     <button class="infobutton" id="btnShowMoreAlerts">Weiter</button>
                 </div>
             </div>
+            
         </div>
 
         <div class="containerWrapper">
@@ -177,7 +178,29 @@
                 <p id="outpRain" class="outputVal" style="font-size: 1.3em;">0 mm erwartet</p>
             </div>
 
+                        <div class="miniContainer" id="visibility_container">
+                <div class="loading">
+                    <div class="spinner-loader"><i class="fa-solid fa-eye"></i></div>
+                </div>
+                <p style="text-decoration: underline;"><strong>Sichtweite <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
+                    <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8z"/>
+                    <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z"/>
+                  </svg></strong></p>
+                <p id="outpVisibility" class="outputVal">Laden...</p>
+                <p id="outpVisibilityTrend" class="pressureTrend">-</p>
+                <div style="margin-top:8px;">
+                    <label for="visibilityWindowSelect" style="font-size:0.8rem;">Fenster:</label>
+                    <select id="visibilityWindowSelect" style="margin-left:6px; font-size:0.9rem;">
+                        <option value="3">3h</option>
+                        <option value="6">6h</option>
+                        <option value="24">24h</option>
+                    </select>
+                </div>
+                <p class="descr">Aktuelle Sichtweite und Kurzzeit-Tendenz</p>
+            </div>
         </div>
+
+
 
         <!-- Vorerst keine Air Quali -->
         <div class="miniContainer small" id="airQualiBox">
