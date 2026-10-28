@@ -1391,11 +1391,11 @@ function ausw(param_current_Temp) {
   //?####################################################################################################
   //* ANCHOR -  Wetter Hintergrundbild
   //? Klarer Himmel
-  if (iconValRaw === "01d" || iconValRaw === "01n") {
-    // weatherContainer.style.backgroundImage = "url('img/Sun.jpg')";
-    document.getElementById("weatherimg").style.width = "270px";
-    document.getElementById("weatherimg").style.top = "-25px";
-  }
+  // if (iconValRaw === "01d" || iconValRaw === "01n") {
+  //   // weatherContainer.style.backgroundImage = "url('img/Sun.jpg')";
+  //   document.getElementById("weatherimg").style.width = "170px";
+  //   document.getElementById("weatherimg").style.top = "125px";
+  // }
   // if (iconValRaw === '01n') {
   //     // weatherContainer.style.backgroundImage = "url('img/night.jpeg')";
   // }
